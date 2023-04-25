@@ -28,6 +28,9 @@ pub use round_robin::Client as RoundRobinClient;
 mod single;
 pub use single::Client as SingleClient;
 
+mod app;
+pub use app::Client as AppClient;
+
 mod stream_filter;
 use olog::error;
 use stream_filter::StreamFilterWith;
@@ -35,6 +38,7 @@ use stream_filter::StreamFilterWith;
 pub enum Client {
 	Single(SingleClient),
 	RoundRobin(RoundRobinClient),
+	App(AppClient),
 }
 
 impl From<SingleClient> for Client {
@@ -49,11 +53,18 @@ impl From<RoundRobinClient> for Client {
 	}
 }
 
+impl From<AppClient> for Client {
+	fn from(client: AppClient) -> Self {
+		Self::App(client)
+	}
+}
+
 impl Client {
 	pub fn octocrab(&self) -> &Octocrab {
 		match self {
 			Client::Single(client) => client.octocrab(),
 			Client::RoundRobin(client) => client.octocrab(),
+			Client::App(client) => client.octocrab(),
 		}
 	}
 
@@ -61,6 +72,7 @@ impl Client {
 		match self {
 			Client::Single(client) => client.config(),
 			Client::RoundRobin(client) => client.config(),
+			Client::App(client) => client.config(),
 		}
 	}
 

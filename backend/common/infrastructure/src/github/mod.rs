@@ -8,7 +8,7 @@ mod contributors;
 pub use contributors::Contributors;
 
 mod clients;
-pub use clients::{Client, RoundRobinClient, SingleClient};
+pub use clients::{AppClient, Client, RoundRobinClient, SingleClient};
 
 mod error;
 pub use error::Error;

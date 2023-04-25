@@ -41,6 +41,7 @@ uuid = {version = "0.8.2", default_features = false, features = [
 # Github
 octocrab = { git = "https://github.com/onlydustxyz/octocrab.git", features=["stream"] }
 reqwest = "0.11.13"
+jsonwebtoken = "8.3.0"
 
 # Graphql client
 graphql_client = "0.12.0"
