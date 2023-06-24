@@ -3,6 +3,11 @@
 ```mermaid
 classDiagram
 
+class ApiProjectsContributorsForCaller {
+   githubUserId: bigint
+   projectId: uuid
+}
+
 class Applications {
    applicantId: uuid!
    id: uuid!
@@ -228,6 +233,7 @@ class ProjectLeads {
 class Projects {
    applications: [Applications!]!
    budgets: [Budgets!]!
+   callerAsContributor: [ApiProjectsContributorsForCaller!]!
    contributors: [ProjectsContributors!]!
    githubRepos: [ProjectGithubRepos!]!
    id: uuid!
@@ -445,6 +451,7 @@ ProjectGithubRepos --* GithubReposContributors
 ProjectLeads -- Projects
 ProjectLeads -- RegisteredUsers
 Projects -- ProjectDetails
+Projects --* ApiProjectsContributorsForCaller
 Projects --* Applications
 Projects --* Budgets
 Projects --* PendingProjectLeaderInvitations

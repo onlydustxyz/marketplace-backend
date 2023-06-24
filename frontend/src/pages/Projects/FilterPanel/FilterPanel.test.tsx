@@ -28,7 +28,7 @@ const projects1: GetAllFilterOptionsQuery["projects"][number] = {
   budgetsAggregate: { aggregate: { count: 1 } },
   projectLeads: [{ __typename: "ProjectLeads", userId: "user-1" }],
   pendingInvitations: [],
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 1 } },
   projectDetails: { visibility: "public", projectId: "project-1" },
 };
@@ -55,7 +55,7 @@ const projects2: GetAllFilterOptionsQuery["projects"][number] = {
   budgetsAggregate: { aggregate: { count: 1 } },
   projectLeads: [{ __typename: "ProjectLeads", userId: "user-1" }],
   pendingInvitations: [],
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 1 } },
   projectDetails: { visibility: "public", projectId: "project-2" },
 };
@@ -79,7 +79,7 @@ const projects3: GetAllFilterOptionsQuery["projects"][number] = {
   budgetsAggregate: { aggregate: { count: 1 } },
   projectLeads: [{ __typename: "ProjectLeads", userId: "user-1" }],
   pendingInvitations: [],
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 1 } },
   projectDetails: { visibility: "public", projectId: "project-3" },
 };
@@ -104,7 +104,7 @@ const projects4: GetAllFilterOptionsQuery["projects"][number] = {
   budgetsAggregate: { aggregate: { count: 1 } },
   projectLeads: [{ __typename: "ProjectLeads", userId: "user-1" }],
   pendingInvitations: [],
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 1 } },
   projectDetails: { visibility: "public", projectId: "project-4" },
 };
@@ -128,7 +128,7 @@ const projects5: GetAllFilterOptionsQuery["projects"][number] = {
   projectSponsors: [{ sponsor: { id: "sponsor-3", name: "Sponsor 3" } }],
   projectLeads: [{ __typename: "ProjectLeads", userId: "user-1" }],
   pendingInvitations: [],
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 1 } },
   projectDetails: { visibility: "public", projectId: "project-5" },
 };

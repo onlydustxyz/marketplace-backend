@@ -122,7 +122,7 @@ const getProjectVisibilityMock = (projectId: string) => ({
         __typename: "Projects",
         id: projectId,
         budgetsAggregate: { aggregate: { count: 1 } },
-        contributors: [],
+        callerAsContributorAggregate: { aggregate: { count: 0 } },
         githubReposAggregate: { aggregate: { count: 1 } },
         pendingInvitations: [],
         projectLeads: [{ userId: "user-1" }],

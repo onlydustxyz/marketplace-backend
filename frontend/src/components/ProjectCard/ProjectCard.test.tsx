@@ -22,7 +22,7 @@ const githubRepo2 = {
 
 const PROJECT: Project = {
   id: 123,
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 2 } },
   contributorsAggregate: { aggregate: { count: 3 } },
   projectDetails: {

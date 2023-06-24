@@ -81,7 +81,7 @@ const ALL_PROJECTS_RESULT: { data: GetProjectsQueryResult["data"] } = {
       {
         __typename: "Projects",
         id: TEST_PROJECT_ID,
-        contributors: [],
+        callerAsContributorAggregate: { aggregate: { count: 0 } },
         contributorsAggregate: { aggregate: { count: 0 } },
         githubReposAggregate: { aggregate: { count: 1 } },
         projectDetails: {
@@ -220,7 +220,7 @@ const graphQlMocks = [
             contributorsAggregate: { aggregate: { count: 0 } },
             githubReposAggregate: { aggregate: { count: 1 } },
             budgetsAggregate: { aggregate: { count: 1 } },
-            contributors: [],
+            callerAsContributorAggregate: { aggregate: { count: 0 } },
           },
         ],
       } as GetProjectsForSidebarQueryResult["data"],

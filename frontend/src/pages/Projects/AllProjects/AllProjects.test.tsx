@@ -36,7 +36,7 @@ const ALL_PROJECTS_RESULT_NO_INVITATIONS: { data: GetProjectsQueryResult["data"]
           rank: 0,
           visibility: "public",
         },
-        contributors: [],
+        callerAsContributorAggregate: { aggregate: { count: 0 } },
         githubReposAggregate: { aggregate: { count: 1 } },
         budgetsAggregate: {
           aggregate: {
@@ -96,7 +96,7 @@ const ALL_PROJECTS_RESULT_NO_INVITATIONS: { data: GetProjectsQueryResult["data"]
           },
         },
         contributorsAggregate: { aggregate: { count: 0 } },
-        contributors: [],
+        callerAsContributorAggregate: { aggregate: { count: 0 } },
         githubReposAggregate: { aggregate: { count: 1 } },
         pendingInvitations: [],
         githubRepos: [
@@ -147,7 +147,7 @@ const ALL_PROJECTS_RESULT_WITH_INVITATION: { data: GetProjectsQueryResult["data"
             },
           },
         },
-        contributors: [],
+        callerAsContributorAggregate: { aggregate: { count: 0 } },
         githubReposAggregate: { aggregate: { count: 1 } },
         contributorsAggregate: { aggregate: { count: 0 } },
         pendingInvitations: [],
@@ -192,7 +192,7 @@ const ALL_PROJECTS_RESULT_WITH_INVITATION: { data: GetProjectsQueryResult["data"
             },
           },
         },
-        contributors: [],
+        callerAsContributorAggregate: { aggregate: { count: 0 } },
         githubReposAggregate: { aggregate: { count: 1 } },
         contributorsAggregate: { aggregate: { count: 0 } },
         pendingInvitations: [],
@@ -237,7 +237,7 @@ const ALL_PROJECTS_RESULT_WITH_INVITATION: { data: GetProjectsQueryResult["data"
             },
           },
         },
-        contributors: [],
+        callerAsContributorAggregate: { aggregate: { count: 0 } },
         githubReposAggregate: { aggregate: { count: 1 } },
         contributorsAggregate: { aggregate: { count: 0 } },
         pendingInvitations: [{ id: "invitation-1", githubUserId: TEST_GITHUB_USER_ID }],
@@ -274,7 +274,7 @@ const projectWithNoBudget: ProjectCardFieldsFragment = {
     },
   },
   contributorsAggregate: { aggregate: { count: 0 } },
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 1 } },
   projectDetails: {
     projectId: "project-with-no-budget",
@@ -317,7 +317,7 @@ const projectWithNoRepo: ProjectCardFieldsFragment = {
     },
   },
   contributorsAggregate: { aggregate: { count: 0 } },
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 0 } },
   projectDetails: {
     projectId: "project-with-no-repo",
@@ -351,7 +351,7 @@ const projectWithNoLeader: ProjectCardFieldsFragment = {
     },
   },
   contributorsAggregate: { aggregate: { count: 0 } },
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 1 } },
   projectDetails: {
     projectId: "project-with-no-leader",
@@ -388,7 +388,7 @@ const projectInvalidWithInvite: ProjectCardFieldsFragment = {
     },
   },
   contributorsAggregate: { aggregate: { count: 0 } },
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 0 } },
   projectDetails: {
     projectId: "project-with-only-invite",
@@ -416,7 +416,7 @@ const projectWithNoLeaderAndInviteForWrongUser: ProjectCardFieldsFragment = {
     },
   },
   contributorsAggregate: { aggregate: { count: 0 } },
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 1 } },
   projectDetails: {
     projectId: "project-with-no-leader",
@@ -447,7 +447,7 @@ const projectWithNoLeaderAndInvite: ProjectCardFieldsFragment = {
   __typename: "Projects",
   id: "project-with-no-leader-and-invite",
   contributorsAggregate: { aggregate: { count: 0 } },
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 1 } },
   budgetsAggregate: {
     aggregate: {

@@ -1,0 +1,1 @@
+DROP VIEW api.projects_contributors_for_caller;

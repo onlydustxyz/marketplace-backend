@@ -51,7 +51,7 @@ const props = (args: {
   visibility: string;
 }): Project => ({
   id: 123,
-  contributors: [],
+  callerAsContributorAggregate: { aggregate: { count: 0 } },
   githubReposAggregate: { aggregate: { count: 4 } },
   contributorsAggregate: { aggregate: { count: 4 } },
   projectDetails: {

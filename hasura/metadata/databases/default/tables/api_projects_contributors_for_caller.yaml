@@ -1,0 +1,13 @@
+table:
+  name: projects_contributors_for_caller
+  schema: api
+select_permissions:
+  - role: registered_user
+    permission:
+      columns:
+        - github_user_id
+        - project_id
+      filter:
+        github_user_id:
+          _eq: X-Hasura-githubUserId
+      allow_aggregations: true
