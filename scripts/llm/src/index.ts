@@ -64,8 +64,15 @@ ${projectContributionGuidelines}
 ## 4. Repositories
 ${repos.map(repo => `
 ### ${repo.owner}/${repo.name}
+
+#### 1. Purpose
 ${repo.purpose}
 
+#### 2. Definitions
+${repo.definitions}
+
+#### 3. Contribution guidelines
+${repo.contributionGuidelines}
 
 `)}`);
 

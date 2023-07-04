@@ -120,10 +120,11 @@ export async function summarize(texts: string[], { spinner }: Options) {
         inputVariables: ["texts"],
     });
 
-    const chain = new LLMChain({ llm: model, prompt });
+    const memory = new BufferMemory();
+    const chain = new ConversationChain({ llm: model, memory });
 
     spinner.text = "Summarizing";
-    const { response } = await chain.call({ texts: texts.join("\n") });
+    const { response } = await chain.call({ input: await prompt.format({ texts: texts.join("\n") }) });
 
     return response;
 }
@@ -146,10 +147,11 @@ export async function joinDefinitions(texts: string[], { spinner }: Options) {
         inputVariables: ["texts"],
     });
 
-    const chain = new LLMChain({ llm: model, prompt });
+    const memory = new BufferMemory();
+    const chain = new ConversationChain({ llm: model, memory });
 
     spinner.text = "Joining definitions";
-    const { response } = await chain.call({ texts: texts.join("\n") });
+    const { response } = await chain.call({ input: await prompt.format({ texts: texts.join("\n") }) });
 
     return response;
 }
