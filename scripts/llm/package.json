@@ -1,0 +1,24 @@
+{
+    "name": "llm",
+    "version": "1.0.0",
+    "description": "Use LLM to generate project descriptions and more",
+    "main": "index.js",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "build": "tsc-esm",
+        "start": "node dist/index.js",
+        "dev": "tsc-watch --onSuccess \"npm start\""
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@digitak/tsc-esm": "^3.1.4",
+        "@octokit/rest": "^19.0.13",
+        "@types/node": "^20.3.3",
+        "dotenv": "^16.3.1",
+        "langchain": "^0.0.102",
+        "ora": "^6.3.1",
+        "tsc-watch": "^6.0.4",
+        "typescript": "^5.1.6"
+    }
+}
