@@ -4,21 +4,21 @@
     "description": "Use LLM to generate project descriptions and more",
     "main": "index.js",
     "license": "MIT",
-    "type": "module",
     "scripts": {
-        "build": "tsc-esm",
-        "start": "node dist/index.js",
-        "dev": "tsc-watch --onSuccess \"npm start\""
+        "start": "ts-node dist/index.js",
+        "generate": "graphql-codegen-esm --config codegen.ts"
     },
     "dependencies": {},
     "devDependencies": {
+        "@apollo/client": "3.8.0-alpha.5",
         "@digitak/tsc-esm": "^3.1.4",
+        "@graphql-codegen/cli": "^4.0.1",
         "@octokit/rest": "^19.0.13",
         "@types/node": "^20.3.3",
         "dotenv": "^16.3.1",
         "langchain": "^0.0.102",
-        "ora": "^6.3.1",
-        "tsc-watch": "^6.0.4",
+        "ora": "5.4.1",
+        "ts-node": "^10.9.1",
         "typescript": "^5.1.6"
     }
 }

@@ -27,10 +27,10 @@ export async function getRepoOverview(repo: Repo, { spinner }: Options) {
     const repoDetails = await repo.details();
     const repoReadme = await repo.readme();
 
-    spinner.suffixText = "Asking for the repo purpose";
+    spinner.text = "Asking for the repo purpose";
     await chain.call({ input: await prompt.format({ owner: repo.owner, name: repo.name, description: repoDetails ? repoDetails.description : "", readme: repoReadme }) });
 
-    spinner.suffixText = "Refining the purpose";
+    spinner.text = "Refining the purpose";
     const { response } = await chain.call({ input: "Give me a summary of your answer in less than 300 characters. Do not mention the repository name in the response. Write the result in markdown format." });
 
     return response;
@@ -38,7 +38,7 @@ export async function getRepoOverview(repo: Repo, { spinner }: Options) {
 
 
 export async function explainTechnicalTerms(overview:string, { spinner }: Options) {
-    spinner.suffixText = "Explaining technical terms";
+    spinner.text = "Explaining technical terms";
 
     const model = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.3, modelName: "gpt-3.5-turbo" });
 
@@ -91,8 +91,51 @@ export async function getRepoGuidelines(repo: Repo, { spinner }: Options) {
         || path?.toLowerCase().includes("guideline") || path?.toLowerCase().includes("conduct"))
         .slice(0, 100);
 
-    spinner.suffixText = "Asking for the repo contribution guidelines";
+    spinner.text = "Asking for the repo contribution guidelines";
     const { output } = await executor.call({ input: await prompt.format({ owner: repo.owner, name: repo.name, files: repoDescriptionFiles }) });
 
     return output;
+}
+
+
+export async function summarize(texts: string[], { spinner }: Options) {
+    const model = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.3, modelName: "gpt-4" });
+
+    const prompt = new PromptTemplate({
+        template: `
+        Write a summary of 300 words max the following texts. Write the response in markdown format.
+        Texts:
+
+        {texts}
+        `,
+        inputVariables: ["texts"],
+    });
+
+    const chain = new LLMChain({ llm: model, prompt });
+
+    spinner.text = "Summarizing";
+    const { response } = await chain.call({ input: await prompt.format({ texts: texts.join("\n") }) });
+
+    return response;
+}
+
+
+export async function joinDefinitions(texts: string[], { spinner }: Options) {
+    const model = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.3, modelName: "gpt-4" });
+
+    const prompt = new PromptTemplate({
+        template: `
+        Join the following lists of definitions. Make sure to remove duplicate entries. Write the response in markdown format.
+        Definitions:
+        {texts}
+        `,
+        inputVariables: ["texts"],
+    });
+
+    const chain = new LLMChain({ llm: model, prompt });
+
+    spinner.text = "Joining definitions";
+    const { response } = await chain.call({ input: await prompt.format({ texts: texts.join("\n") }) });
+
+    return response;
 }

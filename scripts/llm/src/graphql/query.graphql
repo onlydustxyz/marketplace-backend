@@ -1,0 +1,13 @@
+query GetProjectRepos($projectName: String!) {
+  projects(where: {projectDetails: {name: {_ilike: $projectName}}}) {
+    projectDetails {
+        name
+    }
+    githubRepos {
+      repo {
+        owner
+        name
+      }
+    }
+  }
+}
