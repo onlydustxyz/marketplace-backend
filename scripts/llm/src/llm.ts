@@ -25,7 +25,7 @@ export async function getRepoOverview(repo: Repo, { spinner }: Options) {
     const chain = new ConversationChain({ llm: model, memory });
 
     const repoDetails = await repo.details();
-    const repoReadme = await repo.readme();
+    const repoReadme = (await repo.readme() || "").substring(0, 15000);
 
     spinner.text = "Asking for the repo purpose";
     await chain.call({ input: await prompt.format({ owner: repo.owner, name: repo.name, description: repoDetails ? repoDetails.description : "", readme: repoReadme }) });
@@ -99,6 +99,10 @@ export async function getRepoGuidelines(repo: Repo, { spinner }: Options) {
 
 
 export async function summarize(texts: string[], { spinner }: Options) {
+    if(texts.length === 0) {
+        return null
+    }
+
     const model = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.3, modelName: "gpt-4" });
 
     const prompt = new PromptTemplate({
