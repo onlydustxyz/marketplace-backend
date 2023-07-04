@@ -91,6 +91,10 @@ export async function getRepoGuidelines(repo: Repo, { spinner }: Options) {
         || path?.toLowerCase().includes("guideline") || path?.toLowerCase().includes("conduct"))
         .slice(0, 100);
 
+    if(repoDescriptionFiles.length === 0) {
+        return null
+    }
+
     spinner.text = "Asking for the repo contribution guidelines";
     const { output } = await executor.call({ input: await prompt.format({ owner: repo.owner, name: repo.name, files: repoDescriptionFiles }) });
 
@@ -125,6 +129,10 @@ export async function summarize(texts: string[], { spinner }: Options) {
 
 
 export async function joinDefinitions(texts: string[], { spinner }: Options) {
+    if(texts.length === 0) {
+        return null
+    }
+
     const model = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.3, modelName: "gpt-4" });
 
     const prompt = new PromptTemplate({

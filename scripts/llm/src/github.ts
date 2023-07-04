@@ -32,7 +32,7 @@ export class Repo {
             })
 
     fileContent = (path: string) => this.octokit.rest.repos.getContent({ owner: this.owner, repo: this.name, path })
-        .then(({data}) => isFileItem(data) ? atob(data.content).substring(0, 15000) : "")
+        .then(({data}) => isFileItem(data) ? atob(data.content) : "")
         .catch((e) => {
             console.error(e);
             return "";
@@ -55,7 +55,20 @@ export class RepoFileContentTool extends Tool {
     }
 
     _call(path: string): Promise<string> {
-        return this.repo.fileContent(path);
+        path = decodeURI(path).trim();
+        if (path.toLowerCase().startsWith(this.repo.owner)) {
+            path = path.substring(this.repo.owner.length);
+        }
+        if (path.toLowerCase().startsWith("/")) {
+            path = path.substring(1);
+        }
+        if (path.toLowerCase().startsWith(this.repo.name)) {
+            path = path.substring(this.repo.name.length);
+        }
+        if (path.toLowerCase().startsWith("/")) {
+            path = path.substring(1);
+        }
+        return this.repo.fileContent(path).then(content=>content.substring(0, 15000));
     }
 
 }
