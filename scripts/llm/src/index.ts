@@ -1,26 +1,20 @@
 import dotenv from 'dotenv';
 import fs from 'fs';
-import ora from "ora";
-import { Repo } from "./github";
-import { Options } from "./options";
-import { explainTechnicalTerms, getRepoGuidelines, getRepoOverview, joinDefinitions, summarize } from "./llm";
-import { createClient } from "./graphql/client";
-import { GetProjectReposDocument, GetProjectReposQuery } from "./__generated/graphql"
+import { Repo } from "./github.js";
+import { explainTechnicalTerms, getRepoGuidelines, getRepoOverview, joinDefinitions, summarize } from "./llm.js";
+import { createClient } from "./graphql/client.js";
+import { GetProjectReposDocument, GetProjectReposQuery } from "./__generated/graphql.js"
+import { Spinner } from "@topcli/spinner";
 
 dotenv.config();
 
 async function main() {
     const projectName = process.argv[2];
 
-    const options: Options = {
-        spinner: ora({prefixText: `[${projectName}]`})
-    };
-    options.spinner?.start("Fetching project details");
-
     const client = createClient();
     const {data} = await client.query<GetProjectReposQuery>({
         query: GetProjectReposDocument,
-        variables:{projectName}
+        variables:{ projectName: `%${projectName}%` }
     });
 
     const project = data.projects.at(0);
@@ -28,26 +22,31 @@ async function main() {
         throw new Error(`No project found matching request: ${projectName}`);
     }
 
-    const repos = [];
-    for (const repo of project.githubRepos.map(({repo}) => repo)) {
-        options.spinner.prefixText = `[${repo?.owner}/${repo?.name}]`;
+    const spinner = new Spinner().start("Generating documentation", { withPrefix: `[${project.projectDetails?.name}] ` });
+
+    const promises = project.githubRepos.map(async ({repo}) => {
+        const spinner = new Spinner().start("Generating documentation", { withPrefix: `[${repo?.owner}/${repo?.name}] `});
 
         const githubRepo = new Repo(repo?.owner || "", repo?.name || "");
-        const purpose = await getRepoOverview(githubRepo, options);
-        const definitions = await explainTechnicalTerms(purpose, options);
-        const contributionGuidelines = await getRepoGuidelines(githubRepo, options);
+        const purpose = await getRepoOverview(githubRepo, { spinner });
+        const definitions = await explainTechnicalTerms(purpose, { spinner });
+        const contributionGuidelines = await getRepoGuidelines(githubRepo, { spinner });
 
-        repos.push({
+        spinner.succeed();
+
+        return {
             ...repo,
             purpose,
             definitions,
             contributionGuidelines
-        })
-    }
+        };
+    });
 
-    const projectOverview = await summarize(repos.map(({purpose}) => purpose), options);
-    const projectContributionGuidelines = await summarize(repos.map(({contributionGuidelines}) => contributionGuidelines), options);
-    const projectDefinitions = await joinDefinitions(repos.map(({definitions}) => definitions), options);
+    const repos = await Promise.all(promises);
+
+    const projectOverview = await summarize(repos.map(({purpose}) => purpose), { spinner });
+    const projectContributionGuidelines = await summarize(repos.map(({contributionGuidelines}) => contributionGuidelines), { spinner });
+    const projectDefinitions = await joinDefinitions(repos.map(({definitions}) => definitions), { spinner });
 
     fs.writeFileSync("project_description.md", `
 # ${project.projectDetails?.name}
@@ -76,7 +75,7 @@ ${repo.contributionGuidelines}
 
 `)}`);
 
-    options.spinner?.succeed();
+    spinner.succeed();
 }
 
 main()

@@ -12,14 +12,11 @@ const config: CodegenConfig = {
     },
   ],
   overwrite: true,
-  documents: ["./src/**/*.graphql"],
+  documents: ["src/**/*.graphql"],
+  emitLegacyCommonJSImports: false,
   generates: {
-    "./src/__generated/graphql.ts": {
-      plugins: ["typescript", "typescript-operations", "typescript-react-apollo"],
-      config: {
-        avoidOptionals: true,
-        skipTypename: false,
-      },
+    "./src/__generated/": {
+      preset: 'client'
     },
   },
 };

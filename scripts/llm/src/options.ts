@@ -1,5 +1,5 @@
-import { Ora } from 'ora';
+import { Spinner } from "@topcli/spinner";
 
 export type Options = {
-    spinner: Ora;
+    spinner: Spinner;
 }
