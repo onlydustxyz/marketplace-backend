@@ -56,13 +56,13 @@ export class RepoFileContentTool extends Tool {
 
     _call(path: string): Promise<string> {
         path = decodeURI(path).trim();
-        if (path.toLowerCase().startsWith(this.repo.owner)) {
+        if (path.toLowerCase().startsWith(this.repo.owner.toLowerCase())) {
             path = path.substring(this.repo.owner.length);
         }
         if (path.toLowerCase().startsWith("/")) {
             path = path.substring(1);
         }
-        if (path.toLowerCase().startsWith(this.repo.name)) {
+        if (path.toLowerCase().startsWith(this.repo.name.toLowerCase())) {
             path = path.substring(this.repo.name.length);
         }
         if (path.toLowerCase().startsWith("/")) {

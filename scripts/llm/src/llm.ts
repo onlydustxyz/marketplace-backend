@@ -89,9 +89,9 @@ export async function getRepoGuidelines(repo: Repo, { spinner }: Options) {
     const repoDescriptionFiles = (await repo.files(true)).filter(path => path?.toLowerCase().endsWith(".md") ||
         path?.toLowerCase().endsWith(".txt") || path?.toLowerCase().includes("contribut")  || path?.toLowerCase().includes("develop")
         || path?.toLowerCase().includes("guideline") || path?.toLowerCase().includes("conduct"))
-        .slice(0, 100);
+        .slice(0, 100).map(text => text.trim());
 
-    if(repoDescriptionFiles.length === 0) {
+    if (!repoDescriptionFiles.some(text => text.length > 0)) {
         return null
     }
 
@@ -103,7 +103,8 @@ export async function getRepoGuidelines(repo: Repo, { spinner }: Options) {
 
 
 export async function summarize(texts: string[], { spinner }: Options) {
-    if(texts.length === 0) {
+    texts = texts.map(text => text.trim())
+    if (!texts.some(text => text.length > 0)) {
         return null
     }
 
@@ -129,7 +130,8 @@ export async function summarize(texts: string[], { spinner }: Options) {
 
 
 export async function joinDefinitions(texts: string[], { spinner }: Options) {
-    if(texts.length === 0) {
+    texts = texts.map(text => text.trim())
+    if (!texts.some(text => text.length > 0)) {
         return null
     }
 
