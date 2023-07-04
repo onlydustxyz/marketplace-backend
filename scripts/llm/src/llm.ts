@@ -2,7 +2,7 @@ import { OpenAI } from "langchain/llms/openai";
 import { ConversationChain, LLMChain } from "langchain/chains";
 import { BufferMemory } from "langchain/memory";
 import { PromptTemplate } from "langchain/prompts";
-import { Repo } from "./github";
+import { Repo, RepoFileContentTool } from "./github";
 import { Options } from "./options";
 import { SerpAPI } from "langchain/tools";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
@@ -58,6 +58,41 @@ export async function explainTechnicalTerms(overview:string, { spinner }: Option
     });
 
     const { output } = await executor.call({ input: await prompt.format({overview}) });
+
+    return output;
+}
+
+
+export async function getRepoGuidelines(repo: Repo, { spinner }: Options) {
+    const model = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.3, modelName: "gpt-4" });
+    const tools = [new RepoFileContentTool(repo)];
+
+    const executor = await initializeAgentExecutorWithOptions(tools, model, {
+        agentType: "zero-shot-react-description",
+        verbose: !!process.env.DEBUG
+    });
+
+    const prompt = new PromptTemplate({
+        template: `
+        Give a summary of the contribution gidelines of the {owner}/{name} github repository. Contribution guidelines describe how a
+        developer should contribute to the repository.
+
+        The list of files that may contain information about contribution gidelines is:
+        {files}
+
+        Analyse the content of each file until you find the contribution guidelines and write a summary of it.
+        If you don't find anything related to this, reply "There doesn't seem to be any contribution guidelines.".
+        `,
+        inputVariables: ["owner", "name", "files"],
+    });
+
+    const repoDescriptionFiles = (await repo.files(true)).filter(path => path?.toLowerCase().endsWith(".md") ||
+        path?.toLowerCase().endsWith(".txt") || path?.toLowerCase().includes("contribut")  || path?.toLowerCase().includes("develop")
+        || path?.toLowerCase().includes("guideline") || path?.toLowerCase().includes("conduct"))
+        .slice(0, 100);
+
+    spinner.suffixText = "Asking for the repo contribution guidelines";
+    const { output } = await executor.call({ input: await prompt.format({ owner: repo.owner, name: repo.name, files: repoDescriptionFiles }) });
 
     return output;
 }

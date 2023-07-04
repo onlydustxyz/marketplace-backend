@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { Repo } from "./github";
 import { Options } from "./options";
 import ora from 'ora';
-import { explainTechnicalTerms, getRepoOverview } from "./llm";
+import { explainTechnicalTerms, getRepoGuidelines, getRepoOverview } from "./llm";
 import fs from 'fs';
 
 dotenv.config();
@@ -25,10 +25,13 @@ ${purpose}
 
 ## Definitions
 ${await explainTechnicalTerms(purpose, options)}
+
+## Contribution Guidelines
+${await getRepoGuidelines(new Repo(owner, repo), options)}
+
 `);
 
     options.spinner?.succeed();
 }
-
 
 main()
