@@ -1,24 +1,25 @@
 {
-    "name": "llm",
-    "version": "1.0.0",
-    "description": "Use LLM to generate project descriptions and more",
-    "main": "index.js",
-    "license": "MIT",
-    "type": "module",
-    "scripts": {
-        "start": "tsc && node dist/index.js",
-        "generate": "graphql-codegen-esm --config codegen.ts"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "@apollo/client": "3.8.0-alpha.5",
-        "@graphql-codegen/cli": "^4.0.1",
-        "@graphql-codegen/client-preset": "^4.0.1",
-        "@octokit/rest": "^19.0.13",
-        "@topcli/spinner": "^2.0.0",
-        "@types/node": "^20.3.3",
-        "dotenv": "^16.3.1",
-        "langchain": "^0.0.102",
-        "typescript": "^5.1.6"
-    }
+  "name": "llm",
+  "version": "1.0.0",
+  "description": "Use LLM to generate project descriptions and more",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "generate": "graphql-codegen-esm --config codegen.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@apollo/client": "3.8.0-alpha.5",
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-codegen/client-preset": "^4.0.1",
+    "@octokit/rest": "^19.0.13",
+    "@topcli/spinner": "^2.0.0",
+    "@types/node": "^20.3.3",
+    "dotenv": "^16.3.1",
+    "langchain": "^0.0.102",
+    "prettier": "^2.8.8",
+    "typescript": "^5.1.6"
+  }
 }
