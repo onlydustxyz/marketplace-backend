@@ -82,15 +82,17 @@ export async function getRepoGuidelines(repo: Repo, { spinner }: Options) {
 
   const prompt = new PromptTemplate({
     template: `
-        Give a summary of the contribution gidelines of the {owner}/{name} github repository. Contribution guidelines describe how a
-        developer should contribute to the repository.
+    Examine the {owner}/{name} GitHub repository's contribution guidelines. Contribution guidelines describe how a developer should contribute to the repository.
 
-        The list of files that may contain information about contribution gidelines is:
-        {files}
+    The list of files that may contain information about contribution guidelines is:
+    {files}
 
-        Analyse the content of each file until you find the contribution guidelines and write a summary of it.
-        If you don't find anything related to this, reply "There doesn't seem to be any contribution guidelines.".
-        `,
+    Extract and summarize the specific instructions or guidelines for contributions present in these files.
+    If there are no contribution guidelines, simply state, 'There doesn't seem to be any contribution guidelines.'
+
+    Write in affirmative style.
+    Write guidelines in bullet points.
+    `,
     inputVariables: ["owner", "name", "files"],
   });
 
@@ -120,7 +122,7 @@ export async function getRepoGuidelines(repo: Repo, { spinner }: Options) {
 }
 
 export async function summarizeOverviews(texts: string[], { spinner }: Options) {
-  texts = texts.map(text => text.trim());
+  texts = texts.filter(text => text != null).map(text => text.trim());
   if (!texts.some(text => text.length > 0)) {
     return null;
   }
@@ -145,8 +147,8 @@ export async function summarizeOverviews(texts: string[], { spinner }: Options) 
   return response;
 }
 
-export async function summarize(texts: string[], { spinner }: Options) {
-  texts = texts.map(text => text.trim());
+export async function summarizeGuidelines(texts: string[], { spinner }: Options) {
+  texts = texts.filter(text => text != null).map(text => text.trim());
   if (!texts.some(text => text.length > 0)) {
     return null;
   }
@@ -155,9 +157,12 @@ export async function summarize(texts: string[], { spinner }: Options) {
 
   const prompt = new PromptTemplate({
     template: `
-          Write the contribution guidelines of this project based on the guidelines of its inner github repositories.
-          Write the response in markdown format.
-          Guidelines: {texts}
+          Here is a list of guidelines:
+          {texts}
+
+          Remove duplicate bullet points from the list above.
+          Keep only the 4 most important and relevant bullet points.
+          Do not add any introductory text before the bullet points.
         `,
     inputVariables: ["texts"],
   });

@@ -1,7 +1,13 @@
 import dotenv from "dotenv";
 import fs from "fs";
 import { Repo } from "./github.js";
-import { explainTechnicalTerms, getRepoGuidelines, getRepoOverview, summarizeOverviews } from "./llm.js";
+import {
+  explainTechnicalTerms,
+  getRepoGuidelines,
+  getRepoOverview,
+  summarizeGuidelines,
+  summarizeOverviews,
+} from "./llm.js";
 import { createClient } from "./graphql/client.js";
 import { GetProjectReposDocument, GetProjectReposQuery } from "./__generated/graphql.js";
 import { Spinner } from "@topcli/spinner";
@@ -50,7 +56,7 @@ async function main() {
     repos.map(({ purpose }) => purpose),
     { spinner }
   );
-  const projectContributionGuidelines = await summarizeOverviews(
+  const projectContributionGuidelines = await summarizeGuidelines(
     repos.map(({ contributionGuidelines }) => contributionGuidelines),
     { spinner }
   );
@@ -59,6 +65,10 @@ async function main() {
     [projectOverview, ...repos.map(({ purpose }) => purpose)].join("\n"),
     { spinner }
   );
+
+  fs.mkdir("out", { recursive: true }, err => {
+    if (err) throw err;
+  });
 
   fs.writeFileSync(
     `out/${project.projectDetails?.name}.md`,
