@@ -22,10 +22,14 @@ async function main() {
     throw new Error(`No project found matching request: ${projectName}`);
   }
 
-  const spinner = new Spinner().start("Generating documentation", { withPrefix: `[${project.projectDetails?.name}] ` });
+  const spinner = new Spinner({ name: "line" }).start("Generating documentation", {
+    withPrefix: `[${project.projectDetails?.name}] `,
+  });
 
   const promises = project.githubRepos.map(async ({ repo }) => {
-    const spinner = new Spinner().start("Generating documentation", { withPrefix: `[${repo?.owner}/${repo?.name}] ` });
+    const spinner = new Spinner({ name: "line" }).start("Generating documentation", {
+      withPrefix: `[${repo?.owner}/${repo?.name}] `,
+    });
 
     const githubRepo = new Repo(repo?.owner || "", repo?.name || "");
     const purpose = await getRepoOverview(githubRepo, { spinner });
@@ -58,23 +62,18 @@ async function main() {
 
   fs.writeFileSync(
     `out/${project.projectDetails?.name}.md`,
-    `
-# ${project.projectDetails?.name}
+    `# ${project.projectDetails?.name}
 
-## 1. Purpose
+## 🧠 Purpose
 ${projectOverview}
 
-## 2. Contribution guidelines
+## 🧑‍💻 Contribution guidelines
 ${projectContributionGuidelines}
 
-## 3. Repositories
-${repos.map(
-  repo => `
-__${repo.owner}/${repo.name}__: ${repo.purpose}
-`
-)}
+## 📔 Repositories
+${repos.map(repo => `__${repo.owner}/${repo.name}__: ${repo.purpose}`).join("\n\n")}
 
-## 4. Definitions
+## 🔍 Definitions
 ${definitions}
 `
   );
