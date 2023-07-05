@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import fs from "fs";
 import { Repo } from "./github.js";
-import { explainTechnicalTerms, getRepoGuidelines, getRepoOverview, joinDefinitions, summarize } from "./llm.js";
+import { explainTechnicalTerms, getRepoGuidelines, getRepoOverview, summarizeOverviews } from "./llm.js";
 import { createClient } from "./graphql/client.js";
 import { GetProjectReposDocument, GetProjectReposQuery } from "./__generated/graphql.js";
 import { Spinner } from "@topcli/spinner";
@@ -29,7 +29,6 @@ async function main() {
 
     const githubRepo = new Repo(repo?.owner || "", repo?.name || "");
     const purpose = await getRepoOverview(githubRepo, { spinner });
-    const definitions = await explainTechnicalTerms(purpose, { spinner });
     const contributionGuidelines = await getRepoGuidelines(githubRepo, { spinner });
 
     spinner.succeed();
@@ -37,56 +36,47 @@ async function main() {
     return {
       ...repo,
       purpose,
-      definitions,
       contributionGuidelines,
     };
   });
 
   const repos = await Promise.all(promises);
 
-  const projectOverview = await summarize(
+  const projectOverview = await summarizeOverviews(
     repos.map(({ purpose }) => purpose),
     { spinner }
   );
-  const projectContributionGuidelines = await summarize(
+  const projectContributionGuidelines = await summarizeOverviews(
     repos.map(({ contributionGuidelines }) => contributionGuidelines),
     { spinner }
   );
-  const projectDefinitions = await joinDefinitions(
-    repos.map(({ definitions }) => definitions),
+
+  const definitions = await explainTechnicalTerms(
+    [projectOverview, ...repos.map(({ purpose }) => purpose)].join("\n"),
     { spinner }
   );
 
   fs.writeFileSync(
-    "out/project_description.md",
+    `out/${project.projectDetails?.name}.md`,
     `
 # ${project.projectDetails?.name}
 
 ## 1. Purpose
 ${projectOverview}
 
-## 2. Definitions
-${projectDefinitions}
-
-## 3. Contribution guidelines
+## 2. Contribution guidelines
 ${projectContributionGuidelines}
 
-## 4. Repositories
+## 3. Repositories
 ${repos.map(
   repo => `
-### ${repo.owner}/${repo.name}
-
-#### 1. Purpose
-${repo.purpose}
-
-#### 2. Definitions
-${repo.definitions}
-
-#### 3. Contribution guidelines
-${repo.contributionGuidelines}
-
+__${repo.owner}/${repo.name}__: ${repo.purpose}
 `
-)}`
+)}
+
+## 4. Definitions
+${definitions}
+`
   );
 
   spinner.succeed();

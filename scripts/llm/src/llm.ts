@@ -119,6 +119,32 @@ export async function getRepoGuidelines(repo: Repo, { spinner }: Options) {
   return output;
 }
 
+export async function summarizeOverviews(texts: string[], { spinner }: Options) {
+  texts = texts.map(text => text.trim());
+  if (!texts.some(text => text.length > 0)) {
+    return null;
+  }
+
+  const model = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.3, modelName: "gpt-4" });
+
+  const prompt = new PromptTemplate({
+    template: `
+        Explain the purpose of the project based on the description of its inner github repositories.
+        Write the response in markdown format in a maximum of 300 words.
+        Descriptions: {texts}
+    `,
+    inputVariables: ["texts"],
+  });
+
+  const memory = new BufferMemory();
+  const chain = new ConversationChain({ llm: model, memory });
+
+  spinner.text = "Summarizing overviews";
+  const { response } = await chain.call({ input: await prompt.format({ texts: texts.join("\n") }) });
+
+  return response;
+}
+
 export async function summarize(texts: string[], { spinner }: Options) {
   texts = texts.map(text => text.trim());
   if (!texts.some(text => text.length > 0)) {
@@ -129,10 +155,9 @@ export async function summarize(texts: string[], { spinner }: Options) {
 
   const prompt = new PromptTemplate({
     template: `
-        Write a summary of 300 words max the following texts. Write the response in markdown format.
-        Texts:
-
-        {texts}
+          Write the contribution guidelines of this project based on the guidelines of its inner github repositories.
+          Write the response in markdown format.
+          Guidelines: {texts}
         `,
     inputVariables: ["texts"],
   });
@@ -140,33 +165,7 @@ export async function summarize(texts: string[], { spinner }: Options) {
   const memory = new BufferMemory();
   const chain = new ConversationChain({ llm: model, memory });
 
-  spinner.text = "Summarizing";
-  const { response } = await chain.call({ input: await prompt.format({ texts: texts.join("\n") }) });
-
-  return response;
-}
-
-export async function joinDefinitions(texts: string[], { spinner }: Options) {
-  texts = texts.map(text => text.trim());
-  if (!texts.some(text => text.length > 0)) {
-    return null;
-  }
-
-  const model = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.3, modelName: "gpt-4" });
-
-  const prompt = new PromptTemplate({
-    template: `
-        Join the following lists of definitions. Make sure to remove duplicate entries. Write the response in markdown format.
-        Definitions:
-        {texts}
-        `,
-    inputVariables: ["texts"],
-  });
-
-  const memory = new BufferMemory();
-  const chain = new ConversationChain({ llm: model, memory });
-
-  spinner.text = "Joining definitions";
+  spinner.text = "Summarizing contribution guidelines";
   const { response } = await chain.call({ input: await prompt.format({ texts: texts.join("\n") }) });
 
   return response;
