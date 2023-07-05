@@ -132,4 +132,30 @@ export class LLM {
         Do not add any introductory text before the bullet points.
     `);
   };
+
+  repoDiscussions = async (repo: Repo, { spinner }: Options) => {
+    spinner.text = "Summarizing main discussions";
+
+    const mostCommentedIssues = await repo.mostCommentedIssues();
+    const explainations = await Promise.all(
+      mostCommentedIssues.slice(0, 5).map(async issue => {
+        const comments = "-" + (await repo.issueComments(issue.number)).map(comment => comment.body || "").join("\n- ");
+        const explaination = await this.model.call(`
+        Based on the tilte, the description of a github issue and the list of its comments:
+        - tell what the github issue is about
+        - give the main challenge involved by this github issue
+
+        The issue title is: "${issue.title || ""}"
+
+        The issue description is: "${issue.body || ""}"
+
+        The issue comments are:
+        ${comments}
+      `);
+        return { issue: issue.title, explaination };
+      })
+    );
+
+    return explainations;
+  };
 }

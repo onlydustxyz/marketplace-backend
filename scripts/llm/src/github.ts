@@ -64,6 +64,38 @@ export class Repo {
         console.error(e);
         return "";
       });
+
+  mostCommentedIssues = () =>
+    this.octokit.rest.issues
+      .listForRepo({
+        owner: this.owner,
+        repo: this.name,
+        per_page: 100,
+        page: 1,
+        sort: "comments",
+        direction: "desc",
+        state: "open",
+      })
+      .then(({ data }) => data)
+      .catch(e => {
+        console.error(e);
+        return [];
+      });
+
+  issueComments = (issueNumber: number) =>
+    this.octokit.issues
+      .listComments({
+        owner: this.owner,
+        repo: this.name,
+        issue_number: issueNumber,
+        per_page: 100,
+        page: 1,
+      })
+      .then(({ data }) => data)
+      .catch(e => {
+        console.error(e);
+        return [];
+      });
 }
 
 function isFileItem(data: unknown): data is FileItem {

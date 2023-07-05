@@ -87,4 +87,6 @@ ${definitions}
   spinner.succeed();
 }
 
-main();
+//main();
+const [owner, name] = process.argv[2].split("/");
+new LLM().repoDiscussions(new Repo(owner,name), {spinner:new Spinner()}).then(console.log);
