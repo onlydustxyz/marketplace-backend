@@ -31,14 +31,30 @@ export class Repo {
       .then(({ data }) => data)
       .catch(console.error);
 
-  files = (recursive: boolean) =>
-    this.octokit.rest.git
-      .getTree({ owner: this.owner, repo: this.name, tree_sha: "main", recursive: recursive ? "1" : "0" })
-      .then(({ data }) => data.tree.map(item => item.path || "").filter(path => path !== ""))
+  defaultBranch = () =>
+    this.octokit.rest.repos
+      .get({ owner: this.owner, repo: this.name })
+      .then(({ data }) => data.default_branch)
       .catch(e => {
         console.error(e);
-        return [];
+        return "main";
       });
+
+  files = (recursive: boolean) =>
+    this.defaultBranch().then(defaultBranch =>
+      this.octokit.rest.git
+        .getTree({
+          owner: this.owner,
+          repo: this.name,
+          tree_sha: defaultBranch,
+          recursive: recursive ? "1" : "0",
+        })
+        .then(({ data }) => data.tree.map(item => item.path || "").filter(path => path !== ""))
+        .catch(e => {
+          console.error(e);
+          return [];
+        })
+    );
 
   fileContent = (path: string) =>
     this.octokit.rest.repos
