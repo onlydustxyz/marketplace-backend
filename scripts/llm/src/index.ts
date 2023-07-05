@@ -1,13 +1,7 @@
 import dotenv from "dotenv";
 import fs from "fs";
 import { Repo } from "./github.js";
-import {
-  explainTechnicalTerms,
-  getRepoGuidelines,
-  getRepoOverview,
-  summarizeGuidelines,
-  summarizeOverviews,
-} from "./llm.js";
+import { LLM } from "./llm.js";
 import { createClient } from "./graphql/client.js";
 import { GetProjectReposDocument, GetProjectReposQuery } from "./__generated/graphql.js";
 import { Spinner } from "@topcli/spinner";
@@ -32,14 +26,16 @@ async function main() {
     withPrefix: `[${project.projectDetails?.name}] `,
   });
 
+  const model = new LLM();
+
   const promises = project.githubRepos.map(async ({ repo }) => {
     const spinner = new Spinner({ name: "line" }).start("Generating documentation", {
       withPrefix: `[${repo?.owner}/${repo?.name}] `,
     });
 
     const githubRepo = new Repo(repo?.owner || "", repo?.name || "");
-    const purpose = await getRepoOverview(githubRepo, { spinner });
-    const contributionGuidelines = await getRepoGuidelines(githubRepo, { spinner });
+    const purpose = await model.repoPurpose(githubRepo, { spinner });
+    const contributionGuidelines = await model.repoGuidelines(githubRepo, { spinner });
 
     spinner.succeed();
 
@@ -52,16 +48,16 @@ async function main() {
 
   const repos = await Promise.all(promises);
 
-  const projectOverview = await summarizeOverviews(
+  const projectOverview = await model.summarizeOverviews(
     repos.map(({ purpose }) => purpose),
     { spinner }
   );
-  const projectContributionGuidelines = await summarizeGuidelines(
+  const projectContributionGuidelines = await model.summarizeGuidelines(
     repos.map(({ contributionGuidelines }) => contributionGuidelines),
     { spinner }
   );
 
-  const definitions = await explainTechnicalTerms(
+  const definitions = await model.explainTechnicalTerms(
     [projectOverview, ...repos.map(({ purpose }) => purpose)].join("\n"),
     { spinner }
   );
