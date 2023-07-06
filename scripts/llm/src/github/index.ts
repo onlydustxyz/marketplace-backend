@@ -102,13 +102,13 @@ export class Repo {
         return [];
       });
 
-  recentDiscussions = async () => {
+  recentDiscussions = async ({ discussionsCount = 10, commentsCountPerDiscussion = 10 } = {}) => {
     const { data } = await this.graphqlClient.query<
       GetRepoLatestDiscussionsQuery,
       GetRepoLatestDiscussionsQueryVariables
     >({
       query: GetRepoLatestDiscussionsDocument,
-      variables: { owner: this.owner, name: this.name },
+      variables: { owner: this.owner, name: this.name, discussionsCount, commentsCountPerDiscussion },
     });
 
     return (

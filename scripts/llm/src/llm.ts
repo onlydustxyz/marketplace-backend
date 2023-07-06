@@ -134,28 +134,73 @@ export class LLM {
   };
 
   repoDiscussions = async (repo: Repo, { spinner }: Options) => {
-    spinner.text = "Summarizing main discussions";
+    spinner.text = "Analyzing recent discussions";
+
+    const prompt = new PromptTemplate({
+      template: `
+        Based on the title, the description of a github discussion and the list of its comments:
+        - tell what the discussion is about
+        - give the main challenge involved by this discussion
+        - answer with less than 100 words
+
+        The title is: "{title}"
+
+        The description is: "{body}"
+
+        The comments are:
+        {comments}
+      `,
+      inputVariables: ["title", "body", "comments"],
+    });
+
+    const chain = new LLMChain({ llm: this.model, prompt });
 
     const mostCommentedIssues = await repo.mostCommentedIssues();
-    const explainations = await Promise.all(
-      mostCommentedIssues.slice(0, 5).map(async issue => {
-        const comments = "-" + (await repo.issueComments(issue.number)).map(comment => comment.body || "").join("\n- ");
-        const explaination = await this.model.call(`
-        Based on the tilte, the description of a github issue and the list of its comments:
-        - tell what the github issue is about
-        - give the main challenge involved by this github issue
+    const issueExplainations = mostCommentedIssues.slice(0, 5).map(async ({ number, title, body }) => {
+      const comments = await repo
+        .issueComments(number)
+        .then(comments => comments.map(({ body }) => `- ${body}`).join("\n"));
 
-        The issue title is: "${issue.title || ""}"
+      return {
+        title,
+        explaination: await chain
+          .call({
+            title,
+            body,
+            comments,
+          })
+          .then(({ text }) => text),
+      };
+    });
 
-        The issue description is: "${issue.body || ""}"
+    const recentDiscussions = await repo.recentDiscussions({ discussionsCount: 5, commentsCountPerDiscussion: 5 });
+    const discussionExplainations = recentDiscussions.map(async ({ title, body, comments }) => ({
+      title,
+      explaination: await chain
+        .call({
+          title,
+          body,
+          comments: comments.map(({ body }) => `- ${body}`).join("\n"),
+        })
+        .then(({ text }) => text),
+    }));
 
-        The issue comments are:
-        ${comments}
-      `);
-        return { issue: issue.title, explaination };
-      })
-    );
+    return await Promise.all([...issueExplainations, ...discussionExplainations]);
+  };
 
-    return explainations;
+  summarizeDiscussions = async (texts: string[], { spinner }: Options) => {
+    texts = texts.map(text => text.trim()).filter(text => text.length > 0);
+    if (texts.length === 0) {
+      return "";
+    }
+
+    spinner.text = "Summarizing repo discussions";
+    return await this.model.call(`
+        Here is a list of discussions in a team and a brief explanation for each one:
+        ${texts.join("\n")}
+
+        List the top 3 most important challenges/concerns the team is facing.
+        Answer with a list in markdown format
+    `);
   };
 }

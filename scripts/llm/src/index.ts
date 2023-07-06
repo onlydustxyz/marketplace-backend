@@ -88,6 +88,17 @@ ${definitions}
 }
 
 //main();
+const spinner = new Spinner().start();
 const [owner, name] = process.argv[2].split("/");
-new Repo(owner, name).recentDiscussions().then(d => console.log(JSON.stringify(d, null, 2)));
-// new LLM().repoDiscussions(new Repo(owner,name), {spinner:new Spinner()}).then(console.log);
+new LLM()
+  .repoDiscussions(new Repo(owner, name), { spinner })
+  .then(d =>
+    new LLM().summarizeDiscussions(
+      d.map(({ title, explaination }) => `title: ${title}\nexplaination: ${explaination}`),
+      { spinner }
+    )
+  )
+  .then(response => {
+    spinner.succeed();
+    console.log(response);
+  });

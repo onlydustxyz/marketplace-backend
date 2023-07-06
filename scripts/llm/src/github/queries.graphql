@@ -1,13 +1,18 @@
-query GetRepoLatestDiscussions($owner: String!, $name: String!) {
+query GetRepoLatestDiscussions(
+  $owner: String!
+  $name: String!
+  $discussionsCount: Int!
+  $commentsCountPerDiscussion: Int!
+) {
   repository(owner: $owner, name: $name) {
-    discussions(last: 100, orderBy: { field: UPDATED_AT, direction: DESC }) {
+    discussions(last: $discussionsCount, orderBy: { field: UPDATED_AT, direction: DESC }) {
       nodes {
         author {
           login
         }
         title
         body
-        comments(last: 100) {
+        comments(last: $commentsCountPerDiscussion) {
           nodes {
             author {
               login
