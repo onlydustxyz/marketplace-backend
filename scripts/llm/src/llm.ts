@@ -7,6 +7,10 @@ import { Options } from "./options.js";
 import { SerpAPI } from "langchain/tools";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 
+type DiscussionSummary = {
+  topic: string;
+  summary: string;
+};
 export class LLM {
   private readonly model: OpenAI;
 
@@ -133,7 +137,7 @@ export class LLM {
     `);
   };
 
-  repoDiscussions = async (repo: Repo, { spinner }: Options) => {
+  repoDiscussions = async (repo: Repo, { spinner }: Options): Promise<DiscussionSummary[]> => {
     spinner.text = "Analyzing recent discussions";
 
     const prompt = new PromptTemplate({
@@ -156,51 +160,54 @@ export class LLM {
     const chain = new LLMChain({ llm: this.model, prompt });
 
     const mostCommentedIssues = await repo.mostCommentedIssues();
-    const issueExplainations = mostCommentedIssues.slice(0, 5).map(async ({ number, title, body }) => {
-      const comments = await repo
-        .issueComments(number)
-        .then(comments => comments.map(({ body }) => `- ${body}`).join("\n"));
+    const issueSummaries: Promise<DiscussionSummary>[] = mostCommentedIssues
+      .slice(0, 5)
+      .map(async ({ number, title, body }) => {
+        const comments = await repo
+          .issueComments(number)
+          .then(comments => comments.map(({ body }) => `- ${body}`).join("\n"));
 
-      return {
-        title,
-        explaination: await chain
+        return {
+          topic: title,
+          summary: await chain
+            .call({
+              title,
+              body,
+              comments,
+            })
+            .then(({ text }) => text),
+        };
+      });
+
+    const recentDiscussions = await repo.recentDiscussions({ discussionsCount: 5, commentsCountPerDiscussion: 5 });
+    const discussionExplainations: Promise<DiscussionSummary>[] = recentDiscussions.map(
+      async ({ title, body, comments }) => ({
+        topic: title || "",
+        summary: await chain
           .call({
             title,
             body,
-            comments,
+            comments: comments.map(({ body }) => `- ${body}`).join("\n"),
           })
           .then(({ text }) => text),
-      };
-    });
+      })
+    );
 
-    const recentDiscussions = await repo.recentDiscussions({ discussionsCount: 5, commentsCountPerDiscussion: 5 });
-    const discussionExplainations = recentDiscussions.map(async ({ title, body, comments }) => ({
-      title,
-      explaination: await chain
-        .call({
-          title,
-          body,
-          comments: comments.map(({ body }) => `- ${body}`).join("\n"),
-        })
-        .then(({ text }) => text),
-    }));
-
-    return await Promise.all([...issueExplainations, ...discussionExplainations]);
+    return await Promise.all([...issueSummaries, ...discussionExplainations]);
   };
 
-  summarizeDiscussions = async (texts: string[], { spinner }: Options) => {
-    texts = texts.map(text => text.trim()).filter(text => text.length > 0);
-    if (texts.length === 0) {
+  summarizeDiscussions = async (discussions: DiscussionSummary[], { spinner }: Options) => {
+    if (discussions.length === 0) {
       return "";
     }
 
     spinner.text = "Summarizing repo discussions";
     return await this.model.call(`
-        Here is a list of discussions in a team and a brief explanation for each one:
-        ${texts.join("\n")}
-
-        List the top 3 most important challenges/concerns the team is facing.
-        Answer with a list in markdown format
+        Based on the topic and summary of the following discussions in a team,
+        list the top 3 most important challenges/concerns the team is facing.
+        Answer with a list in markdown format.
+        Discussions:
+        ${discussions.map(({ topic, summary }) => `- topic: ${topic}\n  summary: ${summary}`).join("\n\n")}
     `);
   };
 }

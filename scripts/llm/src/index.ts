@@ -36,6 +36,7 @@ async function main() {
     const githubRepo = new Repo(repo?.owner || "", repo?.name || "");
     const purpose = await model.repoPurpose(githubRepo, { spinner });
     const contributionGuidelines = await model.repoGuidelines(githubRepo, { spinner });
+    const discussions = await model.repoDiscussions(githubRepo, { spinner });
 
     spinner.succeed();
 
@@ -43,6 +44,7 @@ async function main() {
       ...repo,
       purpose,
       contributionGuidelines,
+      discussions,
     };
   });
 
@@ -52,10 +54,15 @@ async function main() {
     repos.map(({ purpose }) => purpose),
     { spinner }
   );
+
   const projectContributionGuidelines = await model.summarizeGuidelines(
     repos.map(({ contributionGuidelines }) => contributionGuidelines),
     { spinner }
   );
+
+  const projectChallenges = await model.summarizeDiscussions(repos.map(({ discussions }) => discussions).flat(), {
+    spinner,
+  });
 
   const definitions = await model.explainTechnicalTerms(
     [projectOverview, ...repos.map(({ purpose }) => purpose)].join("\n"),
@@ -73,6 +80,9 @@ async function main() {
 ## 🧠 Purpose
 ${projectOverview}
 
+## 💪 Recent challenges
+${projectChallenges}
+
 ## 🧑‍💻 Contribution guidelines
 ${projectContributionGuidelines}
 
@@ -87,18 +97,4 @@ ${definitions}
   spinner.succeed();
 }
 
-//main();
-const spinner = new Spinner().start();
-const [owner, name] = process.argv[2].split("/");
-new LLM()
-  .repoDiscussions(new Repo(owner, name), { spinner })
-  .then(d =>
-    new LLM().summarizeDiscussions(
-      d.map(({ title, explaination }) => `title: ${title}\nexplaination: ${explaination}`),
-      { spinner }
-    )
-  )
-  .then(response => {
-    spinner.succeed();
-    console.log(response);
-  });
+main();
