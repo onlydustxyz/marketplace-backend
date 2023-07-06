@@ -65,7 +65,7 @@ async function main() {
   });
 
   const definitions = await model.explainTechnicalTerms(
-    [projectOverview, ...repos.map(({ purpose }) => purpose)].join("\n"),
+    [projectOverview, projectChallenges, ...repos.map(({ purpose }) => purpose)].join("\n"),
     { spinner }
   );
 
