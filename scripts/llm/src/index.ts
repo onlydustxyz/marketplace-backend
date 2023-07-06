@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import fs from "fs";
-import { Repo } from "./github.js";
+import { Repo } from "./github/index.js";
 import { LLM } from "./llm.js";
-import { createClient } from "./graphql/client.js";
-import { GetProjectReposDocument, GetProjectReposQuery } from "./__generated/graphql.js";
+import { createClient } from "./onlydust/graphql.js";
+import { GetProjectReposDocument, GetProjectReposQuery } from "./__generated/onlydust/graphql.js";
 import { Spinner } from "@topcli/spinner";
 
 dotenv.config();
@@ -89,4 +89,5 @@ ${definitions}
 
 //main();
 const [owner, name] = process.argv[2].split("/");
-new LLM().repoDiscussions(new Repo(owner,name), {spinner:new Spinner()}).then(console.log);
+new Repo(owner, name).recentDiscussions().then(d => console.log(JSON.stringify(d, null, 2)));
+// new LLM().repoDiscussions(new Repo(owner,name), {spinner:new Spinner()}).then(console.log);

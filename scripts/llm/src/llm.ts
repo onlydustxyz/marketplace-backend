@@ -2,7 +2,7 @@ import { OpenAI } from "langchain/llms/openai";
 import { ConversationChain, LLMChain } from "langchain/chains";
 import { BufferMemory } from "langchain/memory";
 import { PromptTemplate } from "langchain/prompts";
-import { Repo, RepoFileContentTool } from "./github.js";
+import { Repo, RepoFileContentTool } from "./github/index.js";
 import { Options } from "./options.js";
 import { SerpAPI } from "langchain/tools";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";

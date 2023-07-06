@@ -7,7 +7,9 @@
   "type": "module",
   "scripts": {
     "start": "tsc && node dist/index.js",
-    "generate": "graphql-codegen-esm --config codegen.ts"
+    "generate": "yarn generate:onlydust && yarn generate:github",
+    "generate:onlydust": "graphql-codegen-esm --config codegen/onlydust_config.ts",
+    "generate:github": "graphql-codegen-esm --config codegen/github_config.ts"
   },
   "dependencies": {},
   "devDependencies": {

@@ -1,0 +1,21 @@
+query GetRepoLatestDiscussions($owner: String!, $name: String!) {
+  repository(owner: $owner, name: $name) {
+    discussions(last: 100, orderBy: { field: UPDATED_AT, direction: DESC }) {
+      nodes {
+        author {
+          login
+        }
+        title
+        body
+        comments(last: 100) {
+          nodes {
+            author {
+              login
+            }
+            body
+          }
+        }
+      }
+    }
+  }
+}

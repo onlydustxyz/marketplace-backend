@@ -1,20 +1,25 @@
 import { Octokit } from "@octokit/rest";
-import { Callbacks, CallbackManagerForToolRun } from "langchain/dist/callbacks";
-import { SerializedFields } from "langchain/dist/load/map_keys";
-import { Serialized, SerializedNotImplemented } from "langchain/dist/load/serializable";
 import { Tool } from "langchain/tools";
-import { ZodEffects, ZodObject, ZodOptional, ZodString, ZodTypeAny, input } from "zod";
 import { components } from "@octokit/openapi-types";
+import { createClient } from "./graphql.js";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
+import {
+  GetRepoLatestDiscussionsDocument,
+  GetRepoLatestDiscussionsQuery,
+  GetRepoLatestDiscussionsQueryVariables,
+} from "../__generated/github/graphql.js";
 
 type FileItem = components["schemas"]["content-file"];
 
 export class Repo {
   readonly octokit: Octokit;
+  readonly graphqlClient: ApolloClient<NormalizedCacheObject>;
   readonly owner: string;
   readonly name: string;
 
   constructor(owner: string, name: string) {
     this.octokit = new Octokit({ auth: process.env.GITHUB_PAT });
+    this.graphqlClient = createClient();
     this.owner = owner;
     this.name = name;
   }
@@ -96,6 +101,29 @@ export class Repo {
         console.error(e);
         return [];
       });
+
+  recentDiscussions = async () => {
+    const { data } = await this.graphqlClient.query<
+      GetRepoLatestDiscussionsQuery,
+      GetRepoLatestDiscussionsQueryVariables
+    >({
+      query: GetRepoLatestDiscussionsDocument,
+      variables: { owner: this.owner, name: this.name },
+    });
+
+    return (
+      data.repository?.discussions.nodes?.map(d => ({
+        author: d?.author?.login,
+        title: d?.title,
+        body: d?.body,
+        comments:
+          d?.comments.nodes?.map(c => ({
+            author: c?.author?.login,
+            body: c?.body,
+          })) || [],
+      })) || []
+    );
+  };
 }
 
 function isFileItem(data: unknown): data is FileItem {
