@@ -163,9 +163,12 @@ export class LLM {
     const issueSummaries: Promise<DiscussionSummary>[] = mostCommentedIssues
       .slice(0, 5)
       .map(async ({ number, title, body }) => {
-        const comments = await repo
-          .issueComments(number)
-          .then(comments => comments.map(({ body }) => `- ${body}`).join("\n"));
+        const comments = await repo.issueComments(number).then(comments =>
+          comments
+            .slice(0, 5)
+            .map(({ body }) => `- ${body}`)
+            .join("\n")
+        );
 
         return {
           topic: title,
