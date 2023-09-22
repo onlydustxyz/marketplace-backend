@@ -3,7 +3,7 @@ use domain::BudgetId;
 use infrastructure::database::{enums::Currency, schema::budgets};
 use rust_decimal::Decimal;
 
-#[derive(Debug, Insertable, Identifiable, Queryable, AsChangeset, Model)]
+#[derive(Debug, Insertable, Identifiable, Queryable, AsChangeset, Model, PartialEq, Eq)]
 pub struct Budget {
 	pub id: BudgetId,
 	pub initial_amount: Decimal,

@@ -4,7 +4,10 @@ mod models;
 use anyhow::Result;
 use api::{models as api_models, presentation::http::routes::projects::budgets::Response};
 use domain::{currencies, sponsor, BudgetEvent, BudgetId, Event, ProjectEvent, ProjectId};
-use infrastructure::{database::ImmutableRepository, event_bus::EXCHANGE_NAME};
+use infrastructure::{
+	database::{enums::Currency, ImmutableRepository},
+	event_bus::EXCHANGE_NAME,
+};
 use olog::info;
 use rocket::{
 	http::{ContentType, Status},
@@ -117,6 +120,16 @@ impl<'a> Test<'a> {
 				sponsor_id: Some(sponsor_id)
 			}),
 			self.context.amqp.listen(EXCHANGE_NAME).await.unwrap(),
+		);
+
+		assert_eq!(
+			vec![api_models::Budget {
+				id: budget_id,
+				currency: Currency::Usd,
+				initial_amount: dec!(1523),
+				remaining_amount: dec!(1523)
+			}],
+			self.context.database.client.list().unwrap()
 		);
 
 		Ok(())
