@@ -4,7 +4,6 @@ use ::domain::{AggregateRepository, Project};
 use domain::{Budget, Event, GithubFetchService, Payment, Publisher};
 pub use http::Config;
 use infrastructure::{
-	amqp::CommandMessage,
 	database::{ImmutableRepository, Repository},
 	github,
 };
@@ -30,7 +29,6 @@ mod usecases;
 pub fn serve(
 	config: crate::Config,
 	schema: graphql::Schema,
-	command_bus: Arc<dyn Publisher<CommandMessage<Event>>>,
 	event_bus: Arc<dyn Publisher<Event>>,
 	project_repository: AggregateRepository<Project>,
 	budget_repository: AggregateRepository<Budget>,
@@ -68,13 +66,12 @@ pub fn serve(
 	);
 
 	let cancel_payment_usecase =
-		application::payment::cancel::Usecase::new(command_bus.clone(), payment_repository.clone());
+		application::payment::cancel::Usecase::new(event_bus.clone(), payment_repository.clone());
 
 	rocket::custom(http::config::rocket("backend/api/Rocket.toml"))
 		.manage(config.http.clone())
 		.manage(config)
 		.manage(schema)
-		.manage(command_bus)
 		.manage(event_bus)
 		.manage(project_repository)
 		.manage(budget_repository)

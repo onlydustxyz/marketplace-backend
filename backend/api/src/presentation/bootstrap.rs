@@ -2,10 +2,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use domain::{AggregateRepository, CompositePublisher, EventPublisher};
-use event_store::bus::QUEUE_NAME as EVENT_STORE_QUEUE;
-use infrastructure::{
-	amqp, amqp::CommandPublisherDecorator, database, event_bus::EXCHANGE_NAME, github,
-};
+use infrastructure::{amqp, database, event_bus::EXCHANGE_NAME, github};
 use rocket::{Build, Rocket};
 
 use crate::{
@@ -59,12 +56,6 @@ pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 	let rocket_build = http::serve(
 		config.clone(),
 		graphql::create_schema(),
-		Arc::new(
-			amqp::Bus::new(config.amqp.clone())
-				.await?
-				.as_publisher(amqp::Destination::queue(EVENT_STORE_QUEUE))
-				.into_command_publisher(database.clone(), expected_processing_count_per_event()),
-		),
 		Arc::new(event_publisher),
 		AggregateRepository::new(database.clone()),
 		AggregateRepository::new(database.clone()),
@@ -88,11 +79,4 @@ pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 		Arc::new(github_client_pat_factory),
 	);
 	Ok(rocket_build)
-}
-
-fn expected_processing_count_per_event() -> i32 {
-	std::env::var("DOMAIN_EVENT_PROJECTORS_COUNT")
-		.unwrap_or_default()
-		.parse()
-		.unwrap_or(2)
 }
