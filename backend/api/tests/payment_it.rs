@@ -79,7 +79,8 @@ impl<'a> Test<'a> {
 		let before = Utc::now().naive_utc();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -202,7 +203,8 @@ impl<'a> Test<'a> {
 		let before = Utc::now().naive_utc();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -324,7 +326,8 @@ impl<'a> Test<'a> {
 		let budget_id = BudgetId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -403,7 +406,8 @@ impl<'a> Test<'a> {
 		let budget_id = BudgetId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -477,7 +481,8 @@ impl<'a> Test<'a> {
 		let payment_id = PaymentId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -503,7 +508,7 @@ impl<'a> Test<'a> {
 					recipient_id: GithubUserId::from(595505u64),
 					amount: Amount::from_decimal(Decimal::from(100), currencies::USD),
 					duration_worked: Duration::hours(2),
-					reason: PaymentReason { work_items: vec![] }.into(),
+					reason: PaymentReason { work_items: vec![] },
 					requested_at: Utc::now().naive_utc(),
 				}
 				.into(),
@@ -550,7 +555,8 @@ impl<'a> Test<'a> {
 		let payment_id = PaymentId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -576,7 +582,7 @@ impl<'a> Test<'a> {
 					recipient_id: GithubUserId::from(595505u64),
 					amount: Amount::from_decimal(Decimal::from(100), currencies::USD),
 					duration_worked: Duration::hours(2),
-					reason: PaymentReason { work_items: vec![] }.into(),
+					reason: PaymentReason { work_items: vec![] },
 					requested_at: Utc::now().naive_utc(),
 				}
 				.into(),
@@ -619,7 +625,8 @@ impl<'a> Test<'a> {
 		let payment_id = PaymentId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -645,7 +652,7 @@ impl<'a> Test<'a> {
 					recipient_id: GithubUserId::from(595505u64),
 					amount: Amount::from_decimal(Decimal::from(100), currencies::USD),
 					duration_worked: Duration::hours(2),
-					reason: PaymentReason { work_items: vec![] }.into(),
+					reason: PaymentReason { work_items: vec![] },
 					requested_at: Utc::now().naive_utc(),
 				}
 				.into(),
@@ -687,7 +694,8 @@ impl<'a> Test<'a> {
 		let payment_id = PaymentId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -718,7 +726,7 @@ impl<'a> Test<'a> {
 					recipient_id: GithubUserId::from(595505u64),
 					amount: Amount::from_decimal(Decimal::from(100), currencies::USD),
 					duration_worked: Duration::hours(2),
-					reason: PaymentReason { work_items: vec![] }.into(),
+					reason: PaymentReason { work_items: vec![] },
 					requested_at: Utc::now().naive_utc(),
 				}
 				.into(),
@@ -790,7 +798,8 @@ impl<'a> Test<'a> {
 		let payment_id = PaymentId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -821,7 +830,7 @@ impl<'a> Test<'a> {
 					recipient_id: GithubUserId::from(595505u64),
 					amount: Amount::from_decimal(Decimal::from(100), currencies::USD),
 					duration_worked: Duration::hours(2),
-					reason: PaymentReason { work_items: vec![] }.into(),
+					reason: PaymentReason { work_items: vec![] },
 					requested_at: Utc::now().naive_utc(),
 				}
 				.into(),
@@ -897,7 +906,8 @@ impl<'a> Test<'a> {
 		let payment_id = PaymentId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -928,7 +938,7 @@ impl<'a> Test<'a> {
 					recipient_id: GithubUserId::from(595505u64),
 					amount: Amount::from_decimal(Decimal::from(100), currencies::STARK),
 					duration_worked: Duration::hours(2),
-					reason: PaymentReason { work_items: vec![] }.into(),
+					reason: PaymentReason { work_items: vec![] },
 					requested_at: Utc::now().naive_utc(),
 				}
 				.into(),

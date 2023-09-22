@@ -46,7 +46,8 @@ impl<'a> Test<'a> {
 		let budget_id = BudgetId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id }.into(),
 				ProjectEvent::BudgetLinked {
 					id,

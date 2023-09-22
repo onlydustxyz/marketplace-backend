@@ -59,7 +59,8 @@ impl<'a> Test<'a> {
 		let sponsor_id = sponsor::Id::new();
 
 		self.context
-			.publish(vec![ProjectEvent::Created { id: project_id }.into()])
+			.event_publisher
+			.publish_many(&[ProjectEvent::Created { id: project_id }.into()])
 			.await?;
 
 		self.context.database.client.insert(api_models::Sponsor {
@@ -143,7 +144,8 @@ impl<'a> Test<'a> {
 		let budget_id = BudgetId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -209,7 +211,8 @@ impl<'a> Test<'a> {
 		let usd_budget_id = BudgetId::new();
 
 		self.context
-			.publish(vec![
+			.event_publisher
+			.publish_many(&[
 				ProjectEvent::Created { id: project_id }.into(),
 				ProjectEvent::BudgetLinked {
 					id: project_id,
@@ -295,7 +298,8 @@ impl<'a> Test<'a> {
 		let sponsor_id = sponsor::Id::new();
 
 		self.context
-			.publish(vec![ProjectEvent::Created { id: project_id }.into()])
+			.event_publisher
+			.publish_many(&[ProjectEvent::Created { id: project_id }.into()])
 			.await?;
 
 		let request = json!({

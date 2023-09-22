@@ -40,7 +40,7 @@ pub struct Context<'a> {
 	pub web3: web3::Context<'a>,
 	pub coinmarketcap: coinmarketcap::Context<'a>,
 	pub quotes_syncer: quotes::sync::Usecase,
-	event_publisher: Arc<dyn Publisher<Event>>,
+	pub event_publisher: Arc<dyn Publisher<Event>>,
 	_environment: environment::Context,
 }
 
@@ -146,10 +146,5 @@ impl<'a> Context<'a> {
 			event_publisher: Arc::new(event_publisher),
 			_environment: environment::Context::new(),
 		})
-	}
-
-	pub async fn publish(&self, events: Vec<Event>) -> Result<()> {
-		self.event_publisher.publish_many(&events).await?;
-		Ok(())
 	}
 }
