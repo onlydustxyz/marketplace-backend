@@ -4,6 +4,7 @@ default: build
 install:
 	@which rustup >/dev/null || curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 	rustup toolchain install nightly
+	rustup component add rustfmt --toolchain nightly
 
 clean:
 	cargo clean
