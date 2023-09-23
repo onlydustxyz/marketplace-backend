@@ -44,7 +44,7 @@ fn image(wiremock_path: String) -> RunnableImage<GenericImage> {
 	/* To record traffic, use the following command and change the port to 8080 in the config.base_url above
 	   docker run \
 	   -p 8080:8080 \
-	   -v $PWD/backend/common/testing/resources/wiremock/github:/home/wiremock \
+	   -v $PWD/common/testing/resources/wiremock/github:/home/wiremock \
 	   wiremock/wiremock \
 	   --proxy-all="https://api.github.com" \
 	   --record-mappings --verbose

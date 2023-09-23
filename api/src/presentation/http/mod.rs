@@ -68,7 +68,7 @@ pub fn serve(
 	let cancel_payment_usecase =
 		application::payment::cancel::Usecase::new(event_bus.clone(), payment_repository.clone());
 
-	rocket::custom(http::config::rocket("backend/api/Rocket.toml"))
+	rocket::custom(http::config::rocket("api/Rocket.toml"))
 		.manage(config.http.clone())
 		.manage(config)
 		.manage(schema)

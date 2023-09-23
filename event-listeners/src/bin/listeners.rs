@@ -7,7 +7,7 @@ use infrastructure::{config, tracing::Tracer};
 #[tokio::main]
 async fn main() -> Result<()> {
 	dotenv().ok();
-	let config: Config = config::load("backend/event-listeners/app.yaml")?;
+	let config: Config = config::load("event-listeners/app.yaml")?;
 	let _tracer = Tracer::init(config.tracer.clone(), "event-queue-worker")?;
 
 	try_join_all(bootstrap(config).await?).await?;

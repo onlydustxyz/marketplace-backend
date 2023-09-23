@@ -120,7 +120,7 @@ jobs:
         with:
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
           codecov_flag: unittest
-          file: backend/cobertura.xml
+          file: cobertura.xml
 
   api_integration_tests:
     name: Integration tests
@@ -147,4 +147,4 @@ jobs:
         with:
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
           codecov_flag: integration_tests
-          file: backend/cobertura.xml
+          file: cobertura.xml
