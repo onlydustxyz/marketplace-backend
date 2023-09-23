@@ -17,7 +17,6 @@ tarpaulin_target
 
 # Env
 .env
-.env.*
 
 # MacOS
 .DS_Store
