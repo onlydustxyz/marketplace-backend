@@ -7,7 +7,7 @@ use std::sync::{
 
 use anyhow::anyhow;
 use domain::{Subscriber, SubscriberCallbackError, SubscriberError};
-use infrastructure::amqp::{Bus, ConsumableBus, Unique};
+use infrastructure::amqp::{Bus, ConsumableBus, Unique, UniqueMessage};
 use lapin::options::QueueDeclareOptions;
 use mockall::lazy_static;
 use opentelemetry::propagation::Extractor;
@@ -79,8 +79,8 @@ async fn run_test(
 	const BAD_MESSAGE_ERROR: &str = "bad message";
 
 	let result = consumer
-		.subscribe(|message: TestMessage| async move {
-			match message {
+		.subscribe(|message: UniqueMessage<TestMessage>| async move {
+			match message.payload() {
 				TestMessage::Valid => {
 					counter.fetch_add(1, Ordering::SeqCst);
 					Ok(())
@@ -168,8 +168,8 @@ async fn terminate_message_consuming_because_of_internal_error(docker: &'static 
 	publish_message(&publisher, QUEUE, TestMessage::Valid).await;
 
 	let result = consumer
-		.subscribe(|message: TestMessage| async move {
-			assert_eq!(message, TestMessage::Valid);
+		.subscribe(|message: UniqueMessage<TestMessage>| async move {
+			assert_eq!(message.payload(), &TestMessage::Valid);
 			Err(SubscriberCallbackError::Fatal(anyhow!(ERROR)))
 		})
 		.await;
