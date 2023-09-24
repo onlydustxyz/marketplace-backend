@@ -5,6 +5,10 @@ install:
 	@which rustup >/dev/null || curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 	rustup toolchain install nightly
 	rustup component add rustfmt --toolchain nightly
+	rustup component add llvm-tools-preview
+	curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+	cargo binstall --no-confirm cargo-nextest --secure
+	cargo install cargo-llvm-cov
 
 clean:
 	cargo clean
@@ -25,18 +29,16 @@ build:
 	cargo build --workspace
 
 unit-tests:
-	cargo test --lib
+	cargo nextest run --lib
 
 integration-tests:
-	cargo test --test '*'
+	cargo nextest run --test '*'
 
 coverage/unit-tests:
-	cargo tarpaulin --workspace --skip-clean  --target-dir tarpaulin_target --lib --out xml
+	cargo llvm-cov nextest --workspace --no-clean --lcov --output-path lcov.info --lib
 
 coverage/integration-tests:
-	cargo tarpaulin --workspace --skip-clean --target-dir tarpaulin_target --test '*' --out xml
-
-coverage/ci: clean fmt check clippy build coverage/unit-tests coverage/integration-tests
+	cargo llvm-cov nextest --workspace --no-clean --lcov --output-path lcov.info  --test '*'
 
 ci: clean fmt check clippy build unit-tests integration-tests
 
