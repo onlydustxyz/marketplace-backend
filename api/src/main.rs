@@ -16,10 +16,14 @@ async fn main() -> Result<()> {
 		let _tracer =
 			Tracer::init(config.tracer.clone(), "api").context("Tracer initialization")?;
 
-		let (http_server, event_listeners) = bootstrap(config).await.context("App bootstrap")?;
+		let (http_server, event_listeners, cron) =
+			bootstrap(config).await.context("App bootstrap")?;
 
-		let (http_server, event_listeners) =
-			join!(http_server.launch(), try_join_all(event_listeners));
+		let (http_server, event_listeners, _) = join!(
+			http_server.launch(),
+			try_join_all(event_listeners),
+			cron.run()
+		);
 
 		let _ = http_server.context("App run")?;
 		event_listeners.context("event-listeners")?;

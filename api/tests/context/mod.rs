@@ -2,7 +2,6 @@ use std::{env, sync::Arc};
 
 use anyhow::Result;
 use api::{
-	application::quotes,
 	domain::projectors::{self, projections},
 	presentation::bootstrap,
 	Config,
@@ -40,7 +39,7 @@ pub struct Context<'a> {
 	pub indexer: indexer::Context<'a>,
 	pub web3: web3::Context<'a>,
 	pub coinmarketcap: coinmarketcap::Context<'a>,
-	pub quotes_syncer: quotes::sync::Usecase,
+	pub quotes_syncer: api::presentation::cron::quotes_syncer::Cron,
 	pub event_publisher: Arc<dyn Publisher<Event>>,
 	_event_listeners: Vec<JoinHandle<()>>,
 	_environment: environment::Context,
@@ -134,7 +133,7 @@ impl<'a> Context<'a> {
 			))),
 		]);
 
-		let (http_server, event_listeners) = bootstrap(config.clone()).await?;
+		let (http_server, event_listeners, cron) = bootstrap(config.clone()).await?;
 
 		Ok(Self {
 			http_client: Client::tracked(http_server).await?,
@@ -146,7 +145,7 @@ impl<'a> Context<'a> {
 			indexer,
 			web3,
 			coinmarketcap,
-			quotes_syncer: quotes::sync::Usecase::bootstrap(config.clone())?,
+			quotes_syncer: cron,
 			event_publisher: Arc::new(event_publisher),
 			_event_listeners: event_listeners,
 			_environment: environment::Context::new(),
