@@ -89,7 +89,6 @@ tokio-retry = "0.3"
 
 # Local dependecies
 domain = { path = "../common/domain", features = ["rocket"] }
-event-store = { path = "../event-store" }
 infrastructure = { path = "../common/infrastructure" }
 derive = { path = "../common/derive" }
 presentation = { path = "../common/presentation" }

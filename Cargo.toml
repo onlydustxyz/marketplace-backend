@@ -11,5 +11,4 @@ members = [
 	"common/testing",
 	"common/olog",
 	"event-listeners",
-	"event-store",
 ]
