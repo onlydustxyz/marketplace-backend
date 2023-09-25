@@ -7,7 +7,7 @@ use infrastructure::database::Repository;
 
 use super::{super::error::Result, Projector};
 use crate::{
-	github_indexer::indexers::contributors_projector::ContributorsProjector,
+	domain::indexers::contributors_projector::ContributorsProjector,
 	models::ContributionsRepository,
 };
 

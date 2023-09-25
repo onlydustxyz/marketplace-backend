@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
 use dotenv::dotenv;
-use event_listeners::{presentation::bootstrap, Config};
+use github_indexer::{presentation::bootstrap, Config};
 use infrastructure::{config, tracing::Tracer};
 use olog::info;
 use tokio::join;

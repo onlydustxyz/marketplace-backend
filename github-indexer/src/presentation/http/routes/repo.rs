@@ -8,7 +8,7 @@ use presentation::http::guards::ApiKey;
 use rocket::State;
 
 use crate::{
-	github_indexer::indexers::{
+	domain::indexers::{
 		self,
 		optional::{self, Optional},
 		Indexer,

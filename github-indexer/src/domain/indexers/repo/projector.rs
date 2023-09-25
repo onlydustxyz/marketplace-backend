@@ -7,7 +7,7 @@ use infrastructure::database::{ImmutableRepository, Repository};
 
 use super::{super::error::Result, IndexedRepo};
 use crate::{
-	github_indexer::indexers::Projector,
+	domain::indexers::Projector,
 	models::{GithubRepo, Technology},
 };
 

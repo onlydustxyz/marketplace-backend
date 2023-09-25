@@ -1,7 +1,10 @@
 use std::env;
 
 use anyhow::Result;
-use event_listeners::{github_indexer::Scheduler, presentation::bootstrap, Config};
+use github_indexer::{
+	presentation::{bootstrap, cron::Scheduler},
+	Config,
+};
 use presentation::http;
 use rocket::local::asynchronous::Client;
 use rstest::fixture;

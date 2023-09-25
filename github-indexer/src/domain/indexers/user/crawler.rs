@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{super::error::Result, Crawler};
 use crate::{
-	github_indexer::indexers::{error::IgnoreErrors, hash},
+	domain::indexers::{error::IgnoreErrors, hash},
 	models::GithubUserIndexRepository,
 };
 

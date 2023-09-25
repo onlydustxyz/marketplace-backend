@@ -5,7 +5,7 @@ use derive_new::new;
 use domain::GithubPullRequest;
 
 use super::{super::error::Result, Projector};
-use crate::github_indexer::indexers::Indexer;
+use crate::domain::indexers::Indexer;
 
 #[derive(new)]
 pub struct PullRequestsProjector {

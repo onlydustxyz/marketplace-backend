@@ -7,7 +7,7 @@ extern crate derive;
 #[macro_use]
 extern crate rocket;
 
-pub mod github_indexer;
+pub mod domain;
 pub mod models;
 pub mod presentation;
 

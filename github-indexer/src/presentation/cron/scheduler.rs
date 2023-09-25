@@ -5,19 +5,18 @@ use domain::{GithubRepoId, GithubUserId};
 use infrastructure::{database, github};
 use olog::info;
 
-use self::{
-	controller::Controller,
-	indexers::{
-		contributors_projector::ContributorsProjector,
-		logged::Logged,
-		rate_limited::{self, RateLimited},
+use crate::{
+	domain::{
+		controller::Controller,
+		indexers::{
+			self,
+			contributors_projector::ContributorsProjector,
+			logged::Logged,
+			rate_limited::{self, RateLimited},
+		},
 	},
+	Config,
 };
-use crate::Config;
-
-mod controller;
-pub mod indexers;
-mod repository;
 
 pub struct Scheduler {
 	repo_indexing: Controller<GithubRepoId>,

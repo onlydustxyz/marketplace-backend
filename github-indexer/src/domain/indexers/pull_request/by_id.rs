@@ -5,7 +5,7 @@ use domain::{
 	GithubRepoId,
 };
 
-use crate::github_indexer::indexers::{self, error::Result, IndexerImpl};
+use crate::domain::indexers::{self, error::Result, IndexerImpl};
 
 pub type PullRequestId = (GithubRepoId, GithubPullRequestNumber);
 
