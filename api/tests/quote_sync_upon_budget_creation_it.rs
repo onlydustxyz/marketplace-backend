@@ -1,7 +1,7 @@
 use anyhow::Result;
 use api::models::CryptoUsdQuote;
 use chrono::Utc;
-use domain::{currencies, BudgetId};
+use domain::{currencies, BudgetEvent, BudgetId};
 use fixtures::*;
 use infrastructure::database::{enums::Currency, ImmutableRepository};
 use olog::info;
@@ -40,7 +40,7 @@ impl<'a> Test<'a> {
 		// When
 		self.context
 			.amqp
-			.publish(domain::BudgetEvent::Created {
+			.publish(BudgetEvent::Created {
 				id: BudgetId::new(),
 				currency: currencies::ETH,
 			})

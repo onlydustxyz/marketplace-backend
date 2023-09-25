@@ -18,12 +18,14 @@ use crate::{
 	presentation::{graphql, http::github_client_pat_factory::GithubClientPatFactory},
 };
 
+mod bootstrap;
 pub mod dto;
 mod error;
 pub mod github_client_pat_factory;
 pub mod roles;
 pub mod routes;
 mod usecases;
+pub use bootstrap::bootstrap;
 
 #[allow(clippy::too_many_arguments)]
 pub fn serve(

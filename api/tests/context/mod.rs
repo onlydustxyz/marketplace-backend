@@ -4,7 +4,7 @@ use anyhow::Result;
 use api::{
 	application::quotes,
 	domain::projectors::{self, projections},
-	presentation::bootstrap::bootstrap,
+	presentation::bootstrap,
 	Config,
 };
 use domain::{CompositePublisher, Event, EventPublisher, Publisher};
@@ -14,6 +14,7 @@ use rocket::local::asynchronous::Client;
 use rstest::fixture;
 use testcontainers::clients::Cli;
 use testing::context::{amqp, coinmarketcap, database, github};
+use tokio::task::JoinHandle;
 
 pub mod environment;
 pub mod indexer;
@@ -41,6 +42,7 @@ pub struct Context<'a> {
 	pub coinmarketcap: coinmarketcap::Context<'a>,
 	pub quotes_syncer: quotes::sync::Usecase,
 	pub event_publisher: Arc<dyn Publisher<Event>>,
+	_event_listeners: Vec<JoinHandle<()>>,
 	_environment: environment::Context,
 }
 
@@ -132,8 +134,10 @@ impl<'a> Context<'a> {
 			))),
 		]);
 
+		let (http_server, event_listeners) = bootstrap(config.clone()).await?;
+
 		Ok(Self {
-			http_client: Client::tracked(bootstrap(config.clone()).await?).await?,
+			http_client: Client::tracked(http_server).await?,
 			database,
 			amqp,
 			simple_storage,
@@ -144,7 +148,14 @@ impl<'a> Context<'a> {
 			coinmarketcap,
 			quotes_syncer: quotes::sync::Usecase::bootstrap(config.clone())?,
 			event_publisher: Arc::new(event_publisher),
+			_event_listeners: event_listeners,
 			_environment: environment::Context::new(),
 		})
+	}
+}
+
+impl<'a> Drop for Context<'a> {
+	fn drop(&mut self) {
+		self._event_listeners.iter().for_each(JoinHandle::abort);
 	}
 }

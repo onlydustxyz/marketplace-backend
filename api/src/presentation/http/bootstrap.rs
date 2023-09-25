@@ -13,7 +13,7 @@ use crate::{
 };
 
 pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
-	info!("Bootstrapping backend api");
+	info!("Bootstrapping api http server");
 	let database = Arc::new(database::Client::new(database::init_pool(
 		config.database.clone(),
 	)?));

@@ -6,10 +6,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use domain::{currencies, EventListener, LogErr, Message, Subscriber, SubscriberCallbackError};
-use infrastructure::{
-	amqp::{CommandSubscriberDecorator, UniqueMessage},
-	coinmarketcap, database, event_bus,
-};
+use infrastructure::{amqp::UniqueMessage, coinmarketcap, database, event_bus};
 use olog::IntoField;
 use tokio::task::JoinHandle;
 use url::{ParseError, Url};
@@ -19,6 +16,7 @@ use self::logger::Logger;
 use crate::Config;
 
 pub async fn bootstrap(config: Config) -> Result<Vec<JoinHandle<()>>> {
+	info!("Bootstrapping event listeners");
 	let reqwest = reqwest::Client::new();
 	let database = Arc::new(database::Client::new(database::init_pool(
 		config.database.clone(),
@@ -39,11 +37,8 @@ pub async fn spawn_all(
 ) -> Result<Vec<JoinHandle<()>>> {
 	let mut handles = vec![
 		Logger.spawn(event_bus::event_consumer(config.amqp.clone(), "logger").await?),
-		quote_syncer::Projector::new(database.clone(), coinmarketcap).spawn(
-			event_bus::event_consumer(config.amqp.clone(), "quote_sync")
-				.await?
-				.into_command_subscriber(database.clone()),
-		),
+		quote_syncer::Projector::new(database.clone(), coinmarketcap)
+			.spawn(event_bus::event_consumer(config.amqp.clone(), "quote_sync").await?),
 	];
 
 	for (index, target) in webhook_targets().into_iter().enumerate() {
