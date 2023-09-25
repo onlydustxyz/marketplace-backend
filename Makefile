@@ -50,7 +50,7 @@ infra/clean:
 	docker compose down -v
 
 infra/up:
-	docker compose up
+	docker compose up -d
 
 infra/re: clean up
 
