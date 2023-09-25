@@ -4,11 +4,10 @@ description = "Event listeners"
 edition = "2021"
 homepage = "https://onlydust.xyz"
 license-file = "LICENSE"
-name = "event-listeners"
+name = "github-indexer"
 readme = "README.md"
 repository = "https://github.com/onlydustxyz/marketplace-backend"
 version = "1.0.0"
-default-run = "event-listeners"
 
 [dependencies]
 

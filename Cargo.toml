@@ -10,5 +10,5 @@ members = [
 	"common/presentation",
 	"common/testing",
 	"common/olog",
-	"event-listeners",
+	"github-indexer",
 ]

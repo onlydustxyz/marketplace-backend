@@ -3,7 +3,7 @@
 use anyhow::Result;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use domain::GithubUser;
-use event_listeners::models;
+use github_indexer::models;
 use infrastructure::database::schema::github_users;
 
 use crate::context::Context;

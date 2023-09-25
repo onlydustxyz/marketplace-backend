@@ -7,7 +7,7 @@ use std::{
 use anyhow::Result;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use domain::{GithubPullRequest, GithubPullRequestStatus, GithubRepo, GithubUser};
-use event_listeners::models;
+use github_indexer::models;
 use infrastructure::database::schema::{github_pull_request_indexes, github_pull_requests};
 use serde_json::json;
 

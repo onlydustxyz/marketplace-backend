@@ -2,7 +2,7 @@
 use anyhow::Result;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use domain::{GithubIssue, GithubIssueStatus, GithubRepo, GithubUser};
-use event_listeners::models;
+use github_indexer::models;
 use infrastructure::database::schema::github_issues;
 
 use super::*;

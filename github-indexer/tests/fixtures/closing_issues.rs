@@ -1,7 +1,7 @@
 #![allow(unused)]
 use anyhow::Result;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
-use event_listeners::models::github_pull_requests::ClosingIssue;
+use github_indexer::models::github_pull_requests::ClosingIssue;
 use infrastructure::database::schema::closing_issues;
 
 use super::*;

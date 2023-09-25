@@ -1,10 +1,10 @@
 use anyhow::Result;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use domain::{GithubCodeReviewStatus, GithubIssueId, GithubPullRequestId};
-use event_listeners::models::{
+use fixtures::*;
+use github_indexer::models::{
 	self, github_pull_requests::ClosingIssue, GithubRepoIndex, ProjectGithubRepo,
 };
-use fixtures::*;
 use infrastructure::database::{
 	enums::{ContributionStatus, ContributionType},
 	schema::{contributions, projects_contributors, projects_pending_contributors},
