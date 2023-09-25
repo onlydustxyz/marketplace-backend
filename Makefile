@@ -40,7 +40,7 @@ coverage/unit-tests:
 coverage/integration-tests:
 	cargo llvm-cov nextest --workspace --no-clean --lcov --output-path lcov.info  --test '*'
 
-ci: clean fmt check clippy build unit-tests integration-tests
+ci: fmt check clippy build unit-tests integration-tests
 
 ### Docker
 infra/down:
