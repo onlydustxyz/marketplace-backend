@@ -26,26 +26,28 @@ pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 	let simple_storage = Arc::new(simple_storage::Client::new(config.s3.clone()).await?);
 	let github_client_pat_factory = GithubClientPatFactory::new(config.github_api_client.clone());
 
+	let projector = projections::Projector::new(
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+	);
+
 	let event_publisher = CompositePublisher::new(vec![
 		Arc::new(EventPublisher::new(
 			projectors::event_store::Projector::new(database.clone()),
 		)),
-		Arc::new(EventPublisher::new(projections::Projector::new(
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-			database.clone(),
-		))),
+		Arc::new(EventPublisher::new(projector.clone())),
 		Arc::new(
 			amqp::Bus::new(config.amqp.clone())
 				.await?
@@ -81,6 +83,7 @@ pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 		database.clone(),
 		database.clone(),
 		database,
+		projector,
 	);
 	Ok(rocket_build)
 }
