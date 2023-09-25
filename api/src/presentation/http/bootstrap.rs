@@ -69,7 +69,7 @@ pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 		database.clone(),
 		database.clone(),
 		database.clone(),
-		database,
+		database.clone(),
 		github_api_client.clone(),
 		github_api_client,
 		dusty_bot_api_client.clone(),
@@ -77,6 +77,10 @@ pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 		Arc::new(ens::Client::new(config.web3)?),
 		simple_storage,
 		Arc::new(github_client_pat_factory),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database,
 	);
 	Ok(rocket_build)
 }

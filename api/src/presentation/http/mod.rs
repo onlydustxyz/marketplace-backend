@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use ::domain::{AggregateRepository, Project};
-use domain::{Budget, Event, GithubFetchService, Payment, Publisher};
+use domain::{Application, Budget, Event, EventStore, GithubFetchService, Payment, Publisher};
 pub use http::Config;
 use infrastructure::{
 	database::{ImmutableRepository, Repository},
@@ -54,6 +54,10 @@ pub fn serve(
 	ens: Arc<ens::Client>,
 	simple_storage: Arc<dyn ImageStoreService>,
 	github_client_pat_factory: Arc<GithubClientPatFactory>,
+	project_event_store: Arc<dyn EventStore<Project>>,
+	application_event_store: Arc<dyn EventStore<Application>>,
+	budget_event_store: Arc<dyn EventStore<Budget>>,
+	payment_event_store: Arc<dyn EventStore<Payment>>,
 ) -> Rocket<Build> {
 	let update_user_profile_info_usecase = application::user::update_profile_info::Usecase::new(
 		user_profile_info_repository.clone(),
@@ -97,6 +101,10 @@ pub fn serve(
 		.manage(payout_info_repository)
 		.manage(github_fetch_service)
 		.manage(dusty_bot_service)
+		.manage(project_event_store)
+		.manage(application_event_store)
+		.manage(budget_event_store)
+		.manage(payment_event_store)
 		.attach(http::guards::Cors)
 		.mount(
 			"/",
@@ -129,4 +137,5 @@ pub fn serve(
 				routes::sponsors::update_sponsor
 			],
 		)
+		.mount("/internal", routes![routes::internal::events::check])
 }
