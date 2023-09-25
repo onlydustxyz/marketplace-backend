@@ -1,4 +1,14 @@
+use anyhow::Result;
+use rocket::{Build, Rocket};
+
+use crate::{github_indexer::Scheduler, Config};
+
+pub mod cron;
 pub mod http;
 
-mod bootstrap;
-pub use bootstrap::bootstrap;
+pub async fn bootstrap(config: Config) -> Result<(Rocket<Build>, Scheduler)> {
+	Ok((
+		http::bootstrap(config.clone()).await?,
+		cron::bootstrap(config)?,
+	))
+}

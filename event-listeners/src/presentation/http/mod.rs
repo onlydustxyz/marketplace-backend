@@ -1,7 +1,9 @@
+mod bootstrap;
 pub mod routes;
 
 use std::sync::Arc;
 
+pub use bootstrap::bootstrap;
 pub use http::Config;
 use infrastructure::{database, github};
 use presentation::http;

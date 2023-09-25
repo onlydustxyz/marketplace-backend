@@ -53,10 +53,12 @@ impl<'a> Context<'a> {
 			..Default::default()
 		};
 
+		let (http_server, cron) = bootstrap(config.clone()).await?;
+
 		Ok(Self {
-			http_client: Client::tracked(bootstrap(config.clone()).await?).await?,
+			http_client: Client::tracked(http_server).await?,
 			database,
-			indexing_scheduler: Scheduler::new(config).expect("Failed to init indexing scheduler"),
+			indexing_scheduler: cron,
 			github,
 		})
 	}
