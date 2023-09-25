@@ -64,13 +64,7 @@ quotes-syncer:
 events-sanity-checks:
 	cargo run -p api --bin events_sanity_checks
 
-event-listeners:
-	cargo run -p event-listeners --bin listeners
-
 github-indexer:
-	cargo run -p event-listeners --bin github-indexer
+	cargo run -p github-indexer
 
-github-indexer-api:
-	cargo run -p event-listeners
-
-.PHONY: install clean fmt check clippy build unit-tests integration-tests ci api quotes-syncer events-sanity-check event-listeners github-indexer github-indexer-api
+.PHONY: install clean fmt check clippy build unit-tests integration-tests ci api quotes-syncer events-sanity-check github-indexer
