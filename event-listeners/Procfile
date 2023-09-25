@@ -1,3 +1,2 @@
-event-listeners: ./target/release/listeners
 github-indexer: ./target/release/github-indexer
 web: ROCKET_PORT=$PORT ./target/release/event-listeners

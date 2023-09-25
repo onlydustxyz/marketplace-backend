@@ -8,7 +8,6 @@ extern crate derive;
 extern crate rocket;
 
 pub mod github_indexer;
-pub mod listeners;
 pub mod models;
 pub mod presentation;
 

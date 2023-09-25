@@ -5,7 +5,7 @@ use event_listeners::models::github_pull_requests::ClosingIssue;
 use infrastructure::database::schema::closing_issues;
 
 use super::*;
-use crate::context::github_indexer::Context;
+use crate::context::Context;
 
 #[track_caller]
 pub fn assert_indexed(context: &mut Context, expected: Vec<ClosingIssue>) -> Result<()> {

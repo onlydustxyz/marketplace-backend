@@ -6,7 +6,7 @@ use rstest::rstest;
 use testcontainers::clients::Cli;
 
 use crate::{
-	context::{docker, github_indexer::Context},
+	context::{docker, Context},
 	fixtures::*,
 };
 

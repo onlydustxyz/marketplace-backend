@@ -6,7 +6,7 @@ use event_listeners::models;
 use infrastructure::database::schema::github_pull_request_commits;
 
 use super::*;
-use crate::context::github_indexer::Context;
+use crate::context::Context;
 
 pub fn a() -> GithubCommit {
 	GithubCommit {

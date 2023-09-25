@@ -1,5 +1,4 @@
 mod contributions;
-mod crypto_usd_quotes;
 mod github_issues;
 pub mod github_pull_request_indexes;
 pub mod github_pull_requests;
@@ -13,7 +12,6 @@ mod projects_pending_contributors;
 mod technologies;
 
 pub use contributions::{Contribution, Repository as ContributionsRepository};
-pub use crypto_usd_quotes::CryptoUsdQuote;
 use diesel::PgConnection;
 pub use github_issues::GithubIssue;
 pub use github_pull_request_indexes::{

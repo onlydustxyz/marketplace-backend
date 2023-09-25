@@ -7,7 +7,7 @@ use event_listeners::models;
 use infrastructure::database::schema::github_repos;
 use serde_json::json;
 
-use crate::context::github_indexer::Context;
+use crate::context::Context;
 
 pub fn marketplace() -> GithubRepo {
 	GithubRepo {

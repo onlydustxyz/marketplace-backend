@@ -1,7 +1,7 @@
 use anyhow::Result;
+use api::models::CryptoUsdQuote;
 use chrono::Utc;
 use domain::{currencies, BudgetId};
-use event_listeners::models::CryptoUsdQuote;
 use fixtures::*;
 use infrastructure::database::{enums::Currency, ImmutableRepository};
 use olog::info;
@@ -9,7 +9,7 @@ use rstest::rstest;
 use rust_decimal_macros::dec;
 use testcontainers::clients::Cli;
 
-use crate::context::{docker, event_listeners::Context};
+use crate::context::{docker, Context};
 
 mod context;
 mod fixtures;

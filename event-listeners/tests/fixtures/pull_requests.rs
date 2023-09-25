@@ -12,7 +12,7 @@ use infrastructure::database::schema::{github_pull_request_indexes, github_pull_
 use serde_json::json;
 
 use super::*;
-use crate::context::github_indexer::Context;
+use crate::context::Context;
 
 pub fn x1144() -> GithubPullRequest {
 	GithubPullRequest {

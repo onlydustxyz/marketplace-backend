@@ -4,6 +4,7 @@ pub use publishable::Publishable;
 pub mod permissions;
 pub use permissions::Permissions;
 
+pub mod listeners;
 pub mod projectors;
 
 mod specifications;

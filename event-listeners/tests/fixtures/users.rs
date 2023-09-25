@@ -6,7 +6,7 @@ use domain::GithubUser;
 use event_listeners::models;
 use infrastructure::database::schema::github_users;
 
-use crate::context::github_indexer::Context;
+use crate::context::Context;
 
 pub fn anthony() -> GithubUser {
 	GithubUser {
