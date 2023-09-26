@@ -25,3 +25,5 @@ thiserror = "1.0.43"
 # Serde
 serde = { version = "1.0.137", features = ["derive"] }
 serde_json = { version = "1.0.81" }
+rust_decimal = { version = "1.29.1" }
+rust_decimal_macros = "1.26"
