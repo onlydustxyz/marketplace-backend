@@ -14,6 +14,26 @@ servers:
     description: Production
 
 paths:
+  /api/v1/version:
+    get:
+      tags:
+        - Version
+      summary: Get API version information
+      operationId: getAPIVersion
+      responses:
+        "200":
+          description: 'API Version'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  releaseDate:
+                    type: string
+                    format: date-time
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
   /api/v1/me:
     get:
       security:
@@ -163,6 +183,28 @@ paths:
         "500":
           $ref: '#/components/responses/InternalServerError'
 
+  /api/v1/me/contributions:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Me
+      summary: Get caller's contributions
+      operationId: getMyContributions
+      description: |
+        Get contributions of the caller.
+      responses:
+        "200":
+          description: 'Contribution list'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContributionListResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedError'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
   /api/v1/technologies:
     get:
       tags:
@@ -275,38 +317,6 @@ paths:
         "500":
           $ref: '#/components/responses/InternalServerError'
 
-  /api/v1/contributions:
-    get:
-      tags:
-        - Contributions
-      summary: Get contributions
-      operationId: getContributions
-      description: |
-        Get contributions of a user/project. At least one query parameter must be set.
-      parameters:
-        - in: query
-          name: projectId
-          schema:
-            $ref: '#/components/schemas/ProjectId'
-        - in: query
-          name: userId
-          schema:
-            $ref: '#/components/schemas/UserId'
-        - in: query
-          name: githubUserId
-          schema:
-            $ref: '#/components/schemas/GithubUserId'
-      responses:
-        "200":
-          description: 'User profile'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ContributionListResponse'
-        "500":
-          $ref: '#/components/responses/InternalServerError'
-
-
   /api/v1/users/{userId}:
     get:
       tags:
@@ -328,6 +338,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserProfileResponse'
+        "404":
+          $ref: '#/components/responses/UserNotFoundError'
         "500":
           $ref: '#/components/responses/InternalServerError'
 
@@ -510,6 +522,45 @@ paths:
         "500":
           $ref: '#/components/responses/InternalServerError'
 
+
+  /api/v1/projects/{projectId}/contributions:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Projects
+      summary: Get contributions of a user within the project
+      operationId: getProjectContributions
+      description: |
+        Get contributions of a user on a given project. The caller must be a leader of the project.
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            $ref: '#/components/schemas/ProjectId'
+        - in: query
+          name: githubUserId
+          required: true
+          schema:
+            $ref: '#/components/schemas/GithubUserId'
+      responses:
+        "200":
+          description: 'Contribution list'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContributionListResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedError'
+        "403":
+          $ref: '#/components/responses/ProjectForbiddenError'
+        "404":
+          $ref: '#/components/responses/ProjectNotFoundError'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+
 components:
   securitySchemes:
     bearerAuth:
@@ -522,36 +573,75 @@ components:
       description: Internal Server Error
       content:
         application/problem+json:
+          example:
+            type: GITHUB_NOT_RESPONDING
+            title: Github API is not responding
+            status: 500
           schema:
             $ref: '#/components/schemas/OnlyDustError'
     UnauthorizedError:
       description: Unauthorized
       content:
         application/problem+json:
+          example:
+            type: NOT_AUTHENTICATED
+            title: You must be authenticated to make this call
+            status: 401
           schema:
             $ref: '#/components/schemas/OnlyDustError'
     ProjectNotFoundError:
       description: Project not found
       content:
         application/problem+json:
+          example:
+            type: PROJECT_NOT_FOUND
+            title: Project not found
+            details: Project 497f6eca-6276-4993-bfeb-53cbbbba6f08 does not exist
+            status: 404
           schema:
             $ref: '#/components/schemas/OnlyDustError'
     ProjectForbiddenError:
       description: Forbidden. The project is not visible to the caller.
       content:
         application/problem+json:
+          example:
+            type: PROJECT_ACCESS_FORBIDDEN
+            title: Access to this project is forbidden
+            details: You do not have the right to access the project 497f6eca-6276-4993-bfeb-53cbbbba6f08.
+            status: 403
           schema:
             $ref: '#/components/schemas/OnlyDustError'
     RewardNotFoundError:
       description: Reward not found
       content:
         application/problem+json:
+          example:
+            type: REWARD_NOT_FOUND
+            title: Reward not found
+            details: Reward 497f6eca-6276-4993-bfeb-53cbbbba6f08 does not exist
+            status: 404
           schema:
             $ref: '#/components/schemas/OnlyDustError'
     RewardForbiddenError:
       description: Forbidden. The reward is not visible to the caller.
       content:
         application/problem+json:
+          example:
+            type: REWARD_ACCESS_FORBIDDEN
+            title: Access to this reward is forbidden
+            details: You do not have the right to access the reward 497f6eca-6276-4993-bfeb-53cbbbba6f08.
+            status: 403
+          schema:
+            $ref: '#/components/schemas/OnlyDustError'
+    UserNotFoundError:
+      description: User not found
+      content:
+        application/problem+json:
+          example:
+            type: USER_NOT_FOUND
+            title: User not found
+            details: User 497f6eca-6276-4993-bfeb-53cbbbba6f08 (could also be a githubUserId here, like 595505) does not exist
+            status: 404
           schema:
             $ref: '#/components/schemas/OnlyDustError'
 
@@ -568,7 +658,7 @@ components:
         type:
           type: string
           description: A code that identifies the problem type.
-          example: BUDGET.OUT_OF_CREDIT
+          example: F.OUT_OF_CREDIT
         title:
           type: string
           description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem.
@@ -626,6 +716,11 @@ components:
       format: uuid
       description: OnlyDust project ID
 
+    ProjectPrettyId:
+      type: string
+      description: OnlyDust project pretty ID that is computed from its name. This ID CAN change over time.
+      example: my-awesome-project
+
     SponsorId:
       type: string
       format: uuid
@@ -637,7 +732,7 @@ components:
       description: OnlyDust reward ID
 
     # RESPONSES ==================================================================
-    UserResponse:
+    UserMinimalistResponse:
       type: object
       required:
         - githubUserId
@@ -662,11 +757,11 @@ components:
           description: Direct URL to user's avatar image
           example: 'https://avatars.githubusercontent.com/u/595505?v=4'
 
-    RegisteredUserResponse:
+    RegisteredUserMinimalistResponse:
       required:
         - id
       allOf:
-        - $ref: '#/components/schemas/UserResponse'
+        - $ref: '#/components/schemas/UserMinimalistResponse'
 
     PersonIdentity:
       type: object
@@ -777,7 +872,7 @@ components:
 
     UserProfileResponse:
       allOf:
-        - $ref: '#/components/schemas/UserResponse'
+        - $ref: '#/components/schemas/UserMinimalistResponse'
         - type: object
           properties:
             location:
@@ -993,6 +1088,7 @@ components:
       type: object
       required:
         - id
+        - prettyId
         - name
         - shortDescription
         - logoUrl
@@ -1006,6 +1102,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/ProjectId'
+        prettyId:
+          $ref: '#/components/schemas/ProjectPrettyId'
         name:
           type: string
           example: Verkle Tries
@@ -1037,7 +1135,7 @@ components:
         leaders:
           type: array
           items:
-            $ref: '#/components/schemas/RegisteredUserResponse'
+            $ref: '#/components/schemas/RegisteredUserMinimalistResponse'
         sponsors:
           type: array
           items:
@@ -1050,6 +1148,7 @@ components:
       type: object
       required:
         - id
+        - prettyId
         - name
         - shortDescription
         - longDescription
@@ -1065,6 +1164,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/ProjectId'
+        prettyId:
+          $ref: '#/components/schemas/ProjectPrettyId'
         name:
           type: string
           example: Verkle Tries
@@ -1110,13 +1211,45 @@ components:
         leaders:
           type: array
           items:
-            $ref: '#/components/schemas/RegisteredUserResponse'
+            $ref: '#/components/schemas/RegisteredUserMinimalistResponse'
         sponsors:
           type: array
           items:
             $ref: '#/components/schemas/SponsorResponse'
         technologies:
           $ref: '#/components/schemas/Technologies'
+
+    ProjectMinimalistResponse:
+      type: object
+      required:
+        - id
+        - prettyId
+        - name
+        - shortDescription
+        - logoUrl
+        - visibility
+      properties:
+        id:
+          $ref: '#/components/schemas/ProjectId'
+        prettyId:
+          $ref: '#/components/schemas/ProjectPrettyId'
+        name:
+          type: string
+          example: Verkle Tries
+        shortDescription:
+          type: string
+          example: A short project description
+        logoUrl:
+          type: string
+          format: url
+          description: Direct URL to project's logo image
+          example: 'https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg'
+        visibility:
+          type: string
+          enum:
+            - public
+            - private
+          description: Is the project visible to anyone?
 
     GithubRepoResponse:
       type: object
@@ -1274,6 +1407,8 @@ components:
           type: string
         status:
           $ref: '#/components/schemas/PullRequestStatus'
+        draft:
+          type: boolean
         createdAt:
           type: string
           format: date-time
@@ -1284,7 +1419,9 @@ components:
           type: string
           format: date-time
         author:
-          $ref: '#/components/schemas/UserResponse'
+          $ref: '#/components/schemas/UserMinimalistResponse'
+        repo:
+          $ref: '#/components/schemas/GithubRepoResponse'
 
     Issue:
       type: object
@@ -1313,7 +1450,9 @@ components:
         commentCount:
           type: integer
         author:
-          $ref: '#/components/schemas/UserResponse'
+          $ref: '#/components/schemas/UserMinimalistResponse'
+        repo:
+          $ref: '#/components/schemas/GithubRepoResponse'
 
     CodeReview:
       type: object
@@ -1323,7 +1462,7 @@ components:
         pullRequestId:
           $ref: '#/components/schemas/PullRequestId'
         reviewer:
-          $ref: '#/components/schemas/UserResponse'
+          $ref: '#/components/schemas/UserMinimalistResponse'
         status:
           $ref: '#/components/schemas/CodeReviewStatus'
         outcome:
@@ -1331,6 +1470,8 @@ components:
         submittedAt:
           type: string
           format: date-time
+        repo:
+          $ref: '#/components/schemas/GithubRepoResponse'
 
 
     PullRequestStatus:
@@ -1383,5 +1524,46 @@ components:
     ContributionResponse:
       type: object
       properties:
-        detailsId:
+        id:
           type: string
+          description: The contribution ID is determined from its content's ID (ie PR / issue / code review ID)
+        createdAt:
+          type: string
+          format: date-time
+        closedAt:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/ContributionStatus'
+        type:
+          $ref: '#/components/schemas/ContributionType'
+        content:
+          oneOf:
+            - $ref: '#/components/schemas/Issue'
+            - $ref: '#/components/schemas/PullRequest'
+            - $ref: '#/components/schemas/CodeReview'
+        project:
+          $ref: '#/components/schemas/ProjectMinimalistResponse'
+        contributor:
+          $ref: '#/components/schemas/UserMinimalistResponse'
+        linkedRewardCount:
+          type: number
+          description: Number of reward items where the purpose matches the content of this contribution.
+
+
+    ContributionType:
+      type: string
+      enum:
+        - ISSUE
+        - PULL_REQUEST
+        - CODE_REVIEW
+        -
+    ContributionStatus:
+      type: string
+      enum:
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+
+
+
