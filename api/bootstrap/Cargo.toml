@@ -88,14 +88,14 @@ rust_decimal_macros = "1.26"
 tokio-retry = "0.3"
 
 # Local dependecies
-domain = { path = "../common/domain", features = ["rocket"] }
-infrastructure = { path = "../common/infrastructure" }
-derive = { path = "../common/derive" }
-presentation = { path = "../common/presentation" }
-olog = { path = "../common/olog" }
+domain = { path = "../../common/domain", features = ["rocket"] }
+infrastructure = { path = "../../common/infrastructure" }
+derive = { path = "../../common/derive" }
+presentation = { path = "../../common/presentation" }
+olog = { path = "../../common/olog" }
 
 [dev-dependencies]
-testing = { path = "../common/testing" }
+testing = { path = "../../common/testing" }
 envtestkit = "1.1.2"
 lazy_static = "1.4.0"
 rstest = "0.15.0"

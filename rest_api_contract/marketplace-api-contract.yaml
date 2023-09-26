@@ -4,13 +4,13 @@ info:
   description: OnlyDust Marketplace API
   version: 1.0.0
 servers:
-  - url: 'http://localhost:8000'
+  - url: "http://localhost:8000"
     description: Local
-  - url: 'https://develop-api.onlydust.xyz'
+  - url: "https://develop-api.onlydust.xyz"
     description: Develop
-  - url: 'https://staging-api.onlydust.xyz'
+  - url: "https://staging-api.onlydust.xyz"
     description: Staging
-  - url: 'https://api.onlydust.xyz'
+  - url: "https://api.onlydust.xyz"
     description: Production
 
 paths:
@@ -22,7 +22,7 @@ paths:
       operationId: getAPIVersion
       responses:
         "200":
-          description: 'API Version'
+          description: "API Version"
           content:
             application/json:
               schema:
@@ -32,12 +32,12 @@ paths:
                     type: string
                     format: date-time
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/me:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Me
       summary: Get caller profile
@@ -46,15 +46,15 @@ paths:
         Get the whole user profile (including private data)
       responses:
         "200":
-          description: 'Profile'
+          description: "Profile"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserProfileResponse'
+                $ref: "#/components/schemas/UserProfileResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
     put:
       tags:
         - Me
@@ -63,27 +63,27 @@ paths:
       description: |
         Set the whole user profile (including private data)
       requestBody:
-        description: 'User profile'
+        description: "User profile"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserProfileRequest'
+              $ref: "#/components/schemas/UserProfileRequest"
       responses:
         "200":
-          description: 'User profile'
+          description: "User profile"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserProfileResponse'
+                $ref: "#/components/schemas/UserProfileResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/me/payout-info:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Me
       summary: Caller payout info
@@ -92,18 +92,18 @@ paths:
         Get payout info of the caller
       responses:
         "200":
-          description: 'Payout information'
+          description: "Payout information"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserPayoutInformation'
+                $ref: "#/components/schemas/UserPayoutInformation"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
     put:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Me
       summary: Update caller payout info
@@ -111,27 +111,27 @@ paths:
       description: |
         Set payout info of the caller
       requestBody:
-        description: 'Payout information'
+        description: "Payout information"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserPayoutInformation'
+              $ref: "#/components/schemas/UserPayoutInformation"
       responses:
         "200":
-          description: 'Payout information'
+          description: "Payout information"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserPayoutInformation'
+                $ref: "#/components/schemas/UserPayoutInformation"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/me/leaded-projects:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Me
       summary: Get projects leaded by the caller
@@ -151,20 +151,20 @@ paths:
               - CONTRIBUTOR_COUNT
       responses:
         "200":
-          description: 'List of projects'
+          description: "List of projects"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectListResponse'
+                $ref: "#/components/schemas/ProjectListResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/me/rewards:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Me
       summary: Get caller's rewards
@@ -173,20 +173,20 @@ paths:
         Get the list of all rewards where the recipient is the caller
       responses:
         "200":
-          description: 'List of rewards'
+          description: "List of rewards"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RewardListResponse'
+                $ref: "#/components/schemas/RewardListResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/me/contributions:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Me
       summary: Get caller's contributions
@@ -195,15 +195,15 @@ paths:
         Get contributions of the caller.
       responses:
         "200":
-          description: 'Contribution list'
+          description: "Contribution list"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContributionListResponse'
+                $ref: "#/components/schemas/ContributionListResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/technologies:
     get:
@@ -215,18 +215,18 @@ paths:
         Get the list of all technologies (languages, frameworks, tools, etc.) referenced by OnlyDust
       responses:
         "200":
-          description: 'Technologies'
+          description: "Technologies"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Technologies'
+                $ref: "#/components/schemas/Technologies"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/rewards/{rewardId}:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Rewards
       summary: Get reward details
@@ -238,25 +238,25 @@ paths:
           name: rewardId
           required: true
           schema:
-            $ref: '#/components/schemas/RewardId'
+            $ref: "#/components/schemas/RewardId"
       responses:
         "200":
-          description: 'Reward'
+          description: "Reward"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RewardResponse'
+                $ref: "#/components/schemas/RewardResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          $ref: '#/components/responses/RewardForbiddenError'
+          $ref: "#/components/responses/RewardForbiddenError"
         "404":
-          $ref: '#/components/responses/RewardNotFoundError'
+          $ref: "#/components/responses/RewardNotFoundError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
     put:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Rewards
       summary: Update reward
@@ -268,31 +268,31 @@ paths:
           name: rewardId
           required: true
           schema:
-            $ref: '#/components/schemas/RewardId'
+            $ref: "#/components/schemas/RewardId"
       requestBody:
-        description: 'Updated reward'
+        description: "Updated reward"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RewardRequest'
+              $ref: "#/components/schemas/RewardRequest"
       responses:
         "200":
-          description: 'Reward'
+          description: "Reward"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RewardResponse'
+                $ref: "#/components/schemas/RewardResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          $ref: '#/components/responses/RewardForbiddenError'
+          $ref: "#/components/responses/RewardForbiddenError"
         "404":
-          $ref: '#/components/responses/RewardNotFoundError'
+          $ref: "#/components/responses/RewardNotFoundError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
     delete:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Rewards
       summary: Cancel reward
@@ -304,18 +304,18 @@ paths:
           name: rewardId
           required: true
           schema:
-            $ref: '#/components/schemas/RewardId'
+            $ref: "#/components/schemas/RewardId"
       responses:
         "204":
-          description: 'The reward was cancelled successfully.'
+          description: "The reward was cancelled successfully."
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          $ref: '#/components/responses/RewardForbiddenError'
+          $ref: "#/components/responses/RewardForbiddenError"
         "404":
-          $ref: '#/components/responses/RewardNotFoundError'
+          $ref: "#/components/responses/RewardNotFoundError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/users/{userId}:
     get:
@@ -330,24 +330,24 @@ paths:
           name: userId
           required: true
           schema:
-            $ref: '#/components/schemas/UserId'
+            $ref: "#/components/schemas/UserId"
       responses:
         "200":
-          description: 'User profile'
+          description: "User profile"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserProfileResponse'
+                $ref: "#/components/schemas/UserProfileResponse"
         "404":
-          $ref: '#/components/responses/UserNotFoundError'
+          $ref: "#/components/responses/UserNotFoundError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/projects:
     get:
       security:
         - {}
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Projects
       summary: Get all projects
@@ -367,20 +367,41 @@ paths:
               - CONTRIBUTOR_COUNT
       responses:
         "200":
-          description: 'List of projects'
+          description: "List of projects"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectListResponse'
+                $ref: "#/components/schemas/ProjectListResponse"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      security:
+        - apiKey: []
+      tags:
+        - Projects
+      summary: Create new project
+      operationId: createProject
+      description: |
+        Create a new project together with an optional budget
+      requestBody:
 
+      responses:
+        "200":
+          description: "The project"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectResponse"
+        "403":
+          $ref: "#/components/responses/ProjectForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/projects/{projectId}:
     get:
       security:
         - {}
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Projects
       summary: Get project details
@@ -392,26 +413,26 @@ paths:
           name: projectId
           required: true
           schema:
-            $ref: '#/components/schemas/ProjectId'
+            $ref: "#/components/schemas/ProjectId"
       responses:
         "200":
-          description: 'The project'
+          description: "The project"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectResponse'
+                $ref: "#/components/schemas/ProjectResponse"
         "403":
-          $ref: '#/components/responses/ProjectForbiddenError'
+          $ref: "#/components/responses/ProjectForbiddenError"
         "404":
-          $ref: '#/components/responses/ProjectNotFoundError'
+          $ref: "#/components/responses/ProjectNotFoundError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/projects/{projectId}/contributors:
     get:
       security:
         - {}
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Projects
       summary: Get all project contributors
@@ -423,7 +444,7 @@ paths:
           name: projectId
           required: true
           schema:
-            $ref: '#/components/schemas/ProjectId'
+            $ref: "#/components/schemas/ProjectId"
         - in: query
           name: sort
           description: Sort order
@@ -441,23 +462,22 @@ paths:
             type: boolean
       responses:
         "200":
-          description: 'List of project contributors'
+          description: "List of project contributors"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContributorListResponse'
+                $ref: "#/components/schemas/ContributorListResponse"
         "403":
-          $ref: '#/components/responses/ProjectForbiddenError'
+          $ref: "#/components/responses/ProjectForbiddenError"
         "404":
-          $ref: '#/components/responses/ProjectNotFoundError'
+          $ref: "#/components/responses/ProjectNotFoundError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
-
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/projects/{projectId}/rewards:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Projects
       summary: Get project rewards
@@ -469,25 +489,25 @@ paths:
           name: projectId
           required: true
           schema:
-            $ref: '#/components/schemas/ProjectId'
+            $ref: "#/components/schemas/ProjectId"
       responses:
         "200":
-          description: 'List of rewards'
+          description: "List of rewards"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RewardListResponse'
+                $ref: "#/components/schemas/RewardListResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          $ref: '#/components/responses/ProjectForbiddenError'
+          $ref: "#/components/responses/ProjectForbiddenError"
         "404":
-          $ref: '#/components/responses/ProjectNotFoundError'
+          $ref: "#/components/responses/ProjectNotFoundError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
+          $ref: "#/components/responses/InternalServerError"
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Projects
       summary: Create reward
@@ -499,34 +519,33 @@ paths:
           name: projectId
           required: true
           schema:
-            $ref: '#/components/schemas/ProjectId'
+            $ref: "#/components/schemas/ProjectId"
       requestBody:
-        description: 'New reward'
+        description: "New reward"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RewardRequest'
+              $ref: "#/components/schemas/RewardRequest"
       responses:
         "200":
-          description: 'Reward'
+          description: "Reward"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RewardResponse'
+                $ref: "#/components/schemas/RewardResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          $ref: '#/components/responses/ProjectForbiddenError'
+          $ref: "#/components/responses/ProjectForbiddenError"
         "404":
-          $ref: '#/components/responses/ProjectNotFoundError'
+          $ref: "#/components/responses/ProjectNotFoundError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
-
+          $ref: "#/components/responses/InternalServerError"
 
   /api/v1/projects/{projectId}/contributions:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Projects
       summary: Get contributions of a user within the project
@@ -538,28 +557,27 @@ paths:
           name: projectId
           required: true
           schema:
-            $ref: '#/components/schemas/ProjectId'
+            $ref: "#/components/schemas/ProjectId"
         - in: query
           name: githubUserId
           required: true
           schema:
-            $ref: '#/components/schemas/GithubUserId'
+            $ref: "#/components/schemas/GithubUserId"
       responses:
         "200":
-          description: 'Contribution list'
+          description: "Contribution list"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContributionListResponse'
+                $ref: "#/components/schemas/ContributionListResponse"
         "401":
-          $ref: '#/components/responses/UnauthorizedError'
+          $ref: "#/components/responses/UnauthorizedError"
         "403":
-          $ref: '#/components/responses/ProjectForbiddenError'
+          $ref: "#/components/responses/ProjectForbiddenError"
         "404":
-          $ref: '#/components/responses/ProjectNotFoundError'
+          $ref: "#/components/responses/ProjectNotFoundError"
         "500":
-          $ref: '#/components/responses/InternalServerError'
-
+          $ref: "#/components/responses/InternalServerError"
 
 components:
   securitySchemes:
@@ -567,6 +585,10 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    apiKey:
+      type: apiKey
+      in: header
+      name: Api-Key
 
   responses:
     InternalServerError:
@@ -578,7 +600,7 @@ components:
             title: Github API is not responding
             status: 500
           schema:
-            $ref: '#/components/schemas/OnlyDustError'
+            $ref: "#/components/schemas/OnlyDustError"
     UnauthorizedError:
       description: Unauthorized
       content:
@@ -588,7 +610,7 @@ components:
             title: You must be authenticated to make this call
             status: 401
           schema:
-            $ref: '#/components/schemas/OnlyDustError'
+            $ref: "#/components/schemas/OnlyDustError"
     ProjectNotFoundError:
       description: Project not found
       content:
@@ -599,7 +621,7 @@ components:
             details: Project 497f6eca-6276-4993-bfeb-53cbbbba6f08 does not exist
             status: 404
           schema:
-            $ref: '#/components/schemas/OnlyDustError'
+            $ref: "#/components/schemas/OnlyDustError"
     ProjectForbiddenError:
       description: Forbidden. The project is not visible to the caller.
       content:
@@ -610,7 +632,7 @@ components:
             details: You do not have the right to access the project 497f6eca-6276-4993-bfeb-53cbbbba6f08.
             status: 403
           schema:
-            $ref: '#/components/schemas/OnlyDustError'
+            $ref: "#/components/schemas/OnlyDustError"
     RewardNotFoundError:
       description: Reward not found
       content:
@@ -621,7 +643,7 @@ components:
             details: Reward 497f6eca-6276-4993-bfeb-53cbbbba6f08 does not exist
             status: 404
           schema:
-            $ref: '#/components/schemas/OnlyDustError'
+            $ref: "#/components/schemas/OnlyDustError"
     RewardForbiddenError:
       description: Forbidden. The reward is not visible to the caller.
       content:
@@ -632,7 +654,7 @@ components:
             details: You do not have the right to access the reward 497f6eca-6276-4993-bfeb-53cbbbba6f08.
             status: 403
           schema:
-            $ref: '#/components/schemas/OnlyDustError'
+            $ref: "#/components/schemas/OnlyDustError"
     UserNotFoundError:
       description: User not found
       content:
@@ -643,7 +665,7 @@ components:
             details: User 497f6eca-6276-4993-bfeb-53cbbbba6f08 (could also be a githubUserId here, like 595505) does not exist
             status: 404
           schema:
-            $ref: '#/components/schemas/OnlyDustError'
+            $ref: "#/components/schemas/OnlyDustError"
 
   schemas:
     # ERRORS ==================================================================
@@ -675,10 +697,9 @@ components:
           type: object
           description: Arbitrary data that is useful to identifies the specific occurrence of the problem.
           example:
-            - traceId: '19049023845982314'
-              budgetId: '497f6eca-6276-4993-bfeb-53cbbbba6f08'
+            - traceId: "19049023845982314"
+              budgetId: "497f6eca-6276-4993-bfeb-53cbbbba6f08"
               balance: 300
-
 
     # VALUE OBJECTS ==================================================================
     UserId:
@@ -741,9 +762,9 @@ components:
         - avatarUrl
       properties:
         id:
-          $ref: '#/components/schemas/UserId'
+          $ref: "#/components/schemas/UserId"
         githubUserId:
-          $ref: '#/components/schemas/GithubUserId'
+          $ref: "#/components/schemas/GithubUserId"
         login:
           type: string
           description: User's Github login
@@ -755,13 +776,13 @@ components:
           type: string
           format: url
           description: Direct URL to user's avatar image
-          example: 'https://avatars.githubusercontent.com/u/595505?v=4'
+          example: "https://avatars.githubusercontent.com/u/595505?v=4"
 
     RegisteredUserMinimalistResponse:
       required:
         - id
       allOf:
-        - $ref: '#/components/schemas/UserMinimalistResponse'
+        - $ref: "#/components/schemas/UserMinimalistResponse"
 
     PersonIdentity:
       type: object
@@ -784,15 +805,15 @@ components:
           description: SIRET or equivalent
           example: 1873-4987-41234
         owner:
-          $ref: '#/components/schemas/PersonIdentity'
+          $ref: "#/components/schemas/PersonIdentity"
 
     UserPayoutInformation:
       type: object
       properties:
         identity:
           oneOf:
-            - $ref: '#/components/schemas/PersonIdentity'
-            - $ref: '#/components/schemas/CompanyIdentity'
+            - $ref: "#/components/schemas/PersonIdentity"
+            - $ref: "#/components/schemas/CompanyIdentity"
         location:
           type: object
           properties:
@@ -856,7 +877,7 @@ components:
           type: string
           description: User website as in Github profile
         technologies:
-          $ref: '#/components/schemas/Technologies'
+          $ref: "#/components/schemas/Technologies"
         cover:
           type: string
           enum:
@@ -868,11 +889,11 @@ components:
         contacts:
           type: array
           items:
-            $ref: '#/components/schemas/ContactInformation'
+            $ref: "#/components/schemas/ContactInformation"
 
     UserProfileResponse:
       allOf:
-        - $ref: '#/components/schemas/UserMinimalistResponse'
+        - $ref: "#/components/schemas/UserMinimalistResponse"
         - type: object
           properties:
             location:
@@ -887,7 +908,7 @@ components:
               type: string
               description: User website as in Github profile
             technologies:
-              $ref: '#/components/schemas/Technologies'
+              $ref: "#/components/schemas/Technologies"
             createdAt:
               type: string
               format: date-time
@@ -911,13 +932,13 @@ components:
             contacts:
               type: array
               items:
-                $ref: '#/components/schemas/ContactInformation'
+                $ref: "#/components/schemas/ContactInformation"
             projects:
               type: array
               items:
                 properties:
                   id:
-                    $ref: '#/components/schemas/ProjectId'
+                    $ref: "#/components/schemas/ProjectId"
                   name:
                     type: string
                     example: Verkle Tries
@@ -925,7 +946,7 @@ components:
                     type: string
                     format: url
                     description: Direct URL to project's logo image
-                    example: 'https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg'
+                    example: "https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg"
                   contributorCount:
                     type: integer
                     description: Total number of contributors within the project
@@ -997,7 +1018,6 @@ components:
             - public
             - private
 
-
     ContributorListResponse:
       type: object
       required:
@@ -1006,7 +1026,7 @@ components:
         contributors:
           type: array
           items:
-            $ref: '#/components/schemas/ContributorListItemResponse'
+            $ref: "#/components/schemas/ContributorListItemResponse"
 
     ContributorListItemResponse:
       type: object
@@ -1020,9 +1040,9 @@ components:
         - earned
       properties:
         id:
-          $ref: '#/components/schemas/UserId'
+          $ref: "#/components/schemas/UserId"
         githubUserId:
-          $ref: '#/components/schemas/GithubUserId'
+          $ref: "#/components/schemas/GithubUserId"
         login:
           type: string
           description: User's Github login
@@ -1031,7 +1051,7 @@ components:
           type: string
           format: url
           description: Direct URL to user's avatar image
-          example: 'https://avatars.githubusercontent.com/u/595505?v=4'
+          example: "https://avatars.githubusercontent.com/u/595505?v=4"
         contributionCount:
           type: integer
           description: Total number of contributions the contributor made on this project.
@@ -1058,7 +1078,7 @@ components:
         - logoUrl
       properties:
         id:
-          $ref: '#/components/schemas/SponsorId'
+          $ref: "#/components/schemas/SponsorId"
         name:
           type: string
           description: Sponsor name
@@ -1067,12 +1087,12 @@ components:
           type: string
           format: url
           description: URL of sponsor's website
-          example: 'https://ethereum.org'
+          example: "https://ethereum.org"
         logoUrl:
           type: string
           format: url
           description: Direct URL to sponsor's logo image
-          example: 'https://onlydust-app-images.s3.eu-west-1.amazonaws.com/8506434858363286425.png'
+          example: "https://onlydust-app-images.s3.eu-west-1.amazonaws.com/8506434858363286425.png"
 
     ProjectListResponse:
       type: object
@@ -1082,7 +1102,7 @@ components:
         projects:
           type: array
           items:
-            $ref: '#/components/schemas/ProjectListItemResponse'
+            $ref: "#/components/schemas/ProjectListItemResponse"
 
     ProjectListItemResponse:
       type: object
@@ -1101,9 +1121,9 @@ components:
         - technologies
       properties:
         id:
-          $ref: '#/components/schemas/ProjectId'
+          $ref: "#/components/schemas/ProjectId"
         prettyId:
-          $ref: '#/components/schemas/ProjectPrettyId'
+          $ref: "#/components/schemas/ProjectPrettyId"
         name:
           type: string
           example: Verkle Tries
@@ -1114,7 +1134,7 @@ components:
           type: string
           format: url
           description: Direct URL to project's logo image
-          example: 'https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg'
+          example: "https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg"
         hiring:
           type: boolean
           description: Is the project currently hiring?
@@ -1135,14 +1155,13 @@ components:
         leaders:
           type: array
           items:
-            $ref: '#/components/schemas/RegisteredUserMinimalistResponse'
+            $ref: "#/components/schemas/RegisteredUserMinimalistResponse"
         sponsors:
           type: array
           items:
-            $ref: '#/components/schemas/SponsorResponse'
+            $ref: "#/components/schemas/SponsorResponse"
         technologies:
-          $ref: '#/components/schemas/Technologies'
-
+          $ref: "#/components/schemas/Technologies"
 
     ProjectResponse:
       type: object
@@ -1163,9 +1182,9 @@ components:
         - technologies
       properties:
         id:
-          $ref: '#/components/schemas/ProjectId'
+          $ref: "#/components/schemas/ProjectId"
         prettyId:
-          $ref: '#/components/schemas/ProjectPrettyId'
+          $ref: "#/components/schemas/ProjectPrettyId"
         name:
           type: string
           example: Verkle Tries
@@ -1179,12 +1198,12 @@ components:
           type: string
           format: url
           description: Direct URL to project's logo image
-          example: 'https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg'
+          example: "https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg"
         moreInfoUrl:
           type: string
           format: url
           description: External link to get more information about the project
-          example: 'https://t.me/my-super-project'
+          example: "https://t.me/my-super-project"
         hiring:
           type: boolean
           description: Is the project currently hiring?
@@ -1203,21 +1222,21 @@ components:
           description: The top 3 contributors (by contribution count) of this project
           maxItems: 3
           items:
-            $ref: '#/components/schemas/ContributorListItemResponse'
+            $ref: "#/components/schemas/ContributorListItemResponse"
         repos:
           type: array
           items:
-            $ref: '#/components/schemas/GithubRepoResponse'
+            $ref: "#/components/schemas/GithubRepoResponse"
         leaders:
           type: array
           items:
-            $ref: '#/components/schemas/RegisteredUserMinimalistResponse'
+            $ref: "#/components/schemas/RegisteredUserMinimalistResponse"
         sponsors:
           type: array
           items:
-            $ref: '#/components/schemas/SponsorResponse'
+            $ref: "#/components/schemas/SponsorResponse"
         technologies:
-          $ref: '#/components/schemas/Technologies'
+          $ref: "#/components/schemas/Technologies"
 
     ProjectMinimalistResponse:
       type: object
@@ -1230,9 +1249,9 @@ components:
         - visibility
       properties:
         id:
-          $ref: '#/components/schemas/ProjectId'
+          $ref: "#/components/schemas/ProjectId"
         prettyId:
-          $ref: '#/components/schemas/ProjectPrettyId'
+          $ref: "#/components/schemas/ProjectPrettyId"
         name:
           type: string
           example: Verkle Tries
@@ -1243,7 +1262,7 @@ components:
           type: string
           format: url
           description: Direct URL to project's logo image
-          example: 'https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg'
+          example: "https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg"
         visibility:
           type: string
           enum:
@@ -1263,7 +1282,7 @@ components:
         - hasIssues
       properties:
         id:
-          $ref: '#/components/schemas/GithubRepoId'
+          $ref: "#/components/schemas/GithubRepoId"
         owner:
           type: string
           description: Repo owner on Github
@@ -1311,7 +1330,7 @@ components:
         rewards:
           type: array
           items:
-            $ref: '#/components/schemas/RewardResponse'
+            $ref: "#/components/schemas/RewardResponse"
 
     RewardResponse:
       type: object
@@ -1323,7 +1342,7 @@ components:
         - items
       properties:
         id:
-          $ref: '#/components/schemas/RewardId'
+          $ref: "#/components/schemas/RewardId"
         requestedAt:
           type: string
           format: date-time
@@ -1332,12 +1351,12 @@ components:
           type: number
           description: Currency amount
         currency:
-          $ref: '#/components/schemas/Currency'
+          $ref: "#/components/schemas/Currency"
         items:
           type: array
           minItems: 1
           items:
-            $ref: '#/components/schemas/RewardItemResponse'
+            $ref: "#/components/schemas/RewardItemResponse"
 
     RewardType:
       type: string
@@ -1357,12 +1376,12 @@ components:
           type: number
           description: Currency amount
         currency:
-          $ref: '#/components/schemas/Currency'
+          $ref: "#/components/schemas/Currency"
         items:
           type: array
           maxItems: 1
           items:
-            $ref: '#/components/schemas/RewardItemRequest'
+            $ref: "#/components/schemas/RewardItemRequest"
 
     RewardItemRequest:
       type: object
@@ -1371,12 +1390,12 @@ components:
         - purposeId
       properties:
         type:
-          $ref: '#/components/schemas/RewardType'
+          $ref: "#/components/schemas/RewardType"
         purposeId:
           oneOf:
-            - $ref: '#/components/schemas/PullRequestId'
-            - $ref: '#/components/schemas/IssueId'
-            - $ref: '#/components/schemas/CodeReviewId'
+            - $ref: "#/components/schemas/PullRequestId"
+            - $ref: "#/components/schemas/IssueId"
+            - $ref: "#/components/schemas/CodeReviewId"
 
     RewardItemResponse:
       type: object
@@ -1385,18 +1404,18 @@ components:
         - purpose
       properties:
         type:
-          $ref: '#/components/schemas/RewardType'
+          $ref: "#/components/schemas/RewardType"
         purpose:
           oneOf:
-            - $ref: '#/components/schemas/PullRequest'
-            - $ref: '#/components/schemas/Issue'
-            - $ref: '#/components/schemas/CodeReview'
+            - $ref: "#/components/schemas/PullRequest"
+            - $ref: "#/components/schemas/Issue"
+            - $ref: "#/components/schemas/CodeReview"
 
     PullRequest:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/PullRequestId'
+          $ref: "#/components/schemas/PullRequestId"
         number:
           type: integer
           description: Pull request number on Github
@@ -1406,7 +1425,7 @@ components:
         htmlUrl:
           type: string
         status:
-          $ref: '#/components/schemas/PullRequestStatus'
+          $ref: "#/components/schemas/PullRequestStatus"
         draft:
           type: boolean
         createdAt:
@@ -1419,15 +1438,15 @@ components:
           type: string
           format: date-time
         author:
-          $ref: '#/components/schemas/UserMinimalistResponse'
+          $ref: "#/components/schemas/UserMinimalistResponse"
         repo:
-          $ref: '#/components/schemas/GithubRepoResponse'
+          $ref: "#/components/schemas/GithubRepoResponse"
 
     Issue:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/IssueId'
+          $ref: "#/components/schemas/IssueId"
         number:
           type: integer
           description: Issue number on Github
@@ -1437,7 +1456,7 @@ components:
         htmlUrl:
           type: string
         status:
-          $ref: '#/components/schemas/IssueStatus'
+          $ref: "#/components/schemas/IssueStatus"
         createdAt:
           type: string
           format: date-time
@@ -1450,29 +1469,28 @@ components:
         commentCount:
           type: integer
         author:
-          $ref: '#/components/schemas/UserMinimalistResponse'
+          $ref: "#/components/schemas/UserMinimalistResponse"
         repo:
-          $ref: '#/components/schemas/GithubRepoResponse'
+          $ref: "#/components/schemas/GithubRepoResponse"
 
     CodeReview:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/CodeReviewId'
+          $ref: "#/components/schemas/CodeReviewId"
         pullRequestId:
-          $ref: '#/components/schemas/PullRequestId'
+          $ref: "#/components/schemas/PullRequestId"
         reviewer:
-          $ref: '#/components/schemas/UserMinimalistResponse'
+          $ref: "#/components/schemas/UserMinimalistResponse"
         status:
-          $ref: '#/components/schemas/CodeReviewStatus'
+          $ref: "#/components/schemas/CodeReviewStatus"
         outcome:
-          $ref: '#/components/schemas/CodeReviewOutcome'
+          $ref: "#/components/schemas/CodeReviewOutcome"
         submittedAt:
           type: string
           format: date-time
         repo:
-          $ref: '#/components/schemas/GithubRepoResponse'
-
+          $ref: "#/components/schemas/GithubRepoResponse"
 
     PullRequestStatus:
       type: string
@@ -1519,7 +1537,7 @@ components:
         contributions:
           type: array
           items:
-            $ref: '#/components/schemas/ContributionResponse'
+            $ref: "#/components/schemas/ContributionResponse"
 
     ContributionResponse:
       type: object
@@ -1534,22 +1552,21 @@ components:
           type: string
           format: date-time
         status:
-          $ref: '#/components/schemas/ContributionStatus'
+          $ref: "#/components/schemas/ContributionStatus"
         type:
-          $ref: '#/components/schemas/ContributionType'
+          $ref: "#/components/schemas/ContributionType"
         content:
           oneOf:
-            - $ref: '#/components/schemas/Issue'
-            - $ref: '#/components/schemas/PullRequest'
-            - $ref: '#/components/schemas/CodeReview'
+            - $ref: "#/components/schemas/Issue"
+            - $ref: "#/components/schemas/PullRequest"
+            - $ref: "#/components/schemas/CodeReview"
         project:
-          $ref: '#/components/schemas/ProjectMinimalistResponse'
+          $ref: "#/components/schemas/ProjectMinimalistResponse"
         contributor:
-          $ref: '#/components/schemas/UserMinimalistResponse'
+          $ref: "#/components/schemas/UserMinimalistResponse"
         linkedRewardCount:
           type: number
           description: Number of reward items where the purpose matches the content of this contribution.
-
 
     ContributionType:
       type: string
@@ -1564,6 +1581,3 @@ components:
         - IN_PROGRESS
         - COMPLETED
         - CANCELLED
-
-
-

@@ -3,7 +3,7 @@
 resolver = "2"
 
 members = [
-	"api",
+	"api/bootstrap",
 	"common/derive",
 	"common/domain",
 	"common/infrastructure",
