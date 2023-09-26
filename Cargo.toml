@@ -3,7 +3,7 @@
 resolver = "2"
 
 members = [
-	"api",
+	"api/bootstrap",
 	"common/derive",
 	"common/domain",
 	"common/infrastructure",
@@ -11,5 +11,5 @@ members = [
 	"common/testing",
 	"common/olog",
 	"github-indexer",
-	"application/rest-api-adapter",
+	"api/application/rest-api-adapter",
 ]

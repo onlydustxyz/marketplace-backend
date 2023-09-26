@@ -202,6 +202,7 @@ dependencies = [
  "olog",
  "presentation",
  "reqwest",
+ "rest_api_adapter",
  "rocket",
  "rstest",
  "rusoto_core",
