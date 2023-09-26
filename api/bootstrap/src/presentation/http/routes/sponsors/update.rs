@@ -5,7 +5,7 @@ use serde::{Deserialize, Deserializer};
 use url::Url;
 use uuid::Uuid;
 
-use crate::{application, presentation::http::dto::NonEmptyTrimmedString};
+use crate::{use_cases, presentation::http::dto::NonEmptyTrimmedString};
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -22,10 +22,10 @@ pub struct Request {
 	format = "application/json"
 )]
 pub async fn update_sponsor(
-	_api_key: ApiKey,
-	sponsor_id: Uuid,
-	request: Json<Request>,
-	usecase: application::sponsor::update::Usecase,
+    _api_key: ApiKey,
+    sponsor_id: Uuid,
+    request: Json<Request>,
+    usecase: use_cases::sponsor::update::Usecase,
 ) -> Result<(), HttpApiProblem> {
 	let Request {
 		name,

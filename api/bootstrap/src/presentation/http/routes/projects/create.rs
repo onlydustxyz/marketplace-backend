@@ -6,7 +6,7 @@ use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
-use crate::{application, presentation::http::dto};
+use crate::{use_cases, presentation::http::dto};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -33,7 +33,7 @@ pub struct Request {
 pub async fn create_project(
 	_api_key: ApiKey,
 	request: Json<Request>,
-	usecase: application::project::create::Usecase,
+	usecase: use_cases::project::create::Usecase,
 ) -> Result<Json<Response>, HttpApiProblem> {
 	let Request {
 		name,

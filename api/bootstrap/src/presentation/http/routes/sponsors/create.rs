@@ -5,7 +5,7 @@ use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
-use crate::{application, presentation::http::dto::NonEmptyTrimmedString};
+use crate::{use_cases, presentation::http::dto::NonEmptyTrimmedString};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -23,9 +23,9 @@ pub struct Request {
 
 #[post("/sponsors", data = "<request>", format = "application/json")]
 pub async fn create_sponsor(
-	_api_key: ApiKey,
-	request: Json<Request>,
-	usecase: application::sponsor::create::Usecase,
+    _api_key: ApiKey,
+    request: Json<Request>,
+    usecase: use_cases::sponsor::create::Usecase,
 ) -> Result<Json<Response>, HttpApiProblem> {
 	let Request {
 		name,

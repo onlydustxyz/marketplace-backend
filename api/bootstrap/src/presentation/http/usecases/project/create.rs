@@ -5,7 +5,7 @@ use rocket::{
 	Request,
 };
 
-use crate::{application::project::create::Usecase, presentation::http::usecases::FromRocketState};
+use crate::{use_cases::project::create::Usecase, presentation::http::usecases::FromRocketState};
 
 #[async_trait]
 impl<'r> FromRequest<'r> for Usecase {

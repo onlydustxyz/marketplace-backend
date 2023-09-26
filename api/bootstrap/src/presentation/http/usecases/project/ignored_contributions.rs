@@ -6,8 +6,8 @@ use rocket::{
 };
 
 use crate::{
-	application::project::ignored_contributions::Usecase,
-	presentation::http::usecases::FromRocketState,
+    use_cases::project::ignored_contributions::Usecase,
+    presentation::http::usecases::FromRocketState,
 };
 
 #[async_trait]

@@ -8,8 +8,8 @@ use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::{
-	application, domain::permissions::IntoPermission,
-	presentation::http::routes::issues::dto::Response,
+    use_cases, domain::permissions::IntoPermission,
+    presentation::http::routes::issues::dto::Response,
 };
 
 #[derive(Debug, Deserialize)]
@@ -23,12 +23,12 @@ pub struct Request {
 
 #[post("/issues", data = "<request>", format = "application/json")]
 pub async fn create_and_close_issue(
-	_api_key: ApiKey,
-	claims: Claims,
-	role: Role,
-	request: Json<Request>,
-	create_github_issue_usecase: &State<application::dusty_bot::create_and_close_issue::Usecase>,
-	payment_repository: &State<AggregateRepository<Payment>>,
+    _api_key: ApiKey,
+    claims: Claims,
+    role: Role,
+    request: Json<Request>,
+    create_github_issue_usecase: &State<use_cases::dusty_bot::create_and_close_issue::Usecase>,
+    payment_repository: &State<AggregateRepository<Payment>>,
 ) -> Result<Json<Response>, HttpApiProblem> {
 	let caller_id = claims.user_id;
 

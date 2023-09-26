@@ -225,6 +225,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "api_domain"
+version = "0.1.0"
+dependencies = [
+ "url",
+]
+
+[[package]]
 name = "arc-swap"
 version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3956,9 +3963,11 @@ name = "rest_api_adapter"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "api_domain",
  "domain",
  "http-api-problem",
  "olog",
+ "presentation",
  "rocket",
  "rust_decimal",
  "rust_decimal_macros",

@@ -5,18 +5,18 @@ use presentation::http::guards::{ApiKey, Claims, Role};
 use rocket::State;
 use uuid::Uuid;
 
-use crate::{application, domain::permissions::IntoPermission};
+use crate::{use_cases, domain::permissions::IntoPermission};
 
 #[allow(clippy::result_large_err)]
 #[post("/projects/<project_id>/contributions/<contribution_id>/ignore")]
 pub fn ignore(
-	_api_key: ApiKey,
-	project_id: Uuid,
-	contribution_id: String,
-	claims: Claims,
-	role: Role,
-	ignored_contributions_usecase: application::project::ignored_contributions::Usecase,
-	payment_repository: &State<AggregateRepository<Payment>>,
+    _api_key: ApiKey,
+    project_id: Uuid,
+    contribution_id: String,
+    claims: Claims,
+    role: Role,
+    ignored_contributions_usecase: use_cases::project::ignored_contributions::Usecase,
+    payment_repository: &State<AggregateRepository<Payment>>,
 ) -> Result<(), HttpApiProblem> {
 	let project_id = project_id.into();
 	let caller_id = claims.user_id;
@@ -47,13 +47,13 @@ pub fn ignore(
 #[allow(clippy::result_large_err)]
 #[delete("/projects/<project_id>/contributions/<contribution_id>/ignore")]
 pub fn unignore(
-	_api_key: ApiKey,
-	project_id: Uuid,
-	contribution_id: String,
-	claims: Claims,
-	role: Role,
-	ignored_contributions_usecase: application::project::ignored_contributions::Usecase,
-	payment_repository: &State<AggregateRepository<Payment>>,
+    _api_key: ApiKey,
+    project_id: Uuid,
+    contribution_id: String,
+    claims: Claims,
+    role: Role,
+    ignored_contributions_usecase: use_cases::project::ignored_contributions::Usecase,
+    payment_repository: &State<AggregateRepository<Payment>>,
 ) -> Result<(), HttpApiProblem> {
 	let project_id = project_id.into();
 	let caller_id = claims.user_id;

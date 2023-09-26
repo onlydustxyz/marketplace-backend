@@ -12,7 +12,7 @@ use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::{application, infrastructure::web3::ens, presentation::http};
+use crate::{use_cases, infrastructure::web3::ens, presentation::http};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -36,11 +36,11 @@ pub struct Request {
 	format = "application/json"
 )]
 pub async fn create(
-	_api_key: ApiKey,
-	payment_id: Uuid,
-	request: Json<Request>,
-	ens: &State<Arc<ens::Client>>,
-	process_payment_usecase: application::payment::process::Usecase,
+    _api_key: ApiKey,
+    payment_id: Uuid,
+    request: Json<Request>,
+    ens: &State<Arc<ens::Client>>,
+    process_payment_usecase: use_cases::payment::process::Usecase,
 ) -> Result<Json<Response>, HttpApiProblem> {
 	let Request {
 		amount,

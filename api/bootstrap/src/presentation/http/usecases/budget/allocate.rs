@@ -6,7 +6,7 @@ use rocket::{
 };
 
 use crate::{
-	application::budget::allocate::Usecase, presentation::http::usecases::FromRocketState,
+    use_cases::budget::allocate::Usecase, presentation::http::usecases::FromRocketState,
 };
 
 #[async_trait]

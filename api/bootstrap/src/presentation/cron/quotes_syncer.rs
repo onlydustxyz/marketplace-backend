@@ -8,7 +8,7 @@ use domain::currencies;
 use infrastructure::{coinmarketcap, database};
 use olog::{error, info, IntoField};
 
-use crate::{application::quotes::sync::Usecase, Config};
+use crate::{use_cases::quotes::sync::Usecase, Config};
 
 pub fn bootstrap(config: Config) -> Result<Cron> {
 	info!("Bootstrapping quotes_syncer");

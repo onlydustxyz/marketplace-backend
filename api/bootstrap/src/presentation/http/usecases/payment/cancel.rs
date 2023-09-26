@@ -5,7 +5,7 @@ use rocket::{
 	Request,
 };
 
-use crate::{application::payment::cancel::Usecase, presentation::http::usecases::FromRocketState};
+use crate::{use_cases::payment::cancel::Usecase, presentation::http::usecases::FromRocketState};
 
 #[async_trait]
 impl<'r> FromRequest<'r> for Usecase {

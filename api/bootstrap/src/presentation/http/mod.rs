@@ -11,7 +11,7 @@ use presentation::http;
 use rocket::{Build, Rocket};
 
 use crate::{
-	application,
+	use_cases,
 	domain::{projectors::projections::Projector, DustyBotService, ImageStoreService},
 	infrastructure::web3::ens,
 	models::*,
@@ -60,20 +60,20 @@ pub fn serve(
 	payment_event_store: Arc<dyn EventStore<Payment>>,
 	projector: Projector,
 ) -> Rocket<Build> {
-	let update_user_profile_info_usecase = application::user::update_profile_info::Usecase::new(
+	let update_user_profile_info_usecase = use_cases::user::update_profile_info::Usecase::new(
 		user_profile_info_repository.clone(),
 		contact_informations_repository.clone(),
 		simple_storage.clone(),
 	);
 
-	let create_github_issue_usecase = application::dusty_bot::create_and_close_issue::Usecase::new(
+	let create_github_issue_usecase = use_cases::dusty_bot::create_and_close_issue::Usecase::new(
 		project_repository.clone(),
 		dusty_bot_api_client,
 		github_api_client.clone(),
 	);
 
 	let cancel_payment_usecase =
-		application::payment::cancel::Usecase::new(event_bus.clone(), payment_repository.clone());
+		use_cases::payment::cancel::Usecase::new(event_bus.clone(), payment_repository.clone());
 
 	rocket::custom(http::config::rocket("api/Rocket.toml"))
 		.manage(config.http.clone())

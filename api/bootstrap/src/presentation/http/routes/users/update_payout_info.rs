@@ -9,9 +9,9 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{
-	application::user::update_payout_info::*,
-	models::*,
-	presentation::http::dto::{self, PayoutSettings},
+    use_cases::user::update_payout_info::*,
+    models::*,
+    presentation::http::dto::{self, PayoutSettings},
 };
 
 #[derive(Debug, Serialize, Deserialize)]

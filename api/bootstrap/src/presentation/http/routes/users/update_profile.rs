@@ -6,7 +6,7 @@ use presentation::http::guards::{ApiKey, Claims};
 use rocket::{serde::json::Json, State};
 use serde::{Deserialize, Serialize};
 
-use crate::{application, models::ContactInformation, presentation::http::dto};
+use crate::{use_cases, models::ContactInformation, presentation::http::dto};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -29,10 +29,10 @@ pub struct Request {
 
 #[post("/users/profile", data = "<request>", format = "application/json")]
 pub async fn update_user_profile(
-	_api_key: ApiKey,
-	claims: Claims,
-	request: Json<Request>,
-	update_user_profile_info_usecase: &State<application::user::update_profile_info::Usecase>,
+    _api_key: ApiKey,
+    claims: Claims,
+    request: Json<Request>,
+    update_user_profile_info_usecase: &State<use_cases::user::update_profile_info::Usecase>,
 ) -> Result<Json<Response>, HttpApiProblem> {
 	let caller_id = claims.user_id;
 

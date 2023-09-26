@@ -5,7 +5,7 @@ use rocket::{serde::json::Json, State};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::{application, domain::permissions::IntoPermission};
+use crate::{use_cases, domain::permissions::IntoPermission};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -15,12 +15,12 @@ pub struct Response {
 
 #[delete("/payments/<payment_id>")]
 pub async fn cancel_payment(
-	_api_key: ApiKey,
-	payment_id: Uuid,
-	claims: Option<Claims>,
-	role: Role,
-	usecase: application::payment::cancel::Usecase,
-	payment_repository: &State<AggregateRepository<Payment>>,
+    _api_key: ApiKey,
+    payment_id: Uuid,
+    claims: Option<Claims>,
+    role: Role,
+    usecase: use_cases::payment::cancel::Usecase,
+    payment_repository: &State<AggregateRepository<Payment>>,
 ) -> Result<Json<Response>, HttpApiProblem> {
 	let payment_id = payment_id.into();
 

@@ -12,4 +12,5 @@ members = [
 	"common/olog",
 	"github-indexer",
 	"api/application/rest-api-adapter",
+	"api/domain",
 ]

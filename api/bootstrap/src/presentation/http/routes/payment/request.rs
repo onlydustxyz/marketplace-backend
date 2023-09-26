@@ -7,7 +7,7 @@ use rocket::{serde::json::Json, State};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
-use crate::{application, domain::permissions::IntoPermission, presentation::http::dto};
+use crate::{use_cases, domain::permissions::IntoPermission, presentation::http::dto};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -29,12 +29,12 @@ pub struct Request {
 
 #[post("/payments", data = "<request>", format = "application/json")]
 pub async fn request_payment(
-	_api_key: ApiKey,
-	request: Json<Request>,
-	claims: Claims,
-	role: Role,
-	payment_repository: &State<AggregateRepository<Payment>>,
-	request_payment_usecase: application::payment::request::Usecase,
+    _api_key: ApiKey,
+    request: Json<Request>,
+    claims: Claims,
+    role: Role,
+    payment_repository: &State<AggregateRepository<Payment>>,
+    request_payment_usecase: use_cases::payment::request::Usecase,
 ) -> Result<Json<Response>, HttpApiProblem> {
 	let Request {
 		project_id,

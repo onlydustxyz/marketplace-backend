@@ -6,8 +6,8 @@ use rocket::{
 };
 
 use crate::{
-	application::user::update_payout_info::Usecase, domain::IsEnsValid,
-	presentation::http::usecases::FromRocketState,
+    use_cases::user::update_payout_info::Usecase, domain::IsEnsValid,
+    presentation::http::usecases::FromRocketState,
 };
 
 #[async_trait]

@@ -4,7 +4,7 @@ use olog::IntoField;
 use reqwest::StatusCode;
 use thiserror::Error;
 
-use crate::{application, domain::ImageStoreServiceError};
+use crate::{use_cases, domain::ImageStoreServiceError};
 
 #[derive(Debug, Error)]
 pub enum Error {
@@ -30,11 +30,11 @@ impl From<Error> for HttpApiProblem {
 	}
 }
 
-impl From<application::sponsor::Error> for HttpApiProblem {
-	fn from(error: application::sponsor::Error) -> Self {
+impl From<use_cases::sponsor::Error> for HttpApiProblem {
+	fn from(error: use_cases::sponsor::Error) -> Self {
 		match error {
-			application::sponsor::Error::ImageStore(e) => e.into(),
-			application::sponsor::Error::Database(_) => {
+			use_cases::sponsor::Error::ImageStore(e) => e.into(),
+			use_cases::sponsor::Error::Database(_) => {
 				olog::error!(error = error.to_field(), "Database error");
 				HttpApiProblem::new(StatusCode::INTERNAL_SERVER_ERROR)
 					.title("Internal error")

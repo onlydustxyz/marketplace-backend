@@ -1,0 +1,10 @@
+[package]
+name = "api_domain"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+
+[dependencies]
+# Local dependecies
+url = { version = "2.2.2", features = ["serde"] }

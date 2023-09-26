@@ -14,7 +14,7 @@ use rocket::{
 use serde::Serialize;
 use url::Url;
 
-use crate::{application, domain::ImageStoreService, models::*, presentation::http::error::Error};
+use crate::{use_cases, domain::ImageStoreService, models::*, presentation::http::error::Error};
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -50,7 +50,7 @@ pub async fn profile_picture(
 				.detail("Could not decode profile picture")
 		})?;
 
-	let usecase = application::user::update_profile_info::Usecase::new(
+	let usecase = use_cases::user::update_profile_info::Usecase::new(
 		user_profile_info_repository.inner().clone(),
 		contact_informations_repository.inner().clone(),
 		simple_storage.inner().clone(),

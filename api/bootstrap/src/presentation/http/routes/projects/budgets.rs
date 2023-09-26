@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{
-	application,
+	use_cases,
 	presentation::http::{dto, error::Error},
 };
 
@@ -25,7 +25,7 @@ pub async fn allocate(
 	_api_key: ApiKey,
 	project_id: Uuid,
 	request: Json<dto::Allocation>,
-	usecase: application::budget::allocate::Usecase,
+	usecase: use_cases::budget::allocate::Usecase,
 ) -> Result<Json<Response>, HttpApiProblem> {
 	let (amount, sponsor_id) = request.into_inner().try_into()?;
 

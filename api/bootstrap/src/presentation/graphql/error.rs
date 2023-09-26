@@ -4,7 +4,7 @@ use juniper::{graphql_value, DefaultScalarValue, FieldError, IntoFieldError};
 use olog::{error, IntoField};
 use thiserror::Error;
 
-use crate::application::user::{
+use crate::use_cases::user::{
 	onboard::Error as OnboardingError, update_payout_info::Error as UpdateUserPayoutInfoError,
 };
 
