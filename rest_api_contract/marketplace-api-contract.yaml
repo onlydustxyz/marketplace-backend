@@ -80,7 +80,7 @@ paths:
         "500":
           $ref: '#/components/responses/InternalServerError'
 
-  /api/v1/me/payoutInfo:
+  /api/v1/me/payout-info:
     get:
       security:
         - bearerAuth: [ ]
@@ -128,7 +128,7 @@ paths:
         "500":
           $ref: '#/components/responses/InternalServerError'
 
-  /api/v1/me/leadedProjects:
+  /api/v1/me/leaded-projects:
     get:
       security:
         - bearerAuth: [ ]
