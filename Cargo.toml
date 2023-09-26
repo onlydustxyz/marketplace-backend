@@ -11,4 +11,5 @@ members = [
 	"common/testing",
 	"common/olog",
 	"github-indexer",
+	"application/rest-api-adapter",
 ]

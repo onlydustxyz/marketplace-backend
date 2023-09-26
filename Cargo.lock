@@ -3951,6 +3951,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "rest_api_adapter"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "domain",
+ "http-api-problem",
+ "olog",
+ "rocket",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tracing",
+ "url",
+]
+
+[[package]]
 name = "ring"
 version = "0.16.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
