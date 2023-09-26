@@ -224,6 +224,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "api-domain"
+version = "1.0.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "chrono",
+ "derive-new",
+ "derive_more",
+ "domain",
+ "futures",
+ "mockall",
+ "mockall_double",
+ "olog",
+ "rstest",
+ "rust_decimal",
+ "rusty-money",
+ "testing",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "url",
+ "uuid 1.3.3",
+]
+
+[[package]]
 name = "arc-swap"
 version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3948,6 +3973,38 @@ dependencies = [
  "wasm-streams",
  "web-sys",
  "winreg",
+]
+
+[[package]]
+name = "rest_api_adapter"
+version = "1.0.0"
+dependencies = [
+ "anyhow",
+ "api-domain",
+ "async-trait",
+ "chrono",
+ "derive-new",
+ "derive_more",
+ "domain",
+ "futures",
+ "http-api-problem",
+ "jsonwebtoken",
+ "mockall",
+ "mockall_double",
+ "olog",
+ "presentation",
+ "reqwest",
+ "rocket",
+ "rstest",
+ "rust_decimal",
+ "serde",
+ "serde_json",
+ "testing",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "url",
+ "uuid 1.3.3",
 ]
 
 [[package]]

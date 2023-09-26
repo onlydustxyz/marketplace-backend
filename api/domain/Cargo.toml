@@ -1,0 +1,50 @@
+[package]
+authors = ["OnlyDust <tech@onlydust.xyz>"]
+description = "API domain"
+edition = "2021"
+homepage = "https://onlydust.xyz"
+license-file = "LICENSE"
+name = "api-domain"
+readme = "README.md"
+repository = "https://github.com/onlydustxyz/marketplace-backend"
+version = "1.0.0"
+
+[dependencies]
+
+# Async
+async-trait = "0.1.56"
+futures = { version = "0.3.21", features = ["alloc"] }
+tokio = { version = "1.18.2", features = ["full"] }
+
+# Core types
+uuid = { version = "1.3.3", default_features = false, features = [
+	"v4",
+	"serde",
+] }
+url = { version = "2.2.2", features = ["serde"] }
+rusty-money = "0.4.1"
+
+# Tracing
+tracing = "0.1"
+
+# Errors
+anyhow = "1.0.72"
+thiserror = "1.0.43"
+
+# Datetime
+chrono = "0.4"
+
+# Utils
+derive_more = "0.99.17"
+derive-new = "0.5.9"
+rust_decimal = "1.29.1"
+
+# Local dependecies
+domain = { path = "../../common/domain" }
+olog = { path = "../../common/olog" }
+
+[dev-dependencies]
+testing = { path = "../../common/testing" }
+rstest = "0.15.0"
+mockall = "0.11.2"
+mockall_double = "0.3.0"

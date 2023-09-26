@@ -1,5 +1,5 @@
 pub mod amount;
-pub use amount::Amount;
+pub use amount::{Amount, Amount as Money};
 
 pub mod blockchain;
 

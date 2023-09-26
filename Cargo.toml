@@ -4,6 +4,8 @@ resolver = "2"
 
 members = [
 	"api/bootstrap",
+	"api/application/rest-api-adapter",
+	"api/domain",
 	"common/derive",
 	"common/domain",
 	"common/infrastructure",

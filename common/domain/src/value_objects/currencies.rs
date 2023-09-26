@@ -62,7 +62,8 @@ rusty_money::define_currency_set!(
 			name: "",
 			symbol: "",
 			symbol_first: false,
-		},USD : {
+		},
+		USD : {
 			code: "USD",
 			exponent: 2,
 			locale: EnUs,

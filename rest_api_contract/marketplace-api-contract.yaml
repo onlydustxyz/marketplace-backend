@@ -382,18 +382,23 @@ paths:
       summary: Create new project
       operationId: createProject
       description: |
-        Create a new project together with an optional budget
+        Create a new project together with an optional budget allocation
       requestBody:
-
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectRequest"
       responses:
         "200":
           description: "The project"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProjectResponse"
+                $ref: "#/components/schemas/CreateProjectResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
         "403":
-          $ref: "#/components/responses/ProjectForbiddenError"
+          $ref: "#/components/responses/ForbiddenError"
         "500":
           $ref: "#/components/responses/InternalServerError"
 
@@ -611,6 +616,26 @@ components:
             status: 401
           schema:
             $ref: "#/components/schemas/OnlyDustError"
+    BadRequestError:
+      description: Bad request
+      content:
+        application/problem+json:
+          example:
+            type: MISSING_FIELD
+            title: All required fields must have values
+            status: 400
+          schema:
+            $ref: "#/components/schemas/OnlyDustError"
+    ForbiddenError:
+      description: Forbidden. You cannot access this resource.
+      content:
+        application/problem+json:
+          example:
+            type: ACCESS_FORBIDDEN
+            title: Access to this resource is forbidden
+            status: 403
+          schema:
+            $ref: "#/components/schemas/OnlyDustError"
     ProjectNotFoundError:
       description: Project not found
       content:
@@ -737,7 +762,7 @@ components:
       format: uuid
       description: OnlyDust project ID
 
-    ProjectPrettyId:
+    ProjectSlug:
       type: string
       description: OnlyDust project pretty ID that is computed from its name. This ID CAN change over time.
       example: my-awesome-project
@@ -1122,8 +1147,8 @@ components:
       properties:
         id:
           $ref: "#/components/schemas/ProjectId"
-        prettyId:
-          $ref: "#/components/schemas/ProjectPrettyId"
+        slug:
+          $ref: "#/components/schemas/ProjectSlug"
         name:
           type: string
           example: Verkle Tries
@@ -1139,11 +1164,7 @@ components:
           type: boolean
           description: Is the project currently hiring?
         visibility:
-          type: string
-          enum:
-            - public
-            - private
-          description: Is the project visible to anyone?
+          $ref: "#/components/schemas/ProjectVisibility"
         repoCount:
           type: integer
           description: Number of github repositories included in the project
@@ -1163,28 +1184,16 @@ components:
         technologies:
           $ref: "#/components/schemas/Technologies"
 
-    ProjectResponse:
+    CreateProjectRequest:
       type: object
       required:
-        - id
-        - prettyId
         - name
         - shortDescription
         - longDescription
         - logoUrl
-        - moreInfoUrl
-        - hiring
         - visibility
-        - contributorCount
-        - topContributors
-        - leaders
-        - sponsors
-        - technologies
+        - hiring
       properties:
-        id:
-          $ref: "#/components/schemas/ProjectId"
-        prettyId:
-          $ref: "#/components/schemas/ProjectPrettyId"
         name:
           type: string
           example: Verkle Tries
@@ -1208,11 +1217,145 @@ components:
           type: boolean
           description: Is the project currently hiring?
         visibility:
+          $ref: "#/components/schemas/ProjectVisibility"
+        rank:
+          type: integer
+          description: Arbitrary number used to sort projects
+          example: 100
+        repos:
+          type: array
+          items:
+            $ref: "#/components/schemas/GithubRepoId"
+        leaders:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserId"
+        sponsors:
+          type: array
+          items:
+            $ref: "#/components/schemas/SponsorId"
+        budgetAllocations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Money"
+
+    Money:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Currency amount
+        currency:
+          $ref: "#/components/schemas/Currency"
+
+    ProjectVisibility:
+      type: string
+      enum:
+        - PUBLIC
+        - PRIVATE
+      description: Is the project visible to anyone?
+
+    CreateProjectResponse:
+      type: object
+      required:
+        - id
+        - prettyId
+        - name
+        - shortDescription
+        - longDescription
+        - logoUrl
+        - moreInfoUrl
+        - hiring
+        - visibility
+        - contributorCount
+        - topContributors
+        - leaders
+        - sponsors
+        - technologies
+      properties:
+        id:
+          $ref: "#/components/schemas/ProjectId"
+        slug:
+          $ref: "#/components/schemas/ProjectSlug"
+        name:
           type: string
-          enum:
-            - public
-            - private
-          description: Is the project visible to anyone?
+          example: Verkle Tries
+        shortDescription:
+          type: string
+          example: A short project description
+        longDescription:
+          type: string
+          example: A lonnnnnnnnnnnnng project description
+        logoUrl:
+          type: string
+          format: url
+          description: Direct URL to project's logo image
+          example: "https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg"
+        moreInfoUrl:
+          type: string
+          format: url
+          description: External link to get more information about the project
+          example: "https://t.me/my-super-project"
+        hiring:
+          type: boolean
+          description: Is the project currently hiring?
+        visibility:
+          $ref: "#/components/schemas/ProjectVisibility"
+        rank:
+          type: integer
+          description: Arbitrary number used to sort projects
+          example: 100
+
+    ProjectResponse:
+      type: object
+      required:
+        - id
+        - prettyId
+        - name
+        - shortDescription
+        - longDescription
+        - logoUrl
+        - moreInfoUrl
+        - hiring
+        - visibility
+        - contributorCount
+        - topContributors
+        - leaders
+        - sponsors
+        - technologies
+      properties:
+        id:
+          $ref: "#/components/schemas/ProjectId"
+        slug:
+          $ref: "#/components/schemas/ProjectSlug"
+        name:
+          type: string
+          example: Verkle Tries
+        shortDescription:
+          type: string
+          example: A short project description
+        longDescription:
+          type: string
+          example: A lonnnnnnnnnnnnng project description
+        logoUrl:
+          type: string
+          format: url
+          description: Direct URL to project's logo image
+          example: "https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg"
+        moreInfoUrl:
+          type: string
+          format: url
+          description: External link to get more information about the project
+          example: "https://t.me/my-super-project"
+        hiring:
+          type: boolean
+          description: Is the project currently hiring?
+        visibility:
+          $ref: "#/components/schemas/ProjectVisibility"
+        rank:
+          type: integer
+          description: Arbitrary number used to sort projects
+          example: 100
         contributorCount:
           type: integer
           description: Total number of contributors within the project
@@ -1242,7 +1385,7 @@ components:
       type: object
       required:
         - id
-        - prettyId
+        - slug
         - name
         - shortDescription
         - logoUrl
@@ -1250,8 +1393,8 @@ components:
       properties:
         id:
           $ref: "#/components/schemas/ProjectId"
-        prettyId:
-          $ref: "#/components/schemas/ProjectPrettyId"
+        slug:
+          $ref: "#/components/schemas/ProjectSlug"
         name:
           type: string
           example: Verkle Tries
@@ -1264,11 +1407,7 @@ components:
           description: Direct URL to project's logo image
           example: "https://onlydust-app-images.s3.eu-west-1.amazonaws.com/2529199823275297272.jpg"
         visibility:
-          type: string
-          enum:
-            - public
-            - private
-          description: Is the project visible to anyone?
+          $ref: "#/components/schemas/ProjectVisibility"
 
     GithubRepoResponse:
       type: object
@@ -1347,11 +1486,8 @@ components:
           type: string
           format: date-time
           example: 2023-07-21T12:45:04.750174
-        amount:
-          type: number
-          description: Currency amount
-        currency:
-          $ref: "#/components/schemas/Currency"
+        money:
+          $ref: "#/components/schemas/Money"
         items:
           type: array
           minItems: 1
@@ -1372,11 +1508,8 @@ components:
         - currency
         - items
       properties:
-        amount:
-          type: number
-          description: Currency amount
-        currency:
-          $ref: "#/components/schemas/Currency"
+        money:
+          $ref: "#/components/schemas/Money"
         items:
           type: array
           maxItems: 1
@@ -1526,8 +1659,14 @@ components:
 
     Currency:
       type: string
+      enum:
+        - USD
+        - ETH
+        - OPTIMISM
+        - APTOS
+        - STARK
       description: Currency
-      example: USD, ETH, etc.
+      example: USD
 
     ContributionListResponse:
       type: object
