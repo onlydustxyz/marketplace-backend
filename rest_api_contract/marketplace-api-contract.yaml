@@ -931,7 +931,7 @@ components:
                     description: Total number of contributors within the project
                     example: 163
                   totalGranted:
-                    type: integer
+                    type: number
                     description: Total USD-equivalent amount of all rewards granted on this project
                     example: 25400
                   userContributionCount:
@@ -954,7 +954,7 @@ components:
                   description: Number of projects the user leads
                   example: 1
                 totalEarned:
-                  type: integer
+                  type: number
                   description: Total USD-equivalent amount the user earned from rewards
                   example: 4000
                 contributionCount:
@@ -1041,7 +1041,7 @@ components:
           description: Total number of rewards the contributor got on this project.
           example: 10
         earned:
-          type: integer
+          type: number
           description: Total money amount the contributor earned on this project.
           example: 3500
         contributionToRewardCount:
@@ -1329,7 +1329,7 @@ components:
           format: date-time
           example: 2023-07-21T12:45:04.750174
         amount:
-          type: integer
+          type: number
           description: Currency amount
         currency:
           $ref: '#/components/schemas/Currency'
@@ -1354,7 +1354,7 @@ components:
         - items
       properties:
         amount:
-          type: integer
+          type: number
           description: Currency amount
         currency:
           $ref: '#/components/schemas/Currency'
