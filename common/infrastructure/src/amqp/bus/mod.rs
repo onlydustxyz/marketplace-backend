@@ -183,8 +183,8 @@ lazy_static! {
 async fn connect(config: Config) -> Result<Arc<Connection>, Error> {
 	let mut guard = CONNECTION.lock().await;
 	match guard.as_ref().and_then(Weak::upgrade) {
-		Some(connection) => Ok(connection),
-		None => {
+		Some(connection) if connection.status().connected() => Ok(connection),
+		_ => {
 			let connection = Arc::new(_do_connect(config).await?);
 			*guard = Some(Arc::downgrade(&connection));
 			Ok(connection)
