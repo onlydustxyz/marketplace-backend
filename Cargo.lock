@@ -182,6 +182,7 @@ dependencies = [
  "diesel",
  "diesel-derive-newtype",
  "diesel_json",
+ "diesel_migrations",
  "domain",
  "dotenv",
  "envtestkit",
@@ -5088,6 +5089,7 @@ name = "testing"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "diesel_migrations",
  "domain",
  "infrastructure",
  "lapin",

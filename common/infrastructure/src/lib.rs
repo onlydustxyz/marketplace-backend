@@ -15,7 +15,6 @@ pub mod http;
 pub mod tracing;
 pub mod web3;
 
-#[macro_use]
 extern crate diesel_migrations;
 #[macro_use]
 extern crate lazy_static;

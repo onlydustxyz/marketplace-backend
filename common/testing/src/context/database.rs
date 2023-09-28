@@ -1,10 +1,13 @@
 use std::sync::Arc;
 
 use anyhow::{anyhow, Result};
+use diesel_migrations::{embed_migrations, EmbeddedMigrations};
 use infrastructure::dbclient;
 use testcontainers::{
 	clients::Cli, core::WaitFor, images::generic::GenericImage, Container, RunnableImage,
 };
+
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("../../migrations");
 
 static USER: &str = "postgres";
 static PASSWORD: &str = "Passw0rd";
@@ -31,7 +34,7 @@ impl<'docker> Context<'docker> {
 
 		let client = dbclient::Client::new(dbclient::init_pool(config.clone())?);
 
-		client.run_migrations()?;
+		client.run_migrations(MIGRATIONS)?;
 
 		Ok(Self {
 			_container: container,

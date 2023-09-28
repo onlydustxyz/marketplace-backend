@@ -20,11 +20,9 @@ use crate::diesel_migrations::MigrationHarness;
 pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 type PooledConnection = r2d2::PooledConnection<ConnectionManager<PgConnection>>;
 
-pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
-
-pub fn run_migrations(pool: &Pool) {
+pub fn run_migrations(pool: &Pool, migrations: EmbeddedMigrations) {
 	let mut connection = pool.get().expect("Unable to get connection from pool");
-	connection.run_pending_migrations(MIGRATIONS).expect("diesel migration failure");
+	connection.run_pending_migrations(migrations).expect("diesel migration failure");
 }
 
 pub struct Client {
@@ -48,9 +46,9 @@ impl Client {
 		})
 	}
 
-	pub fn run_migrations(&self) -> Result<()> {
+	pub fn run_migrations(&self, migrations: EmbeddedMigrations) -> Result<()> {
 		let mut connection = self.connection()?;
-		connection.run_pending_migrations(MIGRATIONS).map_err(|e| {
+		connection.run_pending_migrations(migrations).map_err(|e| {
 			error!(error = e.to_field(), "Failed to run migrations");
 			DatabaseError::Migration(anyhow!(e))
 		})?;
