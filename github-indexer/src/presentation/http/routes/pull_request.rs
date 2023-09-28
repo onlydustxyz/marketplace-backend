@@ -11,7 +11,7 @@ use crate::{
 		self,
 		contributors_projector::ContributorsProjector,
 		optional::{self, Optional},
-		pull_request::ById,
+		pull_request::{ByRepoId, ByRepoOwnerName},
 		Indexer,
 	},
 	models::GithubPullRequest,
@@ -44,6 +44,44 @@ pub async fn index_by_repo_id(
 	.optional(database);
 
 	indexer.index(&(repo_id.into(), pr_number.into())).await.map_err(|e| {
+		let error_message = "Error while indexing Github pull request";
+		error!(error = e.to_field(), "{error_message}");
+		HttpApiProblem::new(StatusCode::INTERNAL_SERVER_ERROR)
+			.title(error_message.to_string())
+			.detail(e.to_string())
+	})?;
+
+	Ok(())
+}
+
+#[post("/repo/<repo_owner>/<repo_name>/pull_request/<pr_number>")]
+pub async fn index_by_repo_owner_name(
+	_api_key: ApiKey,
+	repo_owner: String,
+	repo_name: String,
+	pr_number: i64,
+	database: &State<Arc<database::Client>>,
+	github: &State<Arc<github::Client>>,
+) -> Result<(), HttpApiProblem> {
+	let database = (*database).clone();
+	let github = (*github).clone();
+
+	let indexer: optional::Indexer<_, _, GithubPullRequest> = indexers::pull_request::new(
+		github.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		ContributorsProjector::new(
+			database.clone(),
+			database.clone(),
+			database.clone(),
+			database.clone(),
+		),
+	)
+	.by_repo_owner_name(github)
+	.optional(database);
+
+	indexer.index(&(repo_owner, repo_name, pr_number.into())).await.map_err(|e| {
 		let error_message = "Error while indexing Github pull request";
 		error!(error = e.to_field(), "{error_message}");
 		HttpApiProblem::new(StatusCode::INTERNAL_SERVER_ERROR)

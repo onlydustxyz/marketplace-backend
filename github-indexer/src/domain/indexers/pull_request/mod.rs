@@ -9,10 +9,12 @@ use crate::models::{
 };
 
 mod by_repo_id;
+mod by_repo_owner_name;
 mod crawler;
 mod projector;
 
 pub use by_repo_id::ByRepoId;
+pub use by_repo_owner_name::ByRepoOwnerName;
 
 pub fn new(
 	github_fetch_service: Arc<dyn GithubFetchService>,
