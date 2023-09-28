@@ -1,8 +1,8 @@
 mod issue;
 mod port;
+pub use port::GithubApiPort;
 mod pull_request;
 mod repo;
-pub use port::Port as GithubApiPort;
 mod user;
 
 use thiserror::Error;
