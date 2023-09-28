@@ -1,12 +1,15 @@
-use std::sync::Arc;
-
 use common_domain::GithubPullRequestNumber;
 use http_api_problem::{HttpApiProblem, StatusCode};
 use olog::{error, IntoField};
 use presentation::http::guards::ApiKey;
-use rocket::{serde::json::Json, State};
+use rocket::serde::json::Json;
 
-use crate::{domain::services::indexer, presentation::http::routes::pull_requests::dto::Response};
+use crate::{
+	domain::services::indexer::Service,
+	presentation::http::{
+		routes::pull_requests::dto::Response, usecases::indexer::Client as IndexerClient,
+	},
+};
 
 #[get("/pull_requests/<repo_owner>/<repo_name>/<pr_number>")]
 pub async fn fetch_pull_request(
@@ -14,11 +17,12 @@ pub async fn fetch_pull_request(
 	repo_owner: String,
 	repo_name: String,
 	pr_number: i32,
-	github_indexer_service: &State<Arc<dyn indexer::Service>>,
+	github_indexer_service: IndexerClient,
 ) -> Result<Json<Response>, HttpApiProblem> {
 	let pr_number = GithubPullRequestNumber::from(pr_number as i64);
 
 	let id = github_indexer_service
+		.0
 		.index_pull_request_by_repo_owner_name(repo_owner.clone(), repo_name.clone(), pr_number)
 		.await
 		.map_err(|e| {
