@@ -22,7 +22,7 @@ impl indexer::Service for http::Client {
 		self.post(format!("repo/{repo_id}/issue/{issue_number}")).await
 	}
 
-	async fn index_pull_request(
+	async fn index_pull_request_by_repo_id(
 		&self,
 		repo_id: GithubRepoId,
 		pr_number: GithubPullRequestNumber,

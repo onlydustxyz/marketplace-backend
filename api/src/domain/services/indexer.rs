@@ -10,7 +10,8 @@ pub trait Service: Send + Sync {
 		repo_id: GithubRepoId,
 		issue_number: GithubIssueNumber,
 	) -> Result<()>;
-	async fn index_pull_request(
+
+	async fn index_pull_request_by_repo_id(
 		&self,
 		repo_id: GithubRepoId,
 		pr_number: GithubPullRequestNumber,
