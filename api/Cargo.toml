@@ -38,9 +38,8 @@ uuid08 = { package = "uuid", version = "0.8", default_features = false, features
 ] }
 
 # Github
-octocrab = { git = "https://github.com/onlydustxyz/octocrab.git", features = [
-	"stream",
-] }
+
+octocrab = { package = "octocrab", version = "0.19.0", features = ["stream"] }
 
 # Http client
 http-api-problem = { version = "0.56.0", features = ["rocket"] }
