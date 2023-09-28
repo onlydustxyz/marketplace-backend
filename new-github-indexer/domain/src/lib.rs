@@ -1,3 +1,3 @@
-mod models;
-mod ports;
+pub mod models;
+pub mod ports;
 mod usecases;

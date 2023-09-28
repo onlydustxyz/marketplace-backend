@@ -2478,6 +2478,7 @@ dependencies = [
  "indexer-domain",
  "infrastructure",
  "itertools",
+ "octocrab 0.30.1",
  "olog",
  "reqwest",
  "serde",

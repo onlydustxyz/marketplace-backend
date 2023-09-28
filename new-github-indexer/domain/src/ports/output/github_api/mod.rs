@@ -1,11 +1,19 @@
-mod issue;
+pub mod issue;
 mod port;
 pub use port::GithubApiPort;
-mod pull_request;
-mod repo;
-mod user;
+pub mod pull_request;
+pub mod repo;
+pub mod user;
 
 use thiserror::Error;
 #[derive(Debug, Error)]
-pub enum Error {}
+pub enum Error {
+	#[error("Not found")]
+	NotFound(#[source] anyhow::Error),
+	#[error(transparent)]
+	InvalidInput(anyhow::Error),
+	#[error(transparent)]
+	Other(anyhow::Error),
+}
+
 pub type Result<T> = std::result::Result<T, Error>;
