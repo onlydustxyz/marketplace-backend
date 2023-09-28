@@ -15,7 +15,12 @@ pub struct Indexer {
 
 #[async_trait]
 impl indexers::Indexer<PullRequestId> for Indexer {
-	async fn index(&self, (repo_owner, repo_name, number): &PullRequestId) -> Result<()> {
+	type Output = Option<GithubFullPullRequest>;
+
+	async fn index(
+		&self,
+		(repo_owner, repo_name, number): &PullRequestId,
+	) -> Result<Option<GithubFullPullRequest>> {
 		let pull_request = self
 			.github_fetch_service
 			.pull_request(repo_owner.clone(), repo_name.clone(), *number)
