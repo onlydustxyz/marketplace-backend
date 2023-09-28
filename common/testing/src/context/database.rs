@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use anyhow::{anyhow, Result};
-use infrastructure::database;
+use infrastructure::dbclient;
 use testcontainers::{
 	clients::Cli, core::WaitFor, images::generic::GenericImage, Container, RunnableImage,
 };
@@ -12,8 +12,8 @@ static DATABASE: &str = "marketplace_db";
 
 pub struct Context<'docker> {
 	_container: Container<'docker, GenericImage>,
-	pub config: database::Config,
-	pub client: Arc<database::Client>,
+	pub config: dbclient::Config,
+	pub client: Arc<dbclient::Client>,
 }
 
 impl<'docker> Context<'docker> {
@@ -24,12 +24,12 @@ impl<'docker> Context<'docker> {
 			.map_to_host_port_ipv4(5432)
 			.ok_or(anyhow!("Invalid postgres port"))?;
 
-		let config = database::Config {
+		let config = dbclient::Config {
 			url: format!("postgres://{USER}:{PASSWORD}@localhost:{port}/{DATABASE}"),
 			pool_max_size: 2,
 		};
 
-		let client = database::Client::new(database::init_pool(config.clone())?);
+		let client = dbclient::Client::new(dbclient::init_pool(config.clone())?);
 
 		client.run_migrations()?;
 

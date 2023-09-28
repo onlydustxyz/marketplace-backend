@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use domain::{AggregateRepository, CompositePublisher, EventPublisher};
-use infrastructure::{amqp, database, event_bus::EXCHANGE_NAME, github};
+use infrastructure::{amqp, dbclient, event_bus::EXCHANGE_NAME, github};
 use rocket::{Build, Rocket};
 
 use crate::{
@@ -14,7 +14,7 @@ use crate::{
 
 pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 	info!("Bootstrapping api http server");
-	let database = Arc::new(database::Client::new(database::init_pool(
+	let database = Arc::new(dbclient::Client::new(dbclient::init_pool(
 		config.database.clone(),
 	)?));
 	database.run_migrations()?;

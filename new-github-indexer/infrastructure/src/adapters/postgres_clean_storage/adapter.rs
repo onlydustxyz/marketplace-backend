@@ -7,10 +7,10 @@ use domain::{
 	},
 	ports::output::clean_storage::{CleanStoragePort, Result},
 };
-use infrastructure::database;
+use infrastructure::dbclient;
 
 pub struct PostgresCleanStorageAdapter {
-	pub postgres_client: database::Client,
+	pub postgres_client: dbclient::Client,
 }
 
 impl CleanStoragePort for PostgresCleanStorageAdapter {
