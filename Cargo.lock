@@ -2460,6 +2460,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "indexer-infrastructure"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "chrono",
+ "derive",
+ "derive-getters",
+ "derive-new",
+ "derive_more",
+ "diesel",
+ "diesel-derive-newtype",
+ "diesel_json",
+ "dotenv",
+ "futures",
+ "indexer-domain",
+ "infrastructure",
+ "itertools",
+ "olog",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "sha2 0.10.7",
+ "thiserror",
+ "url",
+ "uuid 1.3.3",
+]
+
+[[package]]
 name = "indexmap"
 version = "1.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
