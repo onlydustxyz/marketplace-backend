@@ -14,26 +14,26 @@ pub struct PostgresCleanStorageAdapter {
 }
 
 impl CleanStoragePort for PostgresCleanStorageAdapter {
-	fn save_repo(&self, repo: Repository) -> Result<()> {
+	fn save_repo(&self, _repo: Repository) -> Result<()> {
 		todo!()
 	}
 
-	fn save_issue(&self, issue: Issue) -> Result<()> {
+	fn save_issue(&self, _issue: Issue) -> Result<()> {
 		todo!()
 	}
 
 	fn save_pull_request(
 		&self,
-		pull_request: PullRequest,
-		commits: Vec<Commit>,
-		reviews: Vec<Review>,
-		closing_issue_ids: Vec<u64>,
-		ci_checks: Option<CiChecks>,
+		_pull_request: PullRequest,
+		_commits: Vec<Commit>,
+		_reviews: Vec<Review>,
+		_closing_issue_ids: Vec<u64>,
+		_ci_checks: Option<CiChecks>,
 	) -> Result<()> {
 		todo!()
 	}
 
-	fn save_user(&self, user: User) -> Result<()> {
+	fn save_user(&self, _user: User) -> Result<()> {
 		todo!()
 	}
 }

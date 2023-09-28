@@ -36,14 +36,14 @@ impl GithubApiAdapter {
 
 #[async_trait]
 impl issue::Port for GithubApiAdapter {
-	async fn issue_by_repo_id(&self, repo_id: u64, issue_number: u64) -> Result<Issue> {
+	async fn issue_by_repo_id(&self, _repo_id: u64, _issue_number: u64) -> Result<Issue> {
 		todo!()
 	}
 
 	async fn issues_by_repo_id(
 		&self,
-		repo_id: u64,
-		updated_since: Option<DateTime<Utc>>,
+		_repo_id: u64,
+		_updated_since: Option<DateTime<Utc>>,
 	) -> Result<Vec<Issue>> {
 		todo!()
 	}
@@ -53,33 +53,33 @@ impl issue::Port for GithubApiAdapter {
 impl pull_request::Port for GithubApiAdapter {
 	async fn pull_request_by_repo_id(
 		&self,
-		repo_id: u64,
-		pull_request_number: u64,
+		_repo_id: u64,
+		_pull_request_number: u64,
 	) -> Result<PullRequest> {
 		todo!()
 	}
 
 	async fn pull_requests_by_repo_id(
 		&self,
-		repo_id: u64,
-		updated_since: Option<DateTime<Utc>>,
+		_repo_id: u64,
+		_updated_since: Option<DateTime<Utc>>,
 	) -> Result<Vec<PullRequest>> {
 		todo!()
 	}
 
-	async fn pull_request_commits(&self, pull_request: PullRequest) -> Result<Vec<Commit>> {
+	async fn pull_request_commits(&self, _pull_request: PullRequest) -> Result<Vec<Commit>> {
 		todo!()
 	}
 
-	async fn pull_request_reviews(&self, pull_request: PullRequest) -> Result<Vec<Review>> {
+	async fn pull_request_reviews(&self, _pull_request: PullRequest) -> Result<Vec<Review>> {
 		todo!()
 	}
 
-	async fn pull_request_closing_issue_ids(&self, pull_request: PullRequest) -> Result<Vec<u64>> {
+	async fn pull_request_closing_issue_ids(&self, _pull_request: PullRequest) -> Result<Vec<u64>> {
 		todo!()
 	}
 
-	async fn pull_request_ci_checks(&self, pull_request: PullRequest) -> Result<Option<CiChecks>> {
+	async fn pull_request_ci_checks(&self, _pull_request: PullRequest) -> Result<Option<CiChecks>> {
 		todo!()
 	}
 }
@@ -97,7 +97,7 @@ impl repo::Port for GithubApiAdapter {
 
 #[async_trait]
 impl user::Port for GithubApiAdapter {
-	async fn user_by_id(&self, user_id: u64) -> Result<User> {
+	async fn user_by_id(&self, _user_id: u64) -> Result<User> {
 		todo!()
 	}
 }
