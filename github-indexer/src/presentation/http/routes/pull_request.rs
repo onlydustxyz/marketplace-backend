@@ -18,7 +18,7 @@ use crate::{
 };
 
 #[post("/repo/<repo_id>/pull_request/<pr_number>")]
-pub async fn index(
+pub async fn index_by_repo_id(
 	_api_key: ApiKey,
 	repo_id: i64,
 	pr_number: i64,
@@ -40,7 +40,7 @@ pub async fn index(
 			database.clone(),
 		),
 	)
-	.by_id(github)
+	.by_repo_id(github)
 	.optional(database);
 
 	indexer.index(&(repo_id.into(), pr_number.into())).await.map_err(|e| {
