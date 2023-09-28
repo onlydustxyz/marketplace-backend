@@ -14,14 +14,17 @@ pub struct PostgresCleanStorageAdapter {
 }
 
 impl CleanStoragePort for PostgresCleanStorageAdapter {
+	#[allow(clippy::all)]
 	fn save_repo(&self, _repo: Repository) -> Result<()> {
 		todo!()
 	}
 
+	#[allow(clippy::all)]
 	fn save_issue(&self, _issue: Issue) -> Result<()> {
 		todo!()
 	}
 
+	#[allow(clippy::all)]
 	fn save_pull_request(
 		&self,
 		_pull_request: PullRequest,
@@ -33,6 +36,7 @@ impl CleanStoragePort for PostgresCleanStorageAdapter {
 		todo!()
 	}
 
+	#[allow(clippy::all)]
 	fn save_user(&self, _user: User) -> Result<()> {
 		todo!()
 	}

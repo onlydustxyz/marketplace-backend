@@ -36,10 +36,12 @@ impl GithubApiAdapter {
 
 #[async_trait]
 impl issue::Port for GithubApiAdapter {
+	#[allow(clippy::all)]
 	async fn issue_by_repo_id(&self, _repo_id: u64, _issue_number: u64) -> Result<Issue> {
 		todo!()
 	}
 
+	#[allow(clippy::all)]
 	async fn issues_by_repo_id(
 		&self,
 		_repo_id: u64,
@@ -51,6 +53,7 @@ impl issue::Port for GithubApiAdapter {
 
 #[async_trait]
 impl pull_request::Port for GithubApiAdapter {
+	#[allow(clippy::all)]
 	async fn pull_request_by_repo_id(
 		&self,
 		_repo_id: u64,
@@ -59,6 +62,7 @@ impl pull_request::Port for GithubApiAdapter {
 		todo!()
 	}
 
+	#[allow(clippy::all)]
 	async fn pull_requests_by_repo_id(
 		&self,
 		_repo_id: u64,
@@ -67,18 +71,22 @@ impl pull_request::Port for GithubApiAdapter {
 		todo!()
 	}
 
+	#[allow(clippy::all)]
 	async fn pull_request_commits(&self, _pull_request: PullRequest) -> Result<Vec<Commit>> {
 		todo!()
 	}
 
+	#[allow(clippy::all)]
 	async fn pull_request_reviews(&self, _pull_request: PullRequest) -> Result<Vec<Review>> {
 		todo!()
 	}
 
+	#[allow(clippy::all)]
 	async fn pull_request_closing_issue_ids(&self, _pull_request: PullRequest) -> Result<Vec<u64>> {
 		todo!()
 	}
 
+	#[allow(clippy::all)]
 	async fn pull_request_ci_checks(&self, _pull_request: PullRequest) -> Result<Option<CiChecks>> {
 		todo!()
 	}
@@ -97,6 +105,7 @@ impl repo::Port for GithubApiAdapter {
 
 #[async_trait]
 impl user::Port for GithubApiAdapter {
+	#[allow(clippy::all)]
 	async fn user_by_id(&self, _user_id: u64) -> Result<User> {
 		todo!()
 	}
