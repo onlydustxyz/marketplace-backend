@@ -29,4 +29,16 @@ impl indexer::Service for http::Client {
 	) -> Result<()> {
 		self.post(format!("repo/{repo_id}/pull_request/{pr_number}")).await
 	}
+
+	async fn index_pull_request_by_repo_owner_name(
+		&self,
+		repo_owner: String,
+		repo_name: String,
+		pr_number: GithubPullRequestNumber,
+	) -> Result<()> {
+		self.post(format!(
+			"repo/{repo_owner}/{repo_name}/pull_request/{pr_number}"
+		))
+		.await
+	}
 }
