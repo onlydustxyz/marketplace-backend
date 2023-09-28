@@ -1,5 +1,7 @@
 use anyhow::Result;
-use domain::{GithubIssueNumber, GithubPullRequestNumber, GithubRepoId, GithubUserId};
+use domain::{
+	GithubIssueNumber, GithubPullRequestId, GithubPullRequestNumber, GithubRepoId, GithubUserId,
+};
 
 #[async_trait]
 pub trait Service: Send + Sync {
@@ -22,5 +24,5 @@ pub trait Service: Send + Sync {
 		repo_owner: String,
 		repo_name: String,
 		pr_number: GithubPullRequestNumber,
-	) -> Result<()>;
+	) -> Result<GithubPullRequestId>;
 }

@@ -1,6 +1,7 @@
 use anyhow::Result;
 use domain::*;
 use infrastructure::http;
+use serde::Deserialize;
 
 use crate::domain::services::indexer;
 
@@ -35,10 +36,18 @@ impl indexer::Service for http::Client {
 		repo_owner: String,
 		repo_name: String,
 		pr_number: GithubPullRequestNumber,
-	) -> Result<()> {
-		self.post(format!(
-			"repo/{repo_owner}/{repo_name}/pull_request/{pr_number}"
-		))
-		.await
+	) -> Result<GithubPullRequestId> {
+		#[derive(Debug, Deserialize)]
+		struct Response {
+			id: GithubPullRequestId,
+		}
+
+		let response: Response = self
+			.post(format!(
+				"repo/{repo_owner}/{repo_name}/pull_request/{pr_number}"
+			))
+			.await?;
+
+		Ok(response.id)
 	}
 }
