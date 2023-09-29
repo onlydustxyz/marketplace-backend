@@ -1,6 +1,7 @@
 pub mod issue;
 pub mod pull_request;
 pub mod repo;
+pub mod social_accounts;
 pub mod user;
 
 use thiserror::Error;

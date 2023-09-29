@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 pub use octocrab_indexer::models::{Author as User, *};
+use url::Url;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Repository {
@@ -29,4 +30,12 @@ impl TryFrom<Languages> for serde_json::Value {
 pub enum CiChecks {
 	Passed,
 	Failed,
+}
+
+pub type SocialAccounts = Vec<SocialAccount>;
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, PartialOrd, Ord)]
+pub struct SocialAccount {
+	provider: String,
+	url: Url,
 }
