@@ -81,6 +81,13 @@ pub async fn index_by_repo_owner_name(
 	let database = (*database).clone();
 	let github = (*github).clone();
 
+	let repo_indexer = Arc::new(indexers::simple_repo::new(github.clone(), database.clone()));
+	let user_indexer = Arc::new(indexers::user::new(
+		github.clone(),
+		database.clone(),
+		database.clone(),
+	));
+
 	let indexer: optional::Indexer<_, _, GithubPullRequest> = indexers::pull_request::new(
 		github.clone(),
 		database.clone(),
@@ -93,7 +100,7 @@ pub async fn index_by_repo_owner_name(
 			database.clone(),
 		),
 	)
-	.by_repo_owner_name(github)
+	.by_repo_owner_name(github, repo_indexer, user_indexer)
 	.optional(database);
 
 	let result = indexer.index(&(repo_owner, repo_name, pr_number.into())).await.map_err(|e| {
