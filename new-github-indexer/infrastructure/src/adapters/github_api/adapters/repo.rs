@@ -1,4 +1,7 @@
-use domain::{models::*, ports::output::github_api::*};
+use domain::{
+	models::{issues::Issue, pulls::PullRequest, *},
+	ports::output::github_api::*,
+};
 
 use crate::adapters::github_api::Client;
 
@@ -20,6 +23,18 @@ impl repo::Port for Client {
 
 	async fn repo_languages_by_id(&self, repo_id: RepositoryId) -> Result<Languages> {
 		self.get_as(format!("/repositories/{repo_id}/languages"))
+			.await
+			.map_err(Into::into)
+	}
+
+	async fn repo_pull_requests_by_id(&self, repo_id: RepositoryId) -> Result<Vec<PullRequest>> {
+		self.get_all_as(format!("/repositories/{repo_id}/pulls"))
+			.await
+			.map_err(Into::into)
+	}
+
+	async fn repo_issues_by_id(&self, repo_id: RepositoryId) -> Result<Vec<Issue>> {
+		self.get_all_as(format!("/repositories/{repo_id}/pulls"))
 			.await
 			.map_err(Into::into)
 	}
