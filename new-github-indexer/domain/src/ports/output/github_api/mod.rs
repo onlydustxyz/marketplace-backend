@@ -9,8 +9,6 @@ pub enum Error {
 	#[error("Not found")]
 	NotFound(#[source] anyhow::Error),
 	#[error(transparent)]
-	InvalidInput(anyhow::Error),
-	#[error(transparent)]
 	Other(anyhow::Error),
 }
 

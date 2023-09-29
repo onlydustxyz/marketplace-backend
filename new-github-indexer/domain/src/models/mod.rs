@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 pub use octocrab_indexer::models::{Author as User, *};
-use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Repository {
