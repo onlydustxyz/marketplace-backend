@@ -107,6 +107,7 @@ pub async fn index_by_repo_owner_name(
 	let id = match result {
 		optional::Output::Cached(data) => data.id,
 		optional::Output::Fresh(data) => data.map(|pr| pr.inner.id).ok_or_else(|| {
+			error!("No indexed pull request");
 			HttpApiProblem::new(StatusCode::INTERNAL_SERVER_ERROR)
 				.title("Unable to index pull request")
 		})?,
