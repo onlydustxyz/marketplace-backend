@@ -1,11 +1,6 @@
-use thiserror::Error;
+pub use anyhow::Result;
 
 use crate::models::*;
-
-#[derive(Debug, Error)]
-pub enum Error {}
-
-pub type Result<T> = std::result::Result<T, Error>;
 
 #[async_trait]
 pub trait Port: Send + Sync {
