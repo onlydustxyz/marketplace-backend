@@ -177,29 +177,31 @@ impl Port for PostgresCleanStorageAdapter {
 		Ok(())
 	}
 
-	fn save_issue(
-		&self,
-		repo_id: RepositoryId,
-		issue: indexed::Issue,
-	) -> clean_storage::Result<()> {
+	fn save_issue(&self, repo: Repository, issue: indexed::Issue) -> clean_storage::Result<()> {
 		self.postgres_client
 			.connection()
 			.map_err(|e| clean_storage::Error::Connection(e.into()))?
-			.transaction(|connection| self.save_indexed_issue(connection, repo_id, issue))?;
+			.transaction(|connection| {
+				self.save_indexed_issue(connection, repo.id, issue)?;
+				models::Repo::try_from(repo)?.upsert(connection)?;
+				Result::Ok(())
+			})?;
 
 		Ok(())
 	}
 
 	fn save_pull_request(
 		&self,
-		repo_id: RepositoryId,
+		repo: Repository,
 		pull_request: indexed::PullRequest,
 	) -> clean_storage::Result<()> {
 		self.postgres_client
 			.connection()
 			.map_err(|e| clean_storage::Error::Connection(e.into()))?
 			.transaction(|connection| {
-				self.save_indexed_pull_request(connection, repo_id, pull_request)
+				self.save_indexed_pull_request(connection, repo.id, pull_request)?;
+				models::Repo::try_from(repo)?.upsert(connection)?;
+				Result::Ok(())
 			})?;
 
 		Ok(())

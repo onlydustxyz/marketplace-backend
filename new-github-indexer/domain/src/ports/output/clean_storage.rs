@@ -18,13 +18,10 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub trait Port: Send + Sync {
 	fn save_repo(&self, repo: indexed::Repository) -> Result<()>;
 
-	fn save_issue(&self, repo_id: RepositoryId, issue: indexed::Issue) -> Result<()>;
+	fn save_issue(&self, repo: Repository, issue: indexed::Issue) -> Result<()>;
 
-	fn save_pull_request(
-		&self,
-		repo_id: RepositoryId,
-		pull_request: indexed::PullRequest,
-	) -> Result<()>;
+	fn save_pull_request(&self, repo: Repository, pull_request: indexed::PullRequest)
+	-> Result<()>;
 
 	fn save_user(&self, user: indexed::User) -> Result<()>;
 }

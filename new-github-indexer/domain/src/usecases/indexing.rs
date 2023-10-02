@@ -3,7 +3,7 @@ use std::sync::Arc;
 use derive_new::new;
 
 use crate::{
-	models::*,
+	models::{indexed, RepositoryId, UserId},
 	ports::{
 		input::indexing_facade,
 		output::{clean_storage, raw_storage},
@@ -35,6 +35,20 @@ impl Usecase {
 			social_accounts,
 		})
 	}
+
+	async fn read_issue(&self, repo_id: RepositoryId, issue_number: u64) -> Result<indexed::Issue> {
+		let issue = self.raw_storage.issue_by_repo_id(repo_id, issue_number).await?;
+
+		let mut assignees = vec![];
+		for assignee in &issue.assignees {
+			assignees.push(self.read_user(assignee.id).await?);
+		}
+
+		Ok(indexed::Issue {
+			inner: issue,
+			assignees,
+		})
+	}
 }
 
 #[async_trait]
@@ -42,6 +56,21 @@ impl indexing_facade::Port for Usecase {
 	async fn index_user(&self, user_id: UserId) -> indexing_facade::Result<()> {
 		let user = self.read_user(user_id).await?;
 		self.clean_storage.save_user(user)?;
+
+		//TODO: expose data in the exposition storage
+		Ok(())
+	}
+
+	async fn index_issue(
+		&self,
+		repo_owner: String,
+		repo_name: String,
+		issue_number: u64,
+	) -> indexing_facade::Result<()> {
+		let repo = self.raw_storage.repo_by_owner_name(repo_owner, repo_name).await?;
+		let issue = self.read_issue(repo.id, issue_number).await?;
+
+		self.clean_storage.save_issue(repo, issue)?;
 
 		//TODO: expose data in the exposition storage
 		Ok(())
@@ -59,7 +88,7 @@ mod tests {
 	use crate::{ports::input::indexing_facade::Port, usecases::fixtures::*};
 
 	#[rstest]
-	async fn index_user() {
+	async fn index_single_user() {
 		let mut raw_storage = RawStoragePort::new();
 		let mut clean_storage = CleanStoragePort::new();
 
@@ -86,6 +115,63 @@ mod tests {
 
 		Usecase::new(Arc::new(raw_storage), Arc::new(clean_storage))
 			.index_user(users::anthony().id)
+			.await
+			.unwrap();
+	}
+
+	#[rstest]
+	async fn index_single_issue() {
+		let mut raw_storage = RawStoragePort::new();
+		let mut clean_storage = CleanStoragePort::new();
+
+		raw_storage
+			.expect_repo_by_owner_name()
+			.once()
+			.with(
+				eq("onlydustxyz".to_string()),
+				eq("marketplace-frontend".to_string()),
+			)
+			.return_once(|_, _| Ok(repos::marketplace_frontend()));
+
+		raw_storage
+			.expect_issue_by_repo_id()
+			.once()
+			.with(eq(repos::marketplace_frontend().id), eq(78))
+			.return_once(|_, _| Ok(issues::x78()));
+
+		raw_storage
+			.expect_user_by_id()
+			.once()
+			.with(eq(users::anthony().id))
+			.return_once(|_| Ok(users::anthony()));
+
+		raw_storage
+			.expect_user_social_accounts_by_id()
+			.once()
+			.with(eq(users::anthony().id))
+			.return_once(|_| Ok(user_social_accounts::anthony()));
+
+		clean_storage
+			.expect_save_issue()
+			.once()
+			.with(
+				eq(repos::marketplace_frontend()),
+				eq(indexed::Issue {
+					inner: issues::x78(),
+					assignees: vec![indexed::User {
+						inner: users::anthony(),
+						social_accounts: user_social_accounts::anthony(),
+					}],
+				}),
+			)
+			.return_once(|_, _| Ok(()));
+
+		Usecase::new(Arc::new(raw_storage), Arc::new(clean_storage))
+			.index_issue(
+				"onlydustxyz".to_string(),
+				"marketplace-frontend".to_string(),
+				78,
+			)
 			.await
 			.unwrap();
 	}
