@@ -14,7 +14,8 @@ pub enum Error {
 
 pub type Result<T> = std::result::Result<T, Error>;
 
-pub trait CleanStoragePort: Send + Sync {
+#[cfg_attr(test, automock)]
+pub trait Port: Send + Sync {
 	fn save_repo(&self, repo: indexed::Repository) -> Result<()>;
 
 	fn save_issue(&self, repo_id: RepositoryId, issue: indexed::Issue) -> Result<()>;

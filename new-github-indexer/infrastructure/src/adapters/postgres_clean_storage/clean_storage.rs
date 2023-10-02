@@ -1,7 +1,7 @@
 use diesel::{Connection, ExpressionMethods, PgConnection};
 use domain::{
 	models::*,
-	ports::output::clean_storage::{self, CleanStoragePort},
+	ports::output::clean_storage::{self, Port},
 };
 use infrastructure::dbclient::{self, ImmutableModel, Model};
 
@@ -167,7 +167,7 @@ impl PostgresCleanStorageAdapter {
 	}
 }
 
-impl CleanStoragePort for PostgresCleanStorageAdapter {
+impl Port for PostgresCleanStorageAdapter {
 	fn save_repo(&self, repo: indexed::Repository) -> clean_storage::Result<()> {
 		self.postgres_client
 			.connection()

@@ -1,4 +1,4 @@
-use domain::ports::output::{clean_storage, github_api};
+use domain::ports::output::clean_storage;
 use infrastructure::dbclient::DatabaseError;
 
 #[derive(Debug, Error)]
@@ -9,12 +9,6 @@ pub enum Error {
 	Serde(#[from] serde_json::Error),
 	#[error(transparent)]
 	Database(#[from] DatabaseError),
-}
-
-impl From<Error> for github_api::Error {
-	fn from(error: Error) -> Self {
-		Self::Other(error.into())
-	}
 }
 
 impl From<diesel::result::Error> for Error {
