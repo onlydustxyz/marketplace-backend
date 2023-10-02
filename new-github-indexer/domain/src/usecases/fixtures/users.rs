@@ -1,6 +1,7 @@
 use rstest::fixture;
 use serde_json::json;
 
+use super::user_social_accounts;
 use crate::models::*;
 
 #[fixture]
@@ -40,6 +41,14 @@ pub fn anthony() -> User {
 	  "updated_at": "2023-09-19T05:09:36Z"
 	}))
 	.unwrap()
+}
+
+#[fixture]
+pub fn indexed_anthony() -> indexed::User {
+	indexed::User {
+		inner: anthony(),
+		social_accounts: user_social_accounts::anthony(),
+	}
 }
 
 #[fixture]
@@ -84,38 +93,32 @@ pub fn ofux() -> User {
 #[fixture]
 pub fn pierre() -> User {
 	serde_json::from_value(json!({
-	  "login": "ilysse",
-	  "id": 63659897,
-	  "node_id": "MDQ6VXNlcjYzNjU5ODk3",
-	  "avatar_url": "https://avatars.githubusercontent.com/u/63659897?v=4",
-	  "gravatar_id": "",
-	  "url": "https://api.github.com/users/ilysse",
-	  "html_url": "https://github.com/ilysse",
-	  "followers_url": "https://api.github.com/users/ilysse/followers",
-	  "following_url": "https://api.github.com/users/ilysse/following{/other_user}",
-	  "gists_url": "https://api.github.com/users/ilysse/gists{/gist_id}",
-	  "starred_url": "https://api.github.com/users/ilysse/starred{/owner}{/repo}",
-	  "subscriptions_url": "https://api.github.com/users/ilysse/subscriptions",
-	  "organizations_url": "https://api.github.com/users/ilysse/orgs",
-	  "repos_url": "https://api.github.com/users/ilysse/repos",
-	  "events_url": "https://api.github.com/users/ilysse/events{/privacy}",
-	  "received_events_url": "https://api.github.com/users/ilysse/received_events",
-	  "type": "User",
-	  "site_admin": false,
-	  "name": null,
-	  "company": null,
-	  "blog": "",
-	  "location": null,
-	  "email": null,
-	  "hireable": null,
-	  "bio": null,
-	  "twitter_username": null,
-	  "public_repos": 0,
-	  "public_gists": 0,
-	  "followers": 1,
-	  "following": 0,
-	  "created_at": "2020-04-14T15:53:37Z",
-	  "updated_at": "2020-06-17T20:02:16Z"
+		"login": "PierreOucif",
+		"id": 16590657,
+		"node_id": "MDQ6VXNlcjE2NTkwNjU3",
+		"avatar_url": "https://avatars.githubusercontent.com/u/16590657?u=1a94dc2d2be3e5c199916efa42ae79e8893f817d&v=4",
+		"gravatar_id": "",
+		"url": "https://api.github.com/users/PierreOucif",
+		"html_url": "https://github.com/PierreOucif",
+		"followers_url": "https://api.github.com/users/PierreOucif/followers",
+		"following_url": "https://api.github.com/users/PierreOucif/following{/other_user}",
+		"gists_url": "https://api.github.com/users/PierreOucif/gists{/gist_id}",
+		"starred_url": "https://api.github.com/users/PierreOucif/starred{/owner}{/repo}",
+		"subscriptions_url": "https://api.github.com/users/PierreOucif/subscriptions",
+		"organizations_url": "https://api.github.com/users/PierreOucif/orgs",
+		"repos_url": "https://api.github.com/users/PierreOucif/repos",
+		"events_url": "https://api.github.com/users/PierreOucif/events{/privacy}",
+		"received_events_url": "https://api.github.com/users/PierreOucif/received_events",
+		"type": "User",
+		"site_admin": false
 	}))
 	.unwrap()
+}
+
+#[fixture]
+pub fn indexed_pierre() -> indexed::User {
+	indexed::User {
+		inner: pierre(),
+		social_accounts: user_social_accounts::pierre(),
+	}
 }

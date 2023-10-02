@@ -12,4 +12,11 @@ pub trait Port: Send + Sync {
 		repo_name: String,
 		issue_number: u64,
 	) -> Result<()>;
+
+	async fn index_pull_request(
+		&self,
+		repo_owner: String,
+		repo_name: String,
+		pull_request_number: u64,
+	) -> Result<()>;
 }
