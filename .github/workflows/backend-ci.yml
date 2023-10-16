@@ -138,4 +138,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Build and push api image
-        run: ./build-and-push-docker-images.sh
+        run: ./build-and-push-docker-images.sh api
+      - name: Build and push indexer image
+        run: ./build-and-push-docker-images.sh indexer
+
