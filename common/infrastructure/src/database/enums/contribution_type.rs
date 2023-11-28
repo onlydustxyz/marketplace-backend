@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Hash, Deserialize, DbEnum)]
 #[ExistingTypePath = "crate::database::schema::sql_types::ContributionType"]
+#[allow(clippy::wrong_self_convention)]
+#[rustfmt::skip]
 pub enum ContributionType {
 	ISSUE,
 	PULL_REQUEST,
