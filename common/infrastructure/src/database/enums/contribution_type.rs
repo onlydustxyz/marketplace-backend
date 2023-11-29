@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Hash, Deserialize, DbEnum)]
 #[ExistingTypePath = "crate::database::schema::sql_types::ContributionType"]
+#[DbValueStyle = "SCREAMING_SNAKE_CASE"]
 pub enum ContributionType {
 	Issue,
 	PullRequest,
