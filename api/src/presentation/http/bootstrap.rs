@@ -49,8 +49,6 @@ pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 		database.clone(),
 		database.clone(),
 		database.clone(),
-		database.clone(),
-		database.clone(),
 	);
 
 	let event_publisher = CompositePublisher::new(vec![
