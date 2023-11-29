@@ -42,7 +42,7 @@ impl<'a> Test<'a> {
 		info!("should_fetch_and_store_all_usd_prices");
 
 		// Given
-		self.context.database.client.insert_all(vec![
+		self.context.database.client.try_insert_all(vec![
 			CryptoUsdQuote {
 				currency: Currency::Eth,
 				price: Decimal::ZERO,

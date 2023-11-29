@@ -143,8 +143,6 @@ impl<'a> Context<'a> {
 				database.client.clone(),
 				database.client.clone(),
 				database.client.clone(),
-				database.client.clone(),
-				database.client.clone(),
 			))),
 		]);
 

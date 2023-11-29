@@ -12,7 +12,7 @@ SET
 FROM
     github_issues gi
 WHERE
-    c."type" = 'issue'::contribution_type
+    c."type" = 'ISSUE'::contribution_type
     AND gi.id = c.details_id::BIGINT;
 
 
@@ -30,7 +30,7 @@ SET
 FROM
     github_pull_requests pr
 WHERE
-    c."type" = 'pull_request'::contribution_type
+    c."type" = 'PULL_REQUEST'::contribution_type
     AND pr.id = c.details_id::BIGINT;
 
 
@@ -53,7 +53,7 @@ FROM
     github_pull_request_reviews r
     JOIN github_pull_requests pr ON pr.id = r.pull_request_id
 WHERE
-    c."type" = 'code_review'::contribution_type
+    c."type" = 'CODE_REVIEW'::contribution_type
     AND r.id = c.details_id;
 
 

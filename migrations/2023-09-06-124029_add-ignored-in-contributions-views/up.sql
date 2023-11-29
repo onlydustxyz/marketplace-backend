@@ -41,15 +41,15 @@ SELECT
     count(*) AS total_count,
     count(c.details_id) FILTER (
         WHERE
-            c.type = 'issue'::contribution_type
+            c.type = 'ISSUE'::contribution_type
     ) AS issue_count,
     count(c.details_id) FILTER (
         WHERE
-            c.type = 'code_review'::contribution_type
+            c.type = 'CODE_REVIEW'::contribution_type
     ) AS code_review_count,
     count(c.details_id) FILTER (
         WHERE
-            c.type = 'pull_request'::contribution_type
+            c.type = 'PULL_REQUEST'::contribution_type
     ) AS pull_request_count,
     min(c.created_at) AS min_date,
     max(c.created_at) AS max_date
@@ -68,15 +68,15 @@ SELECT
     date_part('week'::text, c.created_at) AS week,
     count(c.details_id) FILTER (
         WHERE
-            c.type = 'issue'::contribution_type
+            c.type = 'ISSUE'::contribution_type
     ) AS issue_count,
     count(c.details_id) FILTER (
         WHERE
-            c.type = 'code_review'::contribution_type
+            c.type = 'CODE_REVIEW'::contribution_type
     ) AS code_review_count,
     count(c.details_id) FILTER (
         WHERE
-            c.type = 'pull_request'::contribution_type
+            c.type = 'PULL_REQUEST'::contribution_type
     ) AS pull_request_count
 FROM
     api.completed_contributions c

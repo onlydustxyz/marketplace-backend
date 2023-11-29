@@ -1,4 +1,4 @@
-CREATE TYPE contribution_type AS enum('issue', 'pull_request', 'code_review');
+CREATE TYPE contribution_type AS enum('ISSUE', 'PULL_REQUEST', 'CODE_REVIEW');
 
 
 CREATE TABLE

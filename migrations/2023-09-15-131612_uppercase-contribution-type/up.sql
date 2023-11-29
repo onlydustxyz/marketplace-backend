@@ -14,15 +14,15 @@ SELECT
     c.created_at,
     pgr.project_id,
     CASE
-        WHEN c.type = 'issue'::contribution_type THEN c.details_id::bigint
+        WHEN c.type = 'ISSUE'::contribution_type THEN c.details_id::bigint
         ELSE NULL::bigint
     END AS github_issue_id,
     CASE
-        WHEN c.type = 'pull_request'::contribution_type THEN c.details_id::bigint
+        WHEN c.type = 'PULL_REQUEST'::contribution_type THEN c.details_id::bigint
         ELSE NULL::bigint
     END AS github_pull_request_id,
     CASE
-        WHEN c.type = 'code_review'::contribution_type THEN c.details_id
+        WHEN c.type = 'CODE_REVIEW'::contribution_type THEN c.details_id
         ELSE NULL::text
     END AS github_code_review_id,
     (

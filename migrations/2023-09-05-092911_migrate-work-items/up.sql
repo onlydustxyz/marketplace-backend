@@ -46,8 +46,8 @@ UPDATE work_items
 SET
     id = twi.id,
     "type" = CASE
-        WHEN twi.type = 'ISSUE' THEN 'issue'::contribution_type
-        ELSE 'pull_request'::contribution_type
+        WHEN twi.type = 'ISSUE' THEN 'ISSUE'::contribution_type
+        ELSE 'PULL_REQUEST'::contribution_type
     END
 FROM
     temp_work_items twi
