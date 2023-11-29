@@ -14,15 +14,15 @@ SELECT
     c.created_at,
     pgr.project_id,
     CASE
-        WHEN c.type = 'issue'::contribution_type THEN c.details_id::BIGINT
+        WHEN c.type = 'ISSUE'::contribution_type THEN c.details_id::BIGINT
         ELSE NULL
     END AS github_issue_id,
     CASE
-        WHEN c.type = 'pull_request'::contribution_type THEN c.details_id::BIGINT
+        WHEN c.type = 'PULL_REQUEST'::contribution_type THEN c.details_id::BIGINT
         ELSE NULL
     END AS github_pull_request_id,
     CASE
-        WHEN c.type = 'code_review'::contribution_type THEN c.details_id
+        WHEN c.type = 'CODE_REVIEW'::contribution_type THEN c.details_id
         ELSE NULL
     END AS github_code_review_id,
     EXISTS (
@@ -50,15 +50,15 @@ SELECT
     w.project_id,
     w.recipient_id,
     CASE
-        WHEN w.type = 'issue'::contribution_type THEN w.id::BIGINT
+        WHEN w.type = 'ISSUE'::contribution_type THEN w.id::BIGINT
         ELSE NULL
     END AS github_issue_id,
     CASE
-        WHEN w.type = 'pull_request'::contribution_type THEN w.id::BIGINT
+        WHEN w.type = 'PULL_REQUEST'::contribution_type THEN w.id::BIGINT
         ELSE NULL
     END AS github_pull_request_id,
     CASE
-        WHEN w.type = 'code_review'::contribution_type THEN w.id
+        WHEN w.type = 'CODE_REVIEW'::contribution_type THEN w.id
         ELSE NULL
     END AS github_code_review_id
 FROM

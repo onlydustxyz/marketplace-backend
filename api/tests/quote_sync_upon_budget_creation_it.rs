@@ -36,6 +36,7 @@ impl<'a> Test<'a> {
 
 		// Given
 		let before = Utc::now().naive_utc();
+		ImmutableRepository::<CryptoUsdQuote>::clear(self.context.database.client.as_ref())?;
 
 		// When
 		self.context

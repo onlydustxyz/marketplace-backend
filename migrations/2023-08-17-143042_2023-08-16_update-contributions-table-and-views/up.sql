@@ -91,15 +91,15 @@ SELECT
     DATE_PART('week'::TEXT, c.created_at) AS week,
     COUNT(c.details_id) FILTER (
         WHERE
-            c.type = 'issue'
+            c.type = 'ISSUE'
     ) AS issue_count,
     COUNT(c.details_id) FILTER (
         WHERE
-            c.type = 'code_review'
+            c.type = 'CODE_REVIEW'
     ) AS code_review_count,
     COUNT(c.details_id) FILTER (
         WHERE
-            c.type = 'pull_request'
+            c.type = 'PULL_REQUEST'
     ) AS pull_request_count
 FROM
     api.completed_contributions c
@@ -117,15 +117,15 @@ SELECT
     COUNT(*) AS total_count,
     COUNT(c.details_id) FILTER (
         WHERE
-            c.type = 'issue'
+            c.type = 'ISSUE'
     ) AS issue_count,
     COUNT(c.details_id) FILTER (
         WHERE
-            c.type = 'code_review'
+            c.type = 'CODE_REVIEW'
     ) AS code_review_count,
     COUNT(c.details_id) FILTER (
         WHERE
-            c.type = 'pull_request'
+            c.type = 'PULL_REQUEST'
     ) AS pull_request_count,
     MIN(c.created_at) AS min_date,
     MAX(c.created_at) AS max_date

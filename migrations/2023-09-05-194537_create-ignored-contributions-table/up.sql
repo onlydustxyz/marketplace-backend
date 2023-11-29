@@ -13,7 +13,7 @@ FROM
     AND igi.issue_number = gpr."number"
     INNER JOIN contributions c ON c.repo_id = gpr.repo_id
     AND c.details_id::BIGINT = gpr.id
-    AND c."type" = 'pull_request'::contribution_type;
+    AND c."type" = 'PULL_REQUEST'::contribution_type;
 
 
 INSERT INTO
@@ -27,7 +27,7 @@ FROM
     AND igi.issue_number = gi."number"
     INNER JOIN contributions c ON c.repo_id = gi.repo_id
     AND c.details_id::BIGINT = gi.id
-    AND c."type" = 'issue'::contribution_type;
+    AND c."type" = 'ISSUE'::contribution_type;
 
 
 DROP TABLE ignored_github_issues;

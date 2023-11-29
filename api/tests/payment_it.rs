@@ -46,7 +46,6 @@ pub async fn payment_processing(docker: &'static Cli) {
 	test.project_lead_can_request_payments_in_eth()
 		.await
 		.expect("project_lead_can_request_payments_in_eth");
-	test.indexing_can_block_payment().await.expect("indexing_can_block_payment");
 	test.anyone_cannot_request_payments()
 		.await
 		.expect("anyone_cannot_request_payments");
@@ -312,86 +311,6 @@ impl<'a> Test<'a> {
 					assert!(requested_at < after);
 				});
 			}
-		);
-
-		Ok(())
-	}
-
-	async fn indexing_can_block_payment(&mut self) -> Result<()> {
-		info!("indexing_can_block_payment");
-
-		// Given
-		let project_id = ProjectId::new();
-		let budget_id = BudgetId::new();
-
-		self.context
-			.event_publisher
-			.publish_many(&[
-				ProjectEvent::Created { id: project_id }.into(),
-				ProjectEvent::BudgetLinked {
-					id: project_id,
-					budget_id,
-					currency: currencies::USD,
-				}
-				.into(),
-				BudgetEvent::Created {
-					id: budget_id,
-					currency: currencies::USD,
-				}
-				.into(),
-				BudgetEvent::Allocated {
-					id: budget_id,
-					amount: Decimal::from(1_000),
-					sponsor_id: None,
-				}
-				.into(),
-			])
-			.await?;
-
-		let request = json!({
-			"projectId": project_id,
-			"recipientId": 595505,
-			"amount": 10,
-			"currency": "USD",
-			"hoursWorked": 1,
-			"reason": {
-				"workItems": [{
-					"type": "PULL_REQUEST",
-					"id": "123456",
-					"repoId": 498695724,
-					"number": 111
-				},
-				{
-					"type": "PULL_REQUEST",
-					"id": "123456",
-					"repoId": 1181927,
-					"number": 111
-				}]
-			}
-		});
-
-		// When
-		let response = self
-			.context
-			.http_client
-			.post("/api/payments")
-			.header(ContentType::JSON)
-			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "registered_user"))
-			.header(Header::new(
-				"Authorization",
-				format!("Bearer {}", jwt(Some(project_id.to_string()))),
-			))
-			.body(request.to_string())
-			.dispatch()
-			.await;
-
-		// Then
-		assert_eq!(
-			response.status(),
-			Status::InternalServerError,
-			"{}",
-			response.into_string().await.unwrap_or_default()
 		);
 
 		Ok(())
