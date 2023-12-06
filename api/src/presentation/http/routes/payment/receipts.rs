@@ -129,6 +129,14 @@ async fn build_payment_receipt(
 			}),
 			None => Err(anyhow!("You must provide the recipient wallet")),
 		},
+		currencies::LORDS => match recipient_wallet {
+			Some(recipient_address) => Ok(PaymentReceipt::Ethereum {
+				recipient_address: recipient_address.parse()?,
+				recipient_ens: None,
+				transaction_hash: transaction_reference.parse()?,
+			}),
+			None => Err(anyhow!("You must provide the recipient wallet")),
+		},
 		_ => Err(anyhow!("Currency {currency} is not supported")),
 	}
 }

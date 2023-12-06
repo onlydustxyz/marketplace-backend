@@ -9,6 +9,7 @@ default:
       ETH: "1027"
       OP: "11840"
       APT: "21794"
+      LORDS: "17445"
   database:
     url: $DATABASE_URL
     pool_max_size: 3

@@ -58,6 +58,11 @@ impl<'a> Test<'a> {
 				price: Decimal::ZERO,
 				updated_at: Utc::now().naive_utc(),
 			},
+			CryptoUsdQuote {
+				currency: Currency::Lords,
+				price: Decimal::ZERO,
+				updated_at: Utc::now().naive_utc(),
+			},
 		])?;
 
 		// When
@@ -73,6 +78,7 @@ impl<'a> Test<'a> {
 					Currency::Eth => assert_eq!(price, dec!(1654.354727031965)),
 					Currency::Op => assert_eq!(price, dec!(1.404801535167209)),
 					Currency::Apt => assert_eq!(price, dec!(5.25259017365663)),
+					Currency::Lords => assert_eq!(price, dec!(0.3550981620115103)),
 					Currency::Stark => panic!("STARK is not liquid yet"),
 				}
 				assert!(before <= updated_at);
