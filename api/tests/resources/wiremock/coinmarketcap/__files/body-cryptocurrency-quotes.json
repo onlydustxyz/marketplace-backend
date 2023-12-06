@@ -314,6 +314,51 @@
                     "last_updated": "2023-09-19T10:01:00.000Z"
                 }
             }
+        },
+        "17445": {
+            "id": 17445,
+            "name": "LORDS",
+            "symbol": "LORDS",
+            "slug": "lords",
+            "num_market_pairs": 8,
+            "date_added": "2022-01-18T11:15:08.000Z",
+            "tags": [],
+            "max_supply": 500000000,
+            "circulating_supply": 0,
+            "total_supply": 50900000,
+            "platform": {
+                "id": 1027,
+                "name": "Ethereum",
+                "symbol": "ETH",
+                "slug": "ethereum",
+                "token_address": "0x686f2404e77ab0d9070a46cdfb0b7fecdd2318b0"
+            },
+            "is_active": 1,
+            "infinite_supply": false,
+            "cmc_rank": 2657,
+            "is_fiat": 0,
+            "self_reported_circulating_supply": 50900000,
+            "self_reported_market_cap": 18074496.446385875,
+            "tvl_ratio": null,
+            "last_updated": "2023-12-06T10:06:00.000Z",
+            "quote": {
+                "USD": {
+                    "price": 0.35509816201151034,
+                    "volume_24h": 403038.95692214,
+                    "volume_change_24h": -56.3755,
+                    "percent_change_1h": -0.28489696,
+                    "percent_change_24h": -0.78591201,
+                    "percent_change_7d": 254.3176928,
+                    "percent_change_30d": 275.082697,
+                    "percent_change_60d": 273.40204865,
+                    "percent_change_90d": 284.49548132,
+                    "market_cap": 0,
+                    "market_cap_dominance": 0,
+                    "fully_diluted_market_cap": 177549081.01,
+                    "tvl": null,
+                    "last_updated": "2023-12-06T10:06:00.000Z"
+                }
+            }
         }
     }
 }
