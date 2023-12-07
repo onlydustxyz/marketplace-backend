@@ -8,6 +8,9 @@
             },
             "Api-Key": {
                 "contains": "test-api-key"
+            },
+            "Content-type": {
+                "contains": "application/json"
             }
         }
     },
