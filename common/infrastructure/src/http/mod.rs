@@ -33,7 +33,8 @@ impl Client {
 		path: String,
 		body: Option<serde_json::Value>,
 	) -> Result<R> {
-		let mut request = self.client.post(self.url(path)?);
+		let mut request =
+			self.client.post(self.url(path)?).header("Content-type", "application/json");
 		if let Some(body) = body {
 			request = request.body(body.to_string());
 		}
