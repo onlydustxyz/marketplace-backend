@@ -10,6 +10,7 @@ default:
       OP: "11840"
       APT: "21794"
       LORDS: "17445"
+      USDC: "3408"
   database:
     url: $DATABASE_URL
     pool_max_size: 3
