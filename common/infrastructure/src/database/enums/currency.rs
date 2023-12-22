@@ -11,6 +11,7 @@ pub enum Currency {
 	Apt,
 	Stark,
 	Lords,
+	Usdc,
 }
 
 impl Currency {
@@ -22,6 +23,7 @@ impl Currency {
 			Currency::Apt => true,
 			Currency::Stark => false,
 			Currency::Lords => true,
+			Currency::Usdc => true,
 		}
 	}
 }
@@ -37,6 +39,7 @@ impl TryFrom<&'static domain::Currency> for Currency {
 			currencies::APTOS => Ok(Self::Apt),
 			currencies::STARK => Ok(Self::Stark),
 			currencies::LORDS => Ok(Self::Lords),
+			currencies::USDC => Ok(Self::Usdc),
 			_ => Err(ParseCurrencyError::NotSupported),
 		}
 	}
@@ -51,6 +54,7 @@ impl From<Currency> for &'static domain::Currency {
 			Currency::Apt => currencies::APTOS,
 			Currency::Stark => currencies::STARK,
 			Currency::Lords => currencies::LORDS,
+			Currency::Usdc => currencies::USDC,
 		}
 	}
 }

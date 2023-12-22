@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-pub use custom::{find, Currency, APTOS, ETH, LORDS, OPTIMISM, STARK, USD};
+pub use custom::{find, Currency, APTOS, ETH, LORDS, OPTIMISM, STARK, USD, USDC};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use thiserror::Error;
 
@@ -72,6 +72,15 @@ rusty_money::define_currency_set!(
 			symbol: "$",
 			symbol_first: true,
 		},
+		USDC : {
+			code: "USDC",
+			exponent: 6,
+			locale: EnUs,
+			minor_units: 1_000_000,
+			name: "USDC",
+			symbol: "USDC",
+			symbol_first: false,
+		},
 		ETH: {
 			code: "ETH",
 			exponent: 18,
@@ -133,6 +142,7 @@ mod tests {
 	#[case("APT", APTOS)]
 	#[case("STARK", STARK)]
 	#[case("LORDS", LORDS)]
+	#[case("USDC", USDC)]
 	pub fn supported_currencies(#[case] input: &str, #[case] output: &Currency) {
 		assert_eq!(
 			output,

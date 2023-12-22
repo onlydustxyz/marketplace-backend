@@ -48,16 +48,23 @@ impl Client {
 		&self,
 		currencies: Vec<String>,
 	) -> Result<Vec<quotes::Currency>> {
-		let currencies = self.get_currencies_ids(&currencies)?;
+		let currency_mapping: HashMap<String, String> = currencies
+			.clone()
+			.into_iter()
+			.zip(self.get_currencies_ids(&currencies)?.into_iter())
+			.collect();
 
-		let response = self.client.quotes_latest_by_id(currencies.join(",")).await?;
+		let mut currency_ids: Vec<_> = currency_mapping.values().cloned().collect();
+		currency_ids.sort();
+
+		let response = self.client.quotes_latest_by_id(currency_ids.join(",")).await?;
 
 		currencies
 			.into_iter()
 			.map(|currency| {
 				response
 					.data
-					.get(&currency)
+					.get(currency_mapping.get(&currency).unwrap())
 					.and_then(|currency| currency.quote.get(currencies::USD.code).cloned())
 					.ok_or_else(|| Error::NotFound(currency.to_owned()))
 			})

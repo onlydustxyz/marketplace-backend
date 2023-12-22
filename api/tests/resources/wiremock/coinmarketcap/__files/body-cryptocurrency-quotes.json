@@ -359,6 +359,107 @@
                     "last_updated": "2023-12-06T10:06:00.000Z"
                 }
             }
+        },
+        "3408": {
+            "id": 3408,
+            "name": "USDC",
+            "symbol": "USDC",
+            "slug": "usd-coin",
+            "num_market_pairs": 15669,
+            "date_added": "2018-10-08T00:00:00.000Z",
+            "tags": [
+                {
+                    "slug": "medium-of-exchange",
+                    "name": "Medium of Exchange",
+                    "category": "INDUSTRY"
+                },
+                {
+                    "slug": "stablecoin",
+                    "name": "Stablecoin",
+                    "category": "CATEGORY"
+                },
+                {
+                    "slug": "asset-backed-stablecoin",
+                    "name": "Asset-Backed Stablecoin",
+                    "category": "CATEGORY"
+                },
+                {
+                    "slug": "coinbase-ventures-portfolio",
+                    "name": "Coinbase Ventures Portfolio",
+                    "category": "CATEGORY"
+                },
+                {
+                    "slug": "hedera-hashgraph-ecosystem",
+                    "name": "Hedera Hashgraph Ecosystem",
+                    "category": "PLATFORM"
+                },
+                {
+                    "slug": "fantom-ecosystem",
+                    "name": "Fantom Ecosystem",
+                    "category": "PLATFORM"
+                },
+                {
+                    "slug": "arbitrum-ecosytem",
+                    "name": "Arbitrum Ecosystem",
+                    "category": "PLATFORM"
+                },
+                {
+                    "slug": "moonriver-ecosystem",
+                    "name": "Moonriver Ecosystem",
+                    "category": "PLATFORM"
+                },
+                {
+                    "slug": "bnb-chain",
+                    "name": "BNB Chain",
+                    "category": "PLATFORM"
+                },
+                {
+                    "slug": "usd-stablecoin",
+                    "name": "USD Stablecoin",
+                    "category": "CATEGORY"
+                },
+                {
+                    "slug": "optimism-ecosystem",
+                    "name": "Optimism Ecosystem",
+                    "category": "PLATFORM"
+                }
+            ],
+            "max_supply": null,
+            "circulating_supply": 24866043051.27905,
+            "total_supply": 24866043051.27905,
+            "platform": {
+                "id": 1027,
+                "name": "Ethereum",
+                "symbol": "ETH",
+                "slug": "ethereum",
+                "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+            },
+            "is_active": 1,
+            "infinite_supply": false,
+            "cmc_rank": 7,
+            "is_fiat": 0,
+            "self_reported_circulating_supply": null,
+            "self_reported_market_cap": null,
+            "tvl_ratio": null,
+            "last_updated": "2023-12-21T15:48:00.000Z",
+            "quote": {
+                "USD": {
+                    "price": 1.0001426702019844,
+                    "volume_24h": 6057620607.0463505,
+                    "volume_change_24h": 12.8534,
+                    "percent_change_1h": 0.01294624,
+                    "percent_change_24h": 0.00252745,
+                    "percent_change_7d": 0.00682368,
+                    "percent_change_30d": 0.0193381,
+                    "percent_change_60d": 0.02100776,
+                    "percent_change_90d": -0.00111675,
+                    "market_cap": 24869590694.663727,
+                    "market_cap_dominance": 1.5119,
+                    "fully_diluted_market_cap": 24869590694.66,
+                    "tvl": null,
+                    "last_updated": "2023-12-21T15:48:00.000Z"
+                }
+            }
         }
     }
 }

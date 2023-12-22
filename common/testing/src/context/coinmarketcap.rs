@@ -23,6 +23,7 @@ impl<'docker> Context<'docker> {
 				(String::from("OP"), String::from("11840")),
 				(String::from("APT"), String::from("21794")),
 				(String::from("LORDS"), String::from("17445")),
+				(String::from("USDC"), String::from("3408")),
 			]
 			.into_iter()
 			.collect(),
