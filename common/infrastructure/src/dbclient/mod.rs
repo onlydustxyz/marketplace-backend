@@ -20,11 +20,6 @@ use crate::diesel_migrations::MigrationHarness;
 pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 type PooledConnection = r2d2::PooledConnection<ConnectionManager<PgConnection>>;
 
-pub fn run_migrations(pool: &Pool, migrations: EmbeddedMigrations) {
-	let mut connection = pool.get().expect("Unable to get connection from pool");
-	connection.run_pending_migrations(migrations).expect("diesel migration failure");
-}
-
 pub struct Client {
 	pool: Pool,
 }
