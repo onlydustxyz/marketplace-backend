@@ -1096,12 +1096,12 @@ impl<'a> Test<'a> {
 				ProjectEvent::BudgetLinked {
 					id: project_id,
 					budget_id,
-					currency: currencies::STARK,
+					currency: currencies::STRK,
 				}
 				.into(),
 				BudgetEvent::Created {
 					id: budget_id,
-					currency: currencies::STARK,
+					currency: currencies::STRK,
 				}
 				.into(),
 				BudgetEvent::Allocated {
@@ -1120,7 +1120,7 @@ impl<'a> Test<'a> {
 					project_id,
 					requestor_id: UserId::new(),
 					recipient_id: GithubUserId::from(595505u64),
-					amount: Amount::from_decimal(Decimal::from(100), currencies::STARK),
+					amount: Amount::from_decimal(Decimal::from(100), currencies::STRK),
 					duration_worked: Some(Duration::hours(2)),
 					reason: PaymentReason { work_items: vec![] },
 					requested_at: Utc::now().naive_utc(),
@@ -1131,7 +1131,7 @@ impl<'a> Test<'a> {
 
 		let request = json!({
 			"amount": 100,
-			"currency": "STARK",
+			"currency": "STRK",
 			"recipientWallet": "0x066252b2940ef3522947c7865e7e154c0af37f64380bc50684010d355585605e",
 			"transactionReference": "0x02ba0d419826ccdf25fc5068866b4ae5803753cbd4f15c944a0319e455d98803",
 		});
@@ -1173,7 +1173,7 @@ impl<'a> Test<'a> {
 					processed_at
 				} => {
 					assert_eq!(id, payment_id);
-					assert_eq!(amount, Amount::from_decimal(dec!(100), currencies::STARK));
+					assert_eq!(amount, Amount::from_decimal(dec!(100), currencies::STRK));
 					assert_eq!(receipt_id, response.receipt_id);
 					assert_eq!(receipt, PaymentReceipt::Starknet {
 						recipient_address: "0x066252b2940ef3522947c7865e7e154c0af37f64380bc50684010d355585605e".parse().unwrap(),

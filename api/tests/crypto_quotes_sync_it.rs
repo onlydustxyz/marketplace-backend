@@ -85,7 +85,7 @@ impl<'a> Test<'a> {
 					Currency::Apt => assert_eq!(price, dec!(5.25259017365663)),
 					Currency::Lords => assert_eq!(price, dec!(0.3550981620115103)),
 					Currency::Usdc => assert_eq!(price, dec!(1.000142670201984)),
-					Currency::Stark => panic!("STARK is not liquid yet"),
+					Currency::Strk => panic!("STRK is not liquid yet"),
 				}
 				assert!(before <= updated_at);
 				assert!(after >= updated_at);
