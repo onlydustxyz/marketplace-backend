@@ -83,3 +83,44 @@ pub async fn request_payment(
 		command_id,
 	}))
 }
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InvoiceReceivedRequest {
+	payments: Vec<PaymentId>,
+}
+
+#[put(
+	"/payments/invoiceReceivedAt",
+	data = "<request>",
+	format = "application/json"
+)]
+pub async fn mark_invoice_as_received(
+	_api_key: ApiKey,
+	request: Json<InvoiceReceivedRequest>,
+	role: Role,
+	payment_repository: &State<AggregateRepository<Payment>>,
+	invoice_payment_usecase: application::payment::invoice::Usecase,
+) -> Result<(), HttpApiProblem> {
+	let InvoiceReceivedRequest { payments } = request.into_inner();
+
+	let caller_permissions = role.to_permissions((*payment_repository).clone());
+
+	if payments
+		.iter()
+		.any(|payment_id| !caller_permissions.can_mark_invoice_as_received_for_payment(payment_id))
+	{
+		return Err(HttpApiProblem::new(StatusCode::UNAUTHORIZED)
+			.title("Only recipient can mark invoice as received"));
+	}
+
+	invoice_payment_usecase.mark_invoice_as_received(payments).await.map_err(|e| {
+		{
+			HttpApiProblem::new(StatusCode::INTERNAL_SERVER_ERROR)
+				.title("Unable to mark_invoice_as_received")
+				.detail(e.to_string())
+		}
+	})?;
+
+	Ok(())
+}

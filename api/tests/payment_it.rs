@@ -72,6 +72,10 @@ pub async fn payment_processing(docker: &'static Cli) {
 		.await
 		.expect("admin_can_add_a_lords_receipt");
 	test.admin_can_add_a_usdc_receipt().await.expect("admin_can_add_a_usdc_receipt");
+
+	test.recipient_can_mark_invoice_as_received()
+		.await
+		.expect("recipient_can_mark_invoice_as_received");
 }
 
 struct Test<'a> {
@@ -1397,6 +1401,103 @@ impl<'a> Test<'a> {
 					});
 					assert!(processed_at > before);
 					assert!(processed_at < after);
+				});
+			}
+		);
+
+		Ok(())
+	}
+
+	async fn recipient_can_mark_invoice_as_received(&mut self) -> Result<()> {
+		info!("recipient_can_mark_invoice_as_received");
+
+		// Given
+		let project_id = ProjectId::new();
+		let budget_id = BudgetId::new();
+		let payment_id = PaymentId::new();
+
+		self.context
+			.event_publisher
+			.publish_many(&[
+				ProjectEvent::Created { id: project_id }.into(),
+				ProjectEvent::BudgetLinked {
+					id: project_id,
+					budget_id,
+					currency: currencies::USDC,
+				}
+				.into(),
+				BudgetEvent::Created {
+					id: budget_id,
+					currency: currencies::USDC,
+				}
+				.into(),
+				BudgetEvent::Allocated {
+					id: budget_id,
+					amount: Decimal::from(1_000),
+					sponsor_id: None,
+				}
+				.into(),
+				BudgetEvent::Spent {
+					id: budget_id,
+					amount: Decimal::from(100),
+				}
+				.into(),
+				PaymentEvent::Requested {
+					id: payment_id,
+					project_id,
+					requestor_id: UserId::new(),
+					recipient_id: GithubUserId::from(43467246u64),
+					amount: Amount::from_decimal(dec!(100), currencies::USD),
+					duration_worked: Some(Duration::hours(2)),
+					reason: PaymentReason { work_items: vec![] },
+					requested_at: Utc::now().naive_utc(),
+				}
+				.into(),
+			])
+			.await?;
+
+		let request = json!({
+			"payments": vec![payment_id],
+		});
+
+		let before = Utc::now().naive_utc();
+
+		// When
+		let response = self
+			.context
+			.http_client
+			.put("/api/payments/invoiceReceivedAt")
+			.header(ContentType::JSON)
+			.header(api_key_header())
+			.header(Header::new("x-hasura-role", "registered_user"))
+			.header(Header::new(
+				"Authorization",
+				format!("Bearer {}", jwt(None)),
+			))
+			.body(request.to_string())
+			.dispatch()
+			.await;
+
+		// Then
+		assert_eq!(
+			response.status(),
+			Status::Ok,
+			"{}",
+			response.into_string().await.unwrap_or_default()
+		);
+
+		let after = Utc::now().naive_utc();
+
+		assert_matches!(
+			self.context.amqp.listen(EXCHANGE_NAME).await.unwrap(),
+			Event::Payment(event) => {
+				assert_matches!(event, PaymentEvent::InvoiceReceived {
+					id,
+					received_at
+				} => {
+					assert_eq!(id, payment_id);
+					assert!(received_at > before);
+					assert!(received_at < after);
 				});
 			}
 		);
