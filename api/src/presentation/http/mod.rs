@@ -129,6 +129,7 @@ pub fn serve(
 				routes::issues::fetch_issue_by_repo_owner_name_issue_number,
 				routes::pull_requests::fetch_pull_request,
 				routes::payment::request_payment,
+				routes::payment::mark_invoice_as_received,
 				routes::payment::cancel_payment,
 				routes::payment::receipts::create,
 				routes::sponsors::create_sponsor,
