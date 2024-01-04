@@ -29,7 +29,6 @@ uuid08 = { package = "uuid", version = "0.8", default_features = false, features
 
 rust_decimal = "1.26.1"
 rusty-money = { version = "0.4.1", features = ["iso", "crypto"] }
-iban_validate = { version = "4.0.1", features = ["serde"] }
 hex = "0.4.3"
 starknet-ff = "0.3.4"
 
