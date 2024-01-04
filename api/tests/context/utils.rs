@@ -5,6 +5,8 @@ use rocket::{http::Header, serde::json::json};
 
 use super::API_KEY;
 
+pub const USER_ID: &str = "9b7effeb-963f-4ac4-be74-d735501925ed";
+
 #[allow(unused)]
 pub fn jwt(project_leaded_id: Option<String>) -> String {
 	let now = SystemTime::now()
@@ -27,10 +29,10 @@ pub fn jwt(project_leaded_id: Option<String>) -> String {
 			  "registered_user"
 			],
 			"x-hasura-default-role": "registered_user",
-			"x-hasura-user-id": "9b7effeb-963f-4ac4-be74-d735501925ed",
+			"x-hasura-user-id": USER_ID,
 			"x-hasura-user-is-anonymous": "false"
 		  },
-		  "sub": "9b7effeb-963f-4ac4-be74-d735501925ed",
+		  "sub": USER_ID,
 		  "iat": now,
 		  "exp": now + 1000,
 		  "iss": "hasura-auth-unit-tests"

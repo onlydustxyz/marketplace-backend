@@ -26,7 +26,7 @@ use uuid::Uuid;
 
 use crate::context::{
 	docker,
-	utils::{api_key_header, jwt},
+	utils::{api_key_header, USER_ID},
 	Context,
 };
 
@@ -52,16 +52,16 @@ pub async fn payment_processing(docker: &'static Cli) {
 	test.project_lead_can_request_payments_in_usdc()
 		.await
 		.expect("project_lead_can_request_payments_in_usdc");
-	test.anyone_cannot_request_payments()
+	test.cannot_request_payments_without_api_key()
 		.await
-		.expect("anyone_cannot_request_payments");
+		.expect("cannot_request_payments_without_api_key");
 	test.project_lead_can_cancel_payments()
 		.await
 		.expect("project_lead_can_cancel_payments");
 	test.admin_can_cancel_payments().await.expect("admin_can_cancel_payments");
-	test.anyone_cannot_cancel_payments()
+	test.cannot_cancel_payments_without_api_key()
 		.await
-		.expect("anyone_cannot_cancel_payments");
+		.expect("cannot_cancel_payments_without_api_key");
 
 	test.admin_can_add_a_sepa_receipt().await.expect("admin_can_add_a_sepa_receipt");
 	test.admin_can_add_an_eth_receipt().await.expect("admin_can_add_an_eth_receipt");
@@ -118,6 +118,7 @@ impl<'a> Test<'a> {
 		let request = json!({
 			"projectId": project_id,
 			"recipientId": 595505,
+			"requestorId": USER_ID,
 			"amount": 10,
 			"currency": "USD",
 			"hoursWorked": 1,
@@ -138,11 +139,6 @@ impl<'a> Test<'a> {
 			.post("/api/payments")
 			.header(ContentType::JSON)
 			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "registered_user"))
-			.header(Header::new(
-				"Authorization",
-				format!("Bearer {}", jwt(Some(project_id.to_string()))),
-			))
 			.body(request.to_string())
 			.dispatch()
 			.await;
@@ -242,6 +238,7 @@ impl<'a> Test<'a> {
 		let request = json!({
 			"projectId": project_id,
 			"recipientId": 595505,
+			"requestorId": USER_ID,
 			"amount": 0.00001,
 			"currency": "ETH",
 			"reason": {
@@ -261,11 +258,6 @@ impl<'a> Test<'a> {
 			.post("/api/payments")
 			.header(ContentType::JSON)
 			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "registered_user"))
-			.header(Header::new(
-				"Authorization",
-				format!("Bearer {}", jwt(Some(project_id.to_string()))),
-			))
 			.body(request.to_string())
 			.dispatch()
 			.await;
@@ -365,6 +357,7 @@ impl<'a> Test<'a> {
 		let request = json!({
 			"projectId": project_id,
 			"recipientId": 595505,
+			"requestorId": USER_ID,
 			"amount": 100.52,
 			"currency": "LORDS",
 			"reason": {
@@ -384,11 +377,6 @@ impl<'a> Test<'a> {
 			.post("/api/payments")
 			.header(ContentType::JSON)
 			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "registered_user"))
-			.header(Header::new(
-				"Authorization",
-				format!("Bearer {}", jwt(Some(project_id.to_string()))),
-			))
 			.body(request.to_string())
 			.dispatch()
 			.await;
@@ -485,6 +473,7 @@ impl<'a> Test<'a> {
 		let request = json!({
 			"projectId": project_id,
 			"recipientId": 595505,
+			"requestorId": USER_ID,
 			"amount": 100.52,
 			"currency": "USDC",
 			"reason": {
@@ -504,11 +493,6 @@ impl<'a> Test<'a> {
 			.post("/api/payments")
 			.header(ContentType::JSON)
 			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "registered_user"))
-			.header(Header::new(
-				"Authorization",
-				format!("Bearer {}", jwt(Some(project_id.to_string()))),
-			))
 			.body(request.to_string())
 			.dispatch()
 			.await;
@@ -570,8 +554,8 @@ impl<'a> Test<'a> {
 		Ok(())
 	}
 
-	async fn anyone_cannot_request_payments(&mut self) -> Result<()> {
-		info!("anyone_cannot_request_payments");
+	async fn cannot_request_payments_without_api_key(&mut self) -> Result<()> {
+		info!("cannot_request_payments_without_api_key");
 
 		// Given
 		let project_id = ProjectId::new();
@@ -604,6 +588,7 @@ impl<'a> Test<'a> {
 		let request = json!({
 			"projectId": project_id,
 			"recipientId": 595505,
+			"requestorId": USER_ID,
 			"amount": 10,
 			"currency": "USD",
 			"hoursWorked": 1,
@@ -623,12 +608,6 @@ impl<'a> Test<'a> {
 			.http_client
 			.post("/api/payments")
 			.header(ContentType::JSON)
-			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "registered_user"))
-			.header(Header::new(
-				"Authorization",
-				format!("Bearer {}", jwt(None)),
-			))
 			.body(request.to_string())
 			.dispatch()
 			.await;
@@ -694,11 +673,6 @@ impl<'a> Test<'a> {
 			.delete(format!("/api/payments/{payment_id}"))
 			.header(ContentType::JSON)
 			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "registered_user"))
-			.header(Header::new(
-				"Authorization",
-				format!("Bearer {}", jwt(Some(project_id.to_string()))),
-			))
 			.dispatch()
 			.await;
 
@@ -776,7 +750,6 @@ impl<'a> Test<'a> {
 			.delete(format!("/api/payments/{payment_id}"))
 			.header(ContentType::JSON)
 			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "admin"))
 			.dispatch()
 			.await;
 
@@ -804,8 +777,8 @@ impl<'a> Test<'a> {
 		Ok(())
 	}
 
-	async fn anyone_cannot_cancel_payments(&mut self) -> Result<()> {
-		info!("anyone_cannot_cancel_payments");
+	async fn cannot_cancel_payments_without_api_key(&mut self) -> Result<()> {
+		info!("cannot_cancel_payments_without_api_key");
 
 		// Given
 		let project_id = ProjectId::new();
@@ -853,12 +826,6 @@ impl<'a> Test<'a> {
 			.http_client
 			.delete(format!("/api/payments/{payment_id}"))
 			.header(ContentType::JSON)
-			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "registered_user"))
-			.header(Header::new(
-				"Authorization",
-				format!("Bearer {}", jwt(None)),
-			))
 			.dispatch()
 			.await;
 
@@ -1469,11 +1436,6 @@ impl<'a> Test<'a> {
 			.put("/api/payments/invoiceReceivedAt")
 			.header(ContentType::JSON)
 			.header(api_key_header())
-			.header(Header::new("x-hasura-role", "registered_user"))
-			.header(Header::new(
-				"Authorization",
-				format!("Bearer {}", jwt(None)),
-			))
 			.body(request.to_string())
 			.dispatch()
 			.await;
