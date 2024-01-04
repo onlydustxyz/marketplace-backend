@@ -1469,7 +1469,6 @@ dependencies = [
  "futures",
  "generic-array",
  "hex",
- "iban_validate",
  "juniper",
  "mockall",
  "mockall_double",
@@ -2354,16 +2353,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f31827a206f56af32e590ba56d5d2d085f558508192593743f16b2306495269f"
 dependencies = [
  "cc",
-]
-
-[[package]]
-name = "iban_validate"
-version = "4.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc1d358f7ae89819e8656f1b495c9d760a9ca315998b12d589dc516c9f81ed08"
-dependencies = [
- "arrayvec",
- "serde",
 ]
 
 [[package]]

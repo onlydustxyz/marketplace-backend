@@ -682,7 +682,7 @@ impl<'a> Test<'a> {
 			.await;
 
 		// Then
-		assert_eq!(response.status(), Status::UnprocessableEntity);
+		assert_eq!(response.status(), Status::Ok);
 
 		Ok(())
 	}
