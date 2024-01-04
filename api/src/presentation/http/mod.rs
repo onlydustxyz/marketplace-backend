@@ -117,7 +117,6 @@ pub fn serve(
 		.mount(
 			"/api",
 			routes![
-				routes::users::profile_picture,
 				routes::users::update_user_profile,
 				routes::users::update_user_payout_info,
 				routes::users::search_users,
