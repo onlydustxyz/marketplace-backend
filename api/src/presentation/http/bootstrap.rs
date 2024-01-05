@@ -9,7 +9,7 @@ use reqwest::header::HeaderMap;
 use rocket::{Build, Rocket};
 
 use crate::{
-	domain::projectors::{self, new_indexer, projections},
+	domain::projectors::{self, new_indexer, projections, projections_for_refresh},
 	infrastructure::{simple_storage, web3::ens},
 	presentation::{graphql, http, http::github_client_pat_factory::GithubClientPatFactory},
 	Config,
@@ -37,6 +37,16 @@ pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 		database.clone(),
 		database.clone(),
 		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+		database.clone(),
+	);
+	let projector_for_refresh = projections_for_refresh::Projector::new(
 		database.clone(),
 		database.clone(),
 		database.clone(),
@@ -91,6 +101,7 @@ pub async fn bootstrap(config: Config) -> Result<Rocket<Build>> {
 		database.clone(),
 		database,
 		projector,
+		projector_for_refresh,
 	);
 	Ok(rocket_build)
 }

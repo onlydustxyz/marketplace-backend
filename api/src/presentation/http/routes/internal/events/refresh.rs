@@ -16,7 +16,7 @@ use rocket::State;
 use thiserror::Error;
 use uuid::Uuid;
 
-use crate::domain::projectors::projections;
+use crate::domain::projectors::projections_for_refresh;
 
 #[derive(Debug, Error)]
 enum Error {
@@ -57,11 +57,11 @@ pub async fn refresh(
 	budget_event_store: &State<Arc<dyn EventStore<Budget>>>,
 	application_event_store: &State<Arc<dyn EventStore<Application>>>,
 	payment_event_store: &State<Arc<dyn EventStore<Payment>>>,
-	projector: &State<projections::Projector>,
+	projector_for_refresh: &State<projections_for_refresh::Projector>,
 ) -> Result<(), HttpApiProblem> {
 	let mut registry = Registry::new();
 
-	let projector = Arc::new((*projector).clone());
+	let projector = Arc::new((*projector_for_refresh).clone());
 
 	Refresher::new((*project_event_store).clone(), projector.clone()).register(&mut registry)?;
 	Refresher::new((*application_event_store).clone(), projector.clone())

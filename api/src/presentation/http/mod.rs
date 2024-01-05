@@ -12,7 +12,7 @@ use rocket::{Build, Rocket};
 
 use crate::{
 	application,
-	domain::{projectors::projections::Projector, DustyBotService, ImageStoreService},
+	domain::{DustyBotService, ImageStoreService},
 	infrastructure::web3::ens,
 	models::*,
 	presentation::{graphql, http::github_client_pat_factory::GithubClientPatFactory},
@@ -58,7 +58,8 @@ pub fn serve(
 	application_event_store: Arc<dyn EventStore<Application>>,
 	budget_event_store: Arc<dyn EventStore<Budget>>,
 	payment_event_store: Arc<dyn EventStore<Payment>>,
-	projector: Projector,
+	projector: crate::domain::projectors::projections::Projector,
+	projector_for_refresh: crate::domain::projectors::projections_for_refresh::Projector,
 ) -> Rocket<Build> {
 	let update_user_profile_info_usecase = application::user::update_profile_info::Usecase::new(
 		user_profile_info_repository.clone(),
@@ -103,6 +104,7 @@ pub fn serve(
 		.manage(budget_event_store)
 		.manage(payment_event_store)
 		.manage(projector)
+		.manage(projector_for_refresh)
 		.attach(http::guards::Cors)
 		.mount(
 			"/",
