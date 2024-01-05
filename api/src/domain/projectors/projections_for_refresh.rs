@@ -1,0 +1,189 @@
+use std::{convert::TryFrom, sync::Arc};
+
+use anyhow::Result;
+use async_trait::async_trait;
+use derive_new::new;
+use domain::{
+	BudgetEvent, Event, EventListener, PaymentEvent, PaymentWorkItem, ProjectEvent,
+	SubscriberCallbackError,
+};
+use infrastructure::dbclient::{ImmutableRepository, Repository};
+use olog::IntoField;
+use rust_decimal::Decimal;
+use tracing::instrument;
+
+use crate::models::*;
+
+#[allow(clippy::too_many_arguments)]
+#[derive(new, Clone)]
+pub struct Projector {
+	project_budgets_repository: Arc<dyn ImmutableRepository<ProjectsBudget>>,
+	budget_repository: Arc<dyn Repository<Budget>>,
+	payment_request_repository: Arc<dyn Repository<PaymentRequest>>,
+	payment_repository: Arc<dyn Repository<Payment>>,
+	work_item_repository: Arc<dyn WorkItemRepository>,
+	projects_rewarded_users_repository: Arc<dyn ProjectsRewardedUserRepository>,
+	// TODO: replace the repositories below by API call to indexer in another projector
+	github_repo_index_repository: Arc<dyn GithubRepoIndexRepository>,
+	github_user_index_repository: Arc<dyn GithubUserIndexRepository>,
+}
+
+#[async_trait]
+impl EventListener<Event> for Projector {
+	#[instrument(name = "project_projection", skip(self))]
+	async fn on_event(&self, event: Event) -> Result<(), SubscriberCallbackError> {
+		match event {
+			Event::Budget(event) => match event {
+				BudgetEvent::Created { id, currency } => {
+					self.budget_repository.upsert(Budget {
+						id,
+						initial_amount: Decimal::ZERO,
+						remaining_amount: Decimal::ZERO,
+						currency: currency.try_into()?,
+					})?;
+				},
+				BudgetEvent::Allocated { id, amount, .. } => {
+					let mut budget = self.budget_repository.find_by_id(id)?;
+					budget.remaining_amount += amount;
+					budget.initial_amount += amount;
+					self.budget_repository.update(budget)?;
+				},
+				BudgetEvent::Spent { id, amount } => {
+					let mut budget = self.budget_repository.find_by_id(id)?;
+					budget.remaining_amount -= amount;
+					self.budget_repository.update(budget)?;
+				},
+			},
+			Event::Payment(event) => match event {
+				PaymentEvent::Requested {
+					id: payment_id,
+					project_id,
+					requestor_id,
+					recipient_id,
+					amount,
+					reason,
+					duration_worked,
+					requested_at,
+				} => {
+					self.payment_request_repository
+						.upsert(PaymentRequest {
+							id: payment_id,
+							project_id,
+							requestor_id,
+							recipient_id,
+							amount: *amount.amount(),
+							currency: amount.currency().try_into()?,
+							requested_at,
+							invoice_received_at: None,
+							hours_worked: duration_worked
+								.and_then(|duration_worked| {
+									i32::try_from(duration_worked.num_hours()).ok()
+								})
+								.unwrap_or(0),
+						})
+						.map_err(|e| {
+							olog::error!(error = e.to_field(), "payment_request_repository.upsert");
+							e
+						})?;
+
+					reason.work_items.into_iter().try_for_each(
+						|work_item| -> Result<(), SubscriberCallbackError> {
+							let repo_id = match work_item {
+								PaymentWorkItem::Issue { repo_id, .. }
+								| PaymentWorkItem::CodeReview { repo_id, .. }
+								| PaymentWorkItem::PullRequest { repo_id, .. } => repo_id,
+							};
+
+							self.work_item_repository
+								.try_insert(
+									(project_id, payment_id, recipient_id, work_item).into(),
+								)
+								.map_err(|e| {
+									olog::error!(
+										error = e.to_field(),
+										"error work_item_repository.try_insert"
+									);
+									e
+								})?;
+
+							self.github_repo_index_repository.start_indexing(repo_id).map_err(
+								|e| {
+									olog::error!(
+										error = e.to_field(),
+										"github_repo_index_repository.start_indexing"
+									);
+									e
+								},
+							)?;
+							Ok(())
+						},
+					)?;
+
+					self.github_user_index_repository
+						.try_insert(GithubUserIndex {
+							user_id: recipient_id,
+							..Default::default()
+						})
+						.map_err(|e| {
+							olog::error!(
+								error = e.to_field(),
+								"github_user_index_repository.try_insert"
+							);
+							e
+						})?;
+
+					self.projects_rewarded_users_repository
+						.increase_user_reward_count_for_project(&project_id, &recipient_id)
+						.map_err(|e| {
+							olog::error!(
+								error = e.to_field(),
+								"increase_user_reward_count_for_project"
+							);
+							e
+						})?;
+				},
+				PaymentEvent::Cancelled { id: payment_id } => {
+					let payment_request = self.payment_request_repository.find_by_id(payment_id)?;
+					self.payment_request_repository.delete(payment_id)?;
+					self.work_item_repository.delete_by_payment_id(payment_id)?;
+
+					self.projects_rewarded_users_repository
+						.decrease_user_reward_count_for_project(
+							&payment_request.project_id,
+							&payment_request.recipient_id,
+						)?;
+				},
+				PaymentEvent::Processed {
+					id: payment_id,
+					receipt_id,
+					amount,
+					receipt,
+					processed_at,
+				} => {
+					self.payment_repository.upsert(Payment {
+						id: receipt_id,
+						amount: *amount.amount(),
+						currency_code: amount.currency().to_string(),
+						receipt: serde_json::to_value(receipt)
+							.map_err(|e| SubscriberCallbackError::Discard(e.into()))?,
+						request_id: payment_id,
+						processed_at,
+					})?;
+				},
+				_ => (),
+			},
+			Event::Project(event) => match event {
+				ProjectEvent::BudgetLinked { id, budget_id, .. } => {
+					self.project_budgets_repository.try_insert(ProjectsBudget {
+						project_id: id,
+						budget_id,
+					})?;
+				},
+				_ => (),
+			},
+			_ => (),
+		}
+
+		Ok(())
+	}
+}
