@@ -89,13 +89,6 @@ promote_heroku() {
         echo "Waiting for api to be up..."
         sleep 2
     done
-
-    log_info Checking events sanity
-    heroku run -a od-api-$TO_ENV events_sanity_checks
-
-    log_info "Reloading hasura metadata"
-    heroku run -a od-api-$TO_ENV hasura metadata apply --skip-update-check
-    heroku run -a od-api-$TO_ENV hasura metadata reload --skip-update-check
 }
 
 deploy() {
