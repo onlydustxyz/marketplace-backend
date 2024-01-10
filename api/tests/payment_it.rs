@@ -994,7 +994,7 @@ impl<'a> Test<'a> {
 
 		let request = json!({
 			"amount": 100,
-			"currency": "USD",
+			"currency": "USDC",
 			"recipientWallet": "vitalik.eth",
 			"transactionReference": "0xe81124e94cf8dad83553eb35f1e50821dba16d145d9c8e3cc43d7681c68e4b2b",
 		});
@@ -1036,7 +1036,7 @@ impl<'a> Test<'a> {
 					processed_at
 				} => {
 					assert_eq!(id, payment_id);
-					assert_eq!(amount, Amount::from_decimal(dec!(100), currencies::USD));
+					assert_eq!(amount, Amount::from_decimal(dec!(100), currencies::USDC));
 					assert_eq!(receipt_id, response.receipt_id);
 					assert_eq!(receipt, PaymentReceipt::Ethereum {
 						recipient_address: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045".parse().unwrap(),
