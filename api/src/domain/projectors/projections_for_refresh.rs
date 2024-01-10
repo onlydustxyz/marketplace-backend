@@ -172,14 +172,11 @@ impl EventListener<Event> for Projector {
 				},
 				_ => (),
 			},
-			Event::Project(event) => match event {
-				ProjectEvent::BudgetLinked { id, budget_id, .. } => {
-					self.project_budgets_repository.try_insert(ProjectsBudget {
-						project_id: id,
-						budget_id,
-					})?;
-				},
-				_ => (),
+			Event::Project(ProjectEvent::BudgetLinked { id, budget_id, .. }) => {
+				self.project_budgets_repository.try_insert(ProjectsBudget {
+					project_id: id,
+					budget_id,
+				})?;
 			},
 			_ => (),
 		}

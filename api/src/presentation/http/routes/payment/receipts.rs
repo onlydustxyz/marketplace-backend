@@ -82,31 +82,12 @@ async fn build_payment_receipt(
 	transaction_reference: String,
 ) -> anyhow::Result<PaymentReceipt> {
 	match currency {
-		currencies::USD => match (recipient_iban, recipient_wallet) {
-			(Some(recipient_iban), None) => Ok(PaymentReceipt::Sepa {
+		currencies::USD => match recipient_iban {
+			Some(recipient_iban) => Ok(PaymentReceipt::Sepa {
 				recipient_iban,
 				transaction_reference,
 			}),
-			(None, Some(wallet)) => {
-				let (recipient_address, recipient_ens) = if wallet.starts_with("0x") {
-					(wallet.parse()?, None)
-				} else {
-					let address = ens.eth_address(&wallet).await?;
-					(address, Some(evm::Name::new(wallet)))
-				};
-
-				Ok(PaymentReceipt::Ethereum {
-					recipient_address,
-					recipient_ens,
-					transaction_hash: transaction_reference.parse()?,
-				})
-			},
-			(Some(_), Some(_)) => Err(anyhow!(
-				"You cannot specify both the recipient iban and wallet"
-			)),
-			(None, None) => Err(anyhow!(
-				"You must provide at least the recipient iban or wallet"
-			)),
+			_ => Err(anyhow!("You must provide the recipient iban")),
 		},
 		currencies::OPTIMISM => match recipient_wallet {
 			Some(recipient_address) => Ok(PaymentReceipt::Optimism {
@@ -130,11 +111,20 @@ async fn build_payment_receipt(
 			None => Err(anyhow!("You must provide the recipient wallet")),
 		},
 		currencies::LORDS | currencies::USDC => match recipient_wallet {
-			Some(recipient_address) => Ok(PaymentReceipt::Ethereum {
-				recipient_address: recipient_address.parse()?,
-				recipient_ens: None,
-				transaction_hash: transaction_reference.parse()?,
-			}),
+			Some(wallet) => {
+				let (recipient_address, recipient_ens) = if wallet.starts_with("0x") {
+					(wallet.parse()?, None)
+				} else {
+					let address = ens.eth_address(&wallet).await?;
+					(address, Some(evm::Name::new(wallet)))
+				};
+
+				Ok(PaymentReceipt::Ethereum {
+					recipient_address,
+					recipient_ens,
+					transaction_hash: transaction_reference.parse()?,
+				})
+			},
 			None => Err(anyhow!("You must provide the recipient wallet")),
 		},
 		_ => Err(anyhow!("Currency {currency} is not supported")),
