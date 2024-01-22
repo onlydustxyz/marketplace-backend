@@ -1,11 +1,12 @@
 use std::fmt::Display;
 
 use derive_more::{From, FromStr, Into};
-use serde::{Deserialize, Serialize};
+use serde_with::{DeserializeFromStr, SerializeDisplay};
 use starknet_ff::FieldElement;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, From, Into, FromStr)]
-#[serde(transparent)]
+#[derive(
+	Debug, Clone, PartialEq, Eq, SerializeDisplay, DeserializeFromStr, From, Into, FromStr,
+)]
 pub struct Address(FieldElement);
 
 impl Display for Address {
@@ -14,8 +15,9 @@ impl Display for Address {
 	}
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, From, Into, FromStr)]
-#[serde(transparent)]
+#[derive(
+	Debug, Clone, PartialEq, Eq, SerializeDisplay, DeserializeFromStr, From, Into, FromStr,
+)]
 pub struct TransactionHash(FieldElement);
 
 impl Display for TransactionHash {
