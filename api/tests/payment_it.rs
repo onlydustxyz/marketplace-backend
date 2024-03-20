@@ -72,6 +72,9 @@ pub async fn payment_processing(docker: &'static Cli) {
 		.await
 		.expect("admin_can_add_a_lords_receipt");
 	test.admin_can_add_a_usdc_receipt().await.expect("admin_can_add_a_usdc_receipt");
+	test.admin_can_add_an_eth_receipt_on_starknet()
+		.await
+		.expect("admin_can_add_an_eth_receipt_on_starknet");
 
 	test.recipient_can_mark_invoice_as_received()
 		.await
@@ -1365,6 +1368,113 @@ impl<'a> Test<'a> {
 						recipient_address: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045".parse().unwrap(),
 						recipient_ens: None,
 						transaction_hash: "0x02ba0d419826ccdf25fc5068866b4ae5803753cbd4f15c944a0319e455d98803".parse().unwrap()
+					});
+					assert!(processed_at > before);
+					assert!(processed_at < after);
+				});
+			}
+		);
+
+		Ok(())
+	}
+
+	async fn admin_can_add_an_eth_receipt_on_starknet(&mut self) -> Result<()> {
+		info!("admin_can_add_an_eth_receipt_on_starknet");
+
+		// Given
+		let project_id = ProjectId::new();
+		let budget_id = BudgetId::new();
+		let payment_id = PaymentId::new();
+
+		self.context
+			.event_publisher
+			.publish_many(&[
+				ProjectEvent::Created { id: project_id }.into(),
+				ProjectEvent::BudgetLinked {
+					id: project_id,
+					budget_id,
+					currency: currencies::ETH,
+				}
+				.into(),
+				BudgetEvent::Created {
+					id: budget_id,
+					currency: currencies::ETH,
+				}
+				.into(),
+				BudgetEvent::Allocated {
+					id: budget_id,
+					amount: Decimal::from(1_000),
+					sponsor_id: None,
+				}
+				.into(),
+				BudgetEvent::Spent {
+					id: budget_id,
+					amount: Decimal::from(100),
+				}
+				.into(),
+				PaymentEvent::Requested {
+					id: payment_id,
+					project_id,
+					requestor_id: UserId::new(),
+					recipient_id: GithubUserId::from(595505u64),
+					amount: Amount::from_decimal(Decimal::from(100), currencies::ETH),
+					duration_worked: Some(Duration::hours(2)),
+					reason: PaymentReason { work_items: vec![] },
+					requested_at: Utc::now().naive_utc(),
+				}
+				.into(),
+			])
+			.await?;
+
+		let request = json!({
+			"amount": 100,
+			"currency": "ETH",
+			"recipientWallet": "0x0168fdb36fc7632aaa7ffb0068364579c16339051c657e1ca93c09f86a040394",
+			"transactionReference": "0x001df43c0f1e0135a574b0bfe52041bc14967ee7e5d48c05fdbf9535d87e7266",
+		});
+
+		let before = Utc::now().naive_utc();
+
+		// When
+		let response = self
+			.context
+			.http_client
+			.post(format!("/api/payments/{payment_id}/receipts"))
+			.header(ContentType::JSON)
+			.header(api_key_header())
+			.header(Header::new("x-hasura-role", "admin"))
+			.body(request.to_string())
+			.dispatch()
+			.await;
+
+		// Then
+		assert_eq!(
+			response.status(),
+			Status::Ok,
+			"{}",
+			response.into_string().await.unwrap_or_default()
+		);
+
+		let after = Utc::now().naive_utc();
+
+		let response: payment::receipts::Response = response.into_json().await.unwrap();
+
+		assert_matches!(
+			self.context.amqp.listen(EXCHANGE_NAME).await.unwrap(),
+			Event::Payment(event) => {
+				assert_matches!(event, PaymentEvent::Processed {
+					id,
+					amount,
+					receipt_id,
+					receipt,
+					processed_at
+				} => {
+					assert_eq!(id, payment_id);
+					assert_eq!(amount, Amount::from_decimal(dec!(100), currencies::ETH));
+					assert_eq!(receipt_id, response.receipt_id);
+					assert_eq!(receipt, PaymentReceipt::Starknet {
+						recipient_address: "0x0168fdb36fc7632aaa7ffb0068364579c16339051c657e1ca93c09f86a040394".parse().unwrap(),
+						transaction_hash: "0x001df43c0f1e0135a574b0bfe52041bc14967ee7e5d48c05fdbf9535d87e7266".parse().unwrap()
 					});
 					assert!(processed_at > before);
 					assert!(processed_at < after);

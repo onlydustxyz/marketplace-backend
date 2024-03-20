@@ -103,7 +103,7 @@ async fn build_payment_receipt(
 			}),
 			None => Err(anyhow!("You must provide the recipient wallet")),
 		},
-		currencies::STRK => match recipient_wallet {
+		currencies::STRK | currencies::ETH => match recipient_wallet {
 			Some(recipient_address) => Ok(PaymentReceipt::Starknet {
 				recipient_address: recipient_address.parse()?,
 				transaction_hash: transaction_reference.parse()?,
